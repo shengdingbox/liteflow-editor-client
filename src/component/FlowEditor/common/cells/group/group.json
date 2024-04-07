@@ -1,0 +1,142 @@
+[
+  {
+    "position": {
+      "x": 35,
+      "y": 100
+    },
+    "size": {
+      "width": 30,
+      "height": 30
+    },
+    "view": "react-shape-view",
+    "shape": "flow-start",
+    "component": "flow-start",
+    "data": {
+      "label": "开始",
+      "trigger": "start"
+    },
+    "ports": {
+      "groups": {
+        "right": {
+          "position": "right",
+          "attrs": {
+            "circle": {
+              "r": 5,
+              "magnet": true,
+              "stroke": "#0098ec66",
+              "strokeWidth": 4,
+              "fill": "#0098ec"
+            }
+          }
+        }
+      },
+      "items": [
+        {
+          "id": "right",
+          "group": "right"
+        }
+      ]
+    },
+    "id": "31563739-239a-4a21-ac91-cc6d038ac056",
+    "zIndex": 1,
+    "_order": 0
+  },
+  {
+    "shape": "edge",
+    "attrs": {
+      "line": {
+        "stroke": "#C1C1C1",
+        "strokeWidth": "1px"
+      }
+    },
+    "id": "f8c3ca84-49e0-4f55-9297-1d2840286ecd",
+    "zIndex": 0,
+    "controlPoints": [
+      {
+        "x": 80,
+        "y": 30
+      }
+    ],
+    "source": {
+      "cell": "31563739-239a-4a21-ac91-cc6d038ac056",
+      "port": "right"
+    },
+    "target": {
+      "cell": "2873544b-53bc-4ac9-906b-dc82423318db",
+      "port": "left"
+    }
+  },
+  {
+    "position": {
+      "x": 125,
+      "y": 100
+    },
+    "size": {
+      "width": 30,
+      "height": 30
+    },
+    "view": "react-shape-view",
+    "shape": "flow-end",
+    "component": "flow-end",
+    "data": {
+      "label": "结束"
+    },
+    "ports": {
+      "groups": {
+        "top": {
+          "position": "top",
+          "attrs": {
+            "circle": {
+              "r": 5,
+              "magnet": true,
+              "stroke": "#0098ec66",
+              "strokeWidth": 4,
+              "fill": "#0098ec"
+            }
+          }
+        },
+        "left": {
+          "position": "left",
+          "attrs": {
+            "circle": {
+              "r": 5,
+              "magnet": true,
+              "stroke": "#0098ec66",
+              "strokeWidth": 4,
+              "fill": "#0098ec"
+            }
+          }
+        },
+        "bottom": {
+          "position": "bottom",
+          "attrs": {
+            "circle": {
+              "r": 5,
+              "magnet": true,
+              "stroke": "#0098ec66",
+              "strokeWidth": 4,
+              "fill": "#0098ec"
+            }
+          }
+        }
+      },
+      "items": [
+        {
+          "id": "top",
+          "group": "top"
+        },
+        {
+          "id": "left",
+          "group": "left"
+        },
+        {
+          "id": "bottom",
+          "group": "bottom"
+        }
+      ]
+    },
+    "id": "2873544b-53bc-4ac9-906b-dc82423318db",
+    "zIndex": 2,
+    "_order": 0
+  }
+]
