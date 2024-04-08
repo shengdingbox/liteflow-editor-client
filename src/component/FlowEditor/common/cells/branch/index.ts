@@ -1,11 +1,9 @@
-import node from './node';
-import view from './view';
-import meta from './meta';
+import icon from './icon.svg';
 
-const config: FlowNode = {
-  meta,
-  node,
-  view,
+const config = {
+  label: '条件(If)',
+  type: 'Branch',
+  icon
 };
 
 export default config;

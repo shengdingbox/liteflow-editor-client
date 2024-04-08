@@ -1,11 +1,9 @@
-import node from './node';
-import view from './view';
-import meta from './meta';
+import icon from './icon.svg';
 
-const config: FlowNode = {
-  meta,
-  node,
-  view,
+const config = {
+  label: '结束',
+  type: 'ParallelEnd',
+  icon
 };
 
 export default config;

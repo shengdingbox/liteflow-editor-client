@@ -1,4 +1,6 @@
 import { Graph } from '@antv/x6';
+import classNames from 'classnames';
+import styles from './index.module.less';
 // 开始 & 结束
 import { default as Start } from './start';
 import { default as End } from './end';
@@ -10,10 +12,17 @@ import { default as ParallelEnd } from './parallel-end';
 import { default as Switch } from './switch';
 import { default as Branch } from './branch';
 // 循环：TODO
-import { useNodeStatus } from '../useNodeStatus';
 
-export const cellMap: { [key: string]: any } = {};
-export const cellSchemaMap: { [key: string]: any } = {};
+
+export const View: React.FC<any> = (props) => {
+  const { node, icon, ...rest } = props;
+  return (
+    <div className={classNames(styles.shapeWrapper, styles.eventShape)} {...rest}>
+      <img className={styles.shapeSvg} src={icon}></img>
+    </div>
+  );
+};
+
 
 [
   Common,
@@ -25,19 +34,36 @@ export const cellSchemaMap: { [key: string]: any } = {};
   Switch
 ].forEach((cell) => {
   // 注册AntV X6节点
-  const { meta, node, view: View } = cell;
-  const StatusView = function ({ node }: any) {
-    const nodeStatus = useNodeStatus(node);
-    return <View node={node} status={nodeStatus} />;
-  };
-  Graph.registerNode(meta.type, node);
-  Graph.registerReactComponent(meta.type, (node: any) => {
-    return <StatusView node={node} />;
+  const { type, label, icon } = cell;
+  Graph.registerNode(type, {
+    shape: type,
+    component(props: any) {
+      return <View {...props} icon={icon} />
+    },
+    width: 30,
+    height: 30,
+    attrs: {
+      label: {
+        refX: 0.5,
+        refY: '100%',
+        refY2: 20,
+        text: label,
+        fill: '#333',
+        fontSize: 13,
+        textAnchor: 'middle',
+        textVerticalAnchor: 'middle',
+        textWrap: {
+          width: 80,
+          height: 32,
+          ellipsis: true,
+          breakWord: true,
+        },
+      },
+    },
+    data: {
+      label: label,
+    },
   });
-
-  // 映射视图/节点
-  cellMap[meta.type] = View;
-  cellSchemaMap[meta.type] = node;
 });
 
 export const NODE_GROUP = {

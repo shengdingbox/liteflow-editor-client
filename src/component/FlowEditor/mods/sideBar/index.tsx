@@ -7,6 +7,7 @@ import { Addon, Graph, Node } from '@antv/x6';
 import classNames from 'classnames';
 import { NODE_GROUP, BRANCH_GROUP, CONTROL_GROUP } from '../../common/cells';
 import { Dnd } from '@antv/x6/lib/addon';
+import { View } from '../../common/cells'
 
 const { Panel } = Collapse;
 
@@ -32,17 +33,6 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
           droppingNode: Node,
           options: Dnd.ValidateNodeOptions,
         ) => {
-          // if (droppingNode.shape === Switch.meta.type) {
-          //   return (droppingNode as SwitchNode).validateNode(
-          //     droppingNode,
-          //     options,
-          //   );
-          // } else if (droppingNode.shape === Group.meta.type) {
-          //   return (droppingNode as GroupNode).validateNode(
-          //     droppingNode,
-          //     options,
-          //   );
-          // }
           return true;
         },
       }),
@@ -83,7 +73,6 @@ const PanelContent: React.FC<IPanelContentProps> = (props) => {
   return (
     <div className={styles.panelContent}>
       {cellTypes.map((cellType, index) => {
-        const Component = cellType.view;
         return (
           <div
             key={index}
@@ -92,15 +81,16 @@ const PanelContent: React.FC<IPanelContentProps> = (props) => {
             })}
           >
             <div className={styles.cellWrapper}>
-              <Component
+              <View
+                icon={cellType.icon}
                 onMouseDown={(evt: any) => {
                   if (!cellType.disabled) {
-                    onMouseDown(evt, cellType.meta.type);
+                    onMouseDown(evt, cellType.type);
                   }
                 }}
               />
             </div>
-            <p className={styles.cellTitle}>{cellType.meta?.label}</p>
+            <p className={styles.cellTitle}>{cellType.label}</p>
           </div>
         );
       })}
