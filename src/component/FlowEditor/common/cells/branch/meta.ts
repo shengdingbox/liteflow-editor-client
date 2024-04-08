@@ -1,4 +1,4 @@
 export default <FlowNodeMeta>{
-  label: '节点',
-  type: 'flow-branch',
+  label: '条件(If)',
+  type: 'Branch',
 };

@@ -27,14 +27,6 @@ Node.config({
     },
   },
   data: {
-    label: meta.label,
-    ports: {
-      right: {
-        condition: 'true',
-      },
-      bottom: {
-        condition: 'false',
-      },
-    },
+    label: meta.label
   },
 });

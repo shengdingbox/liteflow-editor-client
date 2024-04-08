@@ -1,4 +1,4 @@
 export default <FlowNodeMeta>{
-  label: '节点',
-  type: 'flow-switch',
+  label: '选择(Switch)',
+  type: 'Switch',
 };

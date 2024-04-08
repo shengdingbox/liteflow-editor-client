@@ -1,40 +1,28 @@
 import { Graph } from '@antv/x6';
-import { default as AntiFraud } from './anti-fraud';
-import { default as Rule } from './rule';
-import { default as Rate } from './rate';
-import { default as Limit } from './limit';
-import { default as Price } from './price';
-import { default as Behavior } from './behavior';
-import { default as Switch } from './switch';
-import { default as SwitchStart } from './switch-start';
-import { default as SwitchEnd } from './switch-end';
-import { default as Branch } from './branch';
-import { default as End } from './end';
+// 开始 & 结束
 import { default as Start } from './start';
-import { default as Parallel } from './parallel';
-import { default as Group } from './group';
-import { default as Root } from './root';
+import { default as End } from './end';
+// 顺序：串行、并行
+import { default as Common } from './common';
+import { default as ParallelStart } from './parallel-start';
+import { default as ParallelEnd } from './parallel-end';
+// 分支：选择、条件
+import { default as Switch } from './switch';
+import { default as Branch } from './branch';
+// 循环：TODO
 import { useNodeStatus } from '../useNodeStatus';
 
 export const cellMap: { [key: string]: any } = {};
 export const cellSchemaMap: { [key: string]: any } = {};
 
 [
-  AntiFraud,
-  Rule,
-  Rate,
-  Limit,
-  Price,
-  Behavior,
-  Switch,
-  SwitchStart,
-  SwitchEnd,
+  Common,
+  ParallelStart,
+  ParallelEnd,
   Branch,
   End,
   Start,
-  Parallel,
-  Group,
-  Root,
+  Switch
 ].forEach((cell) => {
   // 注册AntV X6节点
   const { meta, node, view: View } = cell;
@@ -54,19 +42,19 @@ export const cellSchemaMap: { [key: string]: any } = {};
 
 export const NODE_GROUP = {
   key: 'node',
-  name: '节点类',
-  cellTypes: [AntiFraud, Rule, Rate, Limit, Price, Behavior],
+  name: '顺序类',
+  cellTypes: [Common, ParallelStart],
 };
 
 // Switch.disabled = true;
 export const BRANCH_GROUP = {
   key: 'branch',
   name: '分支类',
-  cellTypes: [SwitchStart, SwitchEnd],
+  cellTypes: [Switch, Branch],
 };
 
 export const CONTROL_GROUP = {
   key: 'control',
-  name: '控制类',
-  cellTypes: [Start, End, Branch, Parallel],
+  name: '循环类',
+  cellTypes: [],
 };

@@ -6,10 +6,6 @@ import { Collapse } from 'antd';
 import { Addon, Graph, Node } from '@antv/x6';
 import classNames from 'classnames';
 import { NODE_GROUP, BRANCH_GROUP, CONTROL_GROUP } from '../../common/cells';
-import Switch from '../../common/cells/switch';
-import SwitchNode from '../../common/cells/switch/node';
-import Group from '../../common/cells/group';
-import GroupNode from '../../common/cells/group/node';
 import { Dnd } from '@antv/x6/lib/addon';
 
 const { Panel } = Collapse;
@@ -36,17 +32,17 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
           droppingNode: Node,
           options: Dnd.ValidateNodeOptions,
         ) => {
-          if (droppingNode.shape === Switch.meta.type) {
-            return (droppingNode as SwitchNode).validateNode(
-              droppingNode,
-              options,
-            );
-          } else if (droppingNode.shape === Group.meta.type) {
-            return (droppingNode as GroupNode).validateNode(
-              droppingNode,
-              options,
-            );
-          }
+          // if (droppingNode.shape === Switch.meta.type) {
+          //   return (droppingNode as SwitchNode).validateNode(
+          //     droppingNode,
+          //     options,
+          //   );
+          // } else if (droppingNode.shape === Group.meta.type) {
+          //   return (droppingNode as GroupNode).validateNode(
+          //     droppingNode,
+          //     options,
+          //   );
+          // }
           return true;
         },
       }),
