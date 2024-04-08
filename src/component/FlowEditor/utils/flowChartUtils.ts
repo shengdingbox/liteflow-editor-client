@@ -93,18 +93,3 @@ export const forceLayout = (flowChart: Graph, cfg: any = {}): void => {
   });
 };
 
-export const dagreLayout = (flowChart: Graph): void => {
-  const dagreLayout: DagreLayout = new DagreLayout({
-    type: 'dagre',
-    rankdir,
-    align,
-    nodeSize,
-    ranksep,
-    nodesep,
-    controlPoints,
-  });
-
-  const nodeCells: Node<Node.Properties>[] = flowChart.getNodes();
-
-  
-};

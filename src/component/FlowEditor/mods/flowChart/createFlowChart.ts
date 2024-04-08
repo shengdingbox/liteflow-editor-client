@@ -5,15 +5,11 @@ import {
   Edge,
   EdgeView,
   Graph,
-  Node,
-  Point,
-  Registry,
+  Node
 } from '@antv/x6';
-import { MIN_ZOOM, MAX_ZOOM } from '../../common/const';
+import { MIN_ZOOM, MAX_ZOOM } from '../../constant';
 import { getSelectedEdges, forceLayout } from '../../utils/flowChartUtils';
-import MiniMapSimpleNode from '../../components/miniMapSimpleNode';
-import RootNode from '../../common/cells/root';
-import GroupNode from '../../common/cells/group';
+// import MiniMapSimpleNode from '../../components/miniMapSimpleNode';
 
 const registerEvents = (flowChart: Graph): void => {
   // 当前拖动的节点、自动连接到边

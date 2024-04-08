@@ -1,7 +1,7 @@
 import { safeGet } from '../utils';
 import { message } from 'antd';
 import { Cell, Edge, Graph, Node } from '@antv/x6';
-import { MIN_ZOOM, MAX_ZOOM, ZOOM_STEP } from './const';
+import { MIN_ZOOM, MAX_ZOOM, ZOOM_STEP } from '../constant';
 import { getSelectedNodes } from '../utils/flowChartUtils';
 
 interface Shortcut {

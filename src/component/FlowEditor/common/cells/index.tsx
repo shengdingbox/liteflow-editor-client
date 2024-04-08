@@ -1,4 +1,5 @@
 import { Graph } from '@antv/x6';
+import '@antv/x6-react-shape';
 import classNames from 'classnames';
 import styles from './index.module.less';
 // 开始 & 结束
@@ -40,7 +41,8 @@ export const View: React.FC<any> = (props) => {
   // 注册AntV X6节点
   const { type, label, icon } = cell;
   Graph.registerNode(type, {
-    shape: type,
+    // primer: 'circle',
+    inherit: 'react-shape',
     component(props: any) {
       return <View {...props} icon={icon} />
     },
