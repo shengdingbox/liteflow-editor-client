@@ -39,7 +39,7 @@ export const View: React.FC<any> = (props) => {
   WhileLoop,
 ].forEach((cell) => {
   // 注册AntV X6节点
-  const { type, label, icon } = cell;
+  const { type, label, icon, node = {} } = cell;
   Graph.registerNode(type, {
     // primer: 'circle',
     inherit: 'react-shape',
@@ -69,6 +69,7 @@ export const View: React.FC<any> = (props) => {
     data: {
       label: label,
     },
+    ...node
   });
 });
 

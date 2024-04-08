@@ -153,7 +153,6 @@ const createFlowChart = (
     connecting: {
       snap: true,
       allowBlank: false,
-      allowMulti: 'withPort',
       allowLoop: false,
       allowNode: false,
       allowEdge: false,
@@ -161,10 +160,10 @@ const createFlowChart = (
       highlight: true,
       anchor: 'center',
       connectionPoint: 'bbox',
-      connector: {
-        name: 'jumpover', //两条线交叉时，出现线桥。
-      },
-      router: 'manhattan',
+      // connector: {
+      //   name: 'jumpover', //两条线交叉时，出现线桥。
+      // },
+      router: 'normal',
       validateEdge: (args) => {
         const { edge } = args;
         return !!(edge?.target as any)?.port;
