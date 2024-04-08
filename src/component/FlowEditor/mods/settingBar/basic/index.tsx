@@ -1,10 +1,10 @@
-import React from 'react';
-import FormRender, { useForm } from 'form-render';
+import React, { useEffect } from 'react';
 import { Graph } from '@antv/x6';
+import { Select } from 'antd';
 import { forceLayout } from '../../../utils/flowChartUtils';
-import schema from './schema';
+import mocks from './mockData';
+import render from '../model';
 import styles from './index.module.less';
-import begin from './widgets/begin';
 
 interface IProps {
   flowChart: Graph;
@@ -12,20 +12,27 @@ interface IProps {
 
 const Basic: React.FC<IProps> = (props) => {
   const { flowChart } = props;
-  const form = useForm();
-
-  const onValuesChange = () => {
-    forceLayout(flowChart, form.getValues());
+  const handleOnChange = (value: string) => {
+    const mockData = mocks[value] as any;
+    const modelJSON = render(mockData);
+    flowChart.fromJSON(modelJSON);
+    forceLayout(flowChart);
   };
+
+  useEffect(() => {
+    const modelJSON = render(mocks.THEN);
+    flowChart.fromJSON(modelJSON);
+    forceLayout(flowChart);
+  }, [])
 
   return (
     <div className={styles.container}>
-      <FormRender
-        form={form}
-        schema={schema as any}
-        widgets={{ begin }}
-        onValuesChange={onValuesChange}
-      />
+      <Select defaultValue={'THEN'} onChange={handleOnChange}>
+        <Select.Option value='THEN'>串行编排(THEN)</Select.Option>
+        <Select.Option value='WHEN'>并行编排(WHEN)</Select.Option>
+        <Select.Option value='SWITCH'>选择编排(SWITCH)</Select.Option>
+        <Select.Option value='IF'>条件编排(IF)</Select.Option>
+      </Select>
     </div>
   );
 };

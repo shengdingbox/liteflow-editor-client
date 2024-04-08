@@ -50,7 +50,7 @@ export const toSelectedCellsJSON = (
 };
 
 const rankdir: DagreLayoutOptions['rankdir'] = 'LR';
-const align: DagreLayoutOptions['align'] = 'UL';
+const align: DagreLayoutOptions['align'] = undefined;
 const nodeSize: number = 30;
 const ranksep: number = 20;
 const nodesep: number = 20;

@@ -37,7 +37,7 @@ const SettingBar: React.FC<IProps> = (props) => {
           alignItems: 'center',
         }}
       >
-        <TabPane tab={'Dagre配置'} key={'basic'}>
+        <TabPane tab={'测试'} key={'basic'}>
           <Basic flowChart={flowChart} />
         </TabPane>
       </Tabs>
