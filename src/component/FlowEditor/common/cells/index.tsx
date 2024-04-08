@@ -11,7 +11,9 @@ import { default as ParallelEnd } from './parallel-end';
 // 分支：选择、条件
 import { default as Switch } from './switch';
 import { default as Branch } from './branch';
-// 循环：TODO
+// 循环
+import { default as ForLoop } from './for-loop'
+import { default as WhileLoop } from './while-loop'
 
 
 export const View: React.FC<any> = (props) => {
@@ -25,13 +27,15 @@ export const View: React.FC<any> = (props) => {
 
 
 [
+  Start,
+  End,
   Common,
   ParallelStart,
   ParallelEnd,
   Branch,
-  End,
-  Start,
-  Switch
+  Switch,
+  ForLoop,
+  WhileLoop,
 ].forEach((cell) => {
   // 注册AntV X6节点
   const { type, label, icon } = cell;
@@ -82,5 +86,5 @@ export const BRANCH_GROUP = {
 export const CONTROL_GROUP = {
   key: 'control',
   name: '循环类',
-  cellTypes: [],
+  cellTypes: [ForLoop, WhileLoop],
 };

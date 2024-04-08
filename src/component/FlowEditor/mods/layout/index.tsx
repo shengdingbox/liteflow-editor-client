@@ -32,6 +32,14 @@ const Layout: React.FC<IProps> = (props) => {
     <div className={styles.container}>
       <div className={styles.toolBar}>{toolBar}</div>
       <SplitPane split={'vertical'}>
+        <Pane
+          className={styles.sideBar}
+          minSize={'145px'}
+          maxSize={'443px'}
+          initialSize={'267px'}
+        >
+          {sideBar}
+        </Pane>
         <SplitPane split={'horizontal'}>
           {props.children}
           <Pane
@@ -43,14 +51,6 @@ const Layout: React.FC<IProps> = (props) => {
             {settingBar}
           </Pane>
         </SplitPane>
-        <Pane
-          className={styles.sideBar}
-          minSize={'145px'}
-          maxSize={'443px'}
-          initialSize={'267px'}
-        >
-          {sideBar}
-        </Pane>
       </SplitPane>
     </div>
   );
