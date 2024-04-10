@@ -174,7 +174,7 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
       label: { text: '' },
     },
   };
-  const [first, last = { type: 'Virtual', id: 'v' }] = children;
+  const [first, last] = children;
   const trueNode = parse({
     data: first,
     cells,
@@ -186,12 +186,26 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     source: trueNode.id,
     target: end.id,
   });
-  const falseNode = parse({
-    data: last,
-    cells,
-    previous: start,
-    options: { edge: { label: 'false' } },
-  });
+  let falseNode;
+  if (!last) {
+    falseNode = parse({
+      data: { type: 'Virtual', id: 'v' },
+      cells,
+      previous: start,
+      options: {
+        edge: { label: 'false' },
+        node: { attrs: { label: { text: '' } } },
+      },
+    });
+  } else {
+    falseNode = parse({
+      data: last,
+      cells,
+      previous: start,
+      options: { edge: { label: 'false' } },
+    });
+  }
+
   cells.push({
     shape: 'edge',
     source: falseNode.id,
@@ -210,6 +224,7 @@ function parseCommon({ data, cells, previous, options = {} }: ParseParameters) {
     attrs: {
       label: { text: id },
     },
+    ...(options.node || {}),
   };
   cells.push(common);
   cells.push({

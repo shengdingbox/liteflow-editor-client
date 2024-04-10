@@ -8,7 +8,7 @@
                     <g id="编组-16" transform="translate(10.000000, 0.000000)">
                         <g id="编组" transform="translate(2.000000, 2.000000)">
                             <g id="加" transform="translate(1.000000, 1.000000)">
-                                <circle id="椭圆形" cx="9" cy="9" r="9"></circle>
+                                <circle id="椭圆形" cx="9" cy="9" r="9" stroke-dasharray="1"></circle>
                                 <line x1="4.15384615" y1="9" x2="13.6158601" y2="9" id="路径-3"></line>
                                 <line x1="8.88485313" y1="13.731007" x2="8.88485313" y2="4.26899303" id="路径-3备份"></line>
                             </g>
