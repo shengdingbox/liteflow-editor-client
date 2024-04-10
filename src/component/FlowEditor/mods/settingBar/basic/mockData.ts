@@ -42,4 +42,46 @@ export default {
     condition: { type: 'Branch', id: 'x' },
     children: [{ type: 'Common', id: 'a' }],
   },
+  // FOR循环
+  FOR: {
+    type: 'FOR',
+    condition: { type: 'For', id: 'x' },
+    children: [
+      {
+        type: 'THEN',
+        children: [
+          { type: 'Common', id: 'a' },
+          { type: 'Common', id: 'b' },
+        ],
+      },
+    ],
+  },
+  // WHILE循环
+  WHILE: {
+    type: 'WHILE',
+    condition: { type: 'While', id: 'x' },
+    children: [
+      {
+        type: 'THEN',
+        children: [
+          { type: 'Common', id: 'a' },
+          { type: 'Common', id: 'b' },
+        ],
+      },
+    ],
+  },
+  // ITERATOR循环
+  ITERATOR: {
+    type: 'ITERATOR',
+    condition: { type: 'Iterator', id: 'x' },
+    children: [
+      {
+        type: 'THEN',
+        children: [
+          { type: 'Common', id: 'a' },
+          { type: 'Common', id: 'b' },
+        ],
+      },
+    ],
+  },
 } as Record<string, any>;

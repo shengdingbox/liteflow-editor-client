@@ -1,9 +1,9 @@
 import icon from './icon.svg';
 
 const config = {
-  label: 'For循环',
-  type: 'ForLoop',
-  icon
+  label: 'While循环',
+  type: 'While',
+  icon,
 };
 
 export default config;

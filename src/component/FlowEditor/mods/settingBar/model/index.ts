@@ -53,6 +53,12 @@ function parse({
       return parseSwitch({ data, cells, previous, options });
     case 'IF':
       return parseIf({ data, cells, previous, options });
+    case 'FOR':
+      return parseFor({ data, cells, previous, options });
+    case 'WHILE':
+      return parseWhile({ data, cells, previous, options });
+    case 'ITERATOR':
+      return parseIterator({ data, cells, previous, options });
     case 'Common':
     default:
       return parseCommon({ data, cells, previous, options });
@@ -210,6 +216,114 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     shape: 'edge',
     source: falseNode.id,
     target: end.id,
+  });
+  cells.push(end);
+  return end;
+}
+
+function parseFor({ data, cells, previous, options }: ParseParameters) {
+  const { condition, children } = data;
+  const start = {
+    id: condition.id,
+    shape: condition.type,
+    view: 'react-shape-view',
+    attrs: {
+      label: { text: condition.id },
+    },
+  };
+  cells.push(start);
+  cells.push({
+    shape: 'edge',
+    source: previous.id,
+    target: start.id,
+  });
+  const end = {
+    id: 'switchEnd',
+    shape: 'ParallelEnd',
+    view: 'react-shape-view',
+    attrs: {
+      label: { text: '' },
+    },
+  };
+  children.forEach((child: Record<string, any>) => {
+    const next = parse({ data: child, cells, previous: start, options });
+    cells.push({
+      shape: 'edge',
+      source: next.id,
+      target: end.id,
+    });
+  });
+  cells.push(end);
+  return end;
+}
+
+function parseWhile({ data, cells, previous, options }: ParseParameters) {
+  const { condition, children } = data;
+  const start = {
+    id: condition.id,
+    shape: condition.type,
+    view: 'react-shape-view',
+    attrs: {
+      label: { text: condition.id },
+    },
+  };
+  cells.push(start);
+  cells.push({
+    shape: 'edge',
+    source: previous.id,
+    target: start.id,
+  });
+  const end = {
+    id: 'switchEnd',
+    shape: 'ParallelEnd',
+    view: 'react-shape-view',
+    attrs: {
+      label: { text: '' },
+    },
+  };
+  children.forEach((child: Record<string, any>) => {
+    const next = parse({ data: child, cells, previous: start, options });
+    cells.push({
+      shape: 'edge',
+      source: next.id,
+      target: end.id,
+    });
+  });
+  cells.push(end);
+  return end;
+}
+
+function parseIterator({ data, cells, previous, options }: ParseParameters) {
+  const { condition, children } = data;
+  const start = {
+    id: condition.id,
+    shape: condition.type,
+    view: 'react-shape-view',
+    attrs: {
+      label: { text: condition.id },
+    },
+  };
+  cells.push(start);
+  cells.push({
+    shape: 'edge',
+    source: previous.id,
+    target: start.id,
+  });
+  const end = {
+    id: 'switchEnd',
+    shape: 'ParallelEnd',
+    view: 'react-shape-view',
+    attrs: {
+      label: { text: '' },
+    },
+  };
+  children.forEach((child: Record<string, any>) => {
+    const next = parse({ data: child, cells, previous: start, options });
+    cells.push({
+      shape: 'edge',
+      source: next.id,
+      target: end.id,
+    });
   });
   cells.push(end);
   return end;

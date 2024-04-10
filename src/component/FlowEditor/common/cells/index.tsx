@@ -13,8 +13,9 @@ import { default as ParallelEnd } from './parallel-end';
 import { default as Switch } from './switch';
 import { default as Branch } from './branch';
 // 循环
-import { default as ForLoop } from './for-loop';
-import { default as WhileLoop } from './while-loop';
+import { default as For } from './for';
+import { default as While } from './while';
+import { default as Iterator } from './iterator';
 // 其他辅助节点
 import { default as Virtual } from './virtual';
 import { default as Placeholder } from './placeholder';
@@ -39,8 +40,9 @@ export const View: React.FC<any> = (props) => {
   ParallelEnd,
   Branch,
   Switch,
-  ForLoop,
-  WhileLoop,
+  For,
+  While,
+  Iterator,
   Virtual,
   Placeholder,
 ].forEach((cell) => {
@@ -95,5 +97,5 @@ export const BRANCH_GROUP = {
 export const CONTROL_GROUP = {
   key: 'control',
   name: '循环类',
-  cellTypes: [ForLoop, WhileLoop],
+  cellTypes: [For, While, Iterator],
 };
