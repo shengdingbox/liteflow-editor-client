@@ -1,9 +1,9 @@
 import icon from './icon.svg';
 
 const config = {
-  label: '条件(If)',
-  type: 'Branch',
-  icon
+  label: '',
+  type: 'Placeholder',
+  icon,
 };
 
 export default config;
