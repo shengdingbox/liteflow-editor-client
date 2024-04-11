@@ -55,6 +55,7 @@ const Basic: React.FC<IProps> = (props) => {
           },
         ]}
       />
+      <div className={styles.elContentWrapper}>THEN(a, b, c, d)</div>
     </div>
   );
 };
