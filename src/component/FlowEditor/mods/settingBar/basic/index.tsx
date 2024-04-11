@@ -27,14 +27,34 @@ const Basic: React.FC<IProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      <Select defaultValue={'THEN'} onChange={handleOnChange}>
-        <Select.Option value="THEN">串行编排(THEN)</Select.Option>
-        <Select.Option value="WHEN">并行编排(WHEN)</Select.Option>
-        <Select.Option value="SWITCH">选择编排(SWITCH)</Select.Option>
-        <Select.Option value="IF">条件编排(IF)</Select.Option>
-        <Select.Option value="FOR">FOR循环</Select.Option>
-        <Select.Option value="WHILE">WHILE循环</Select.Option>
-      </Select>
+      <Select
+        defaultValue={'THEN'}
+        style={{ width: 200 }}
+        onChange={handleOnChange}
+        options={[
+          {
+            label: '顺序类',
+            options: [
+              { label: '串行编排(THEN)', value: 'THEN' },
+              { label: '并行编排(WHEN)', value: 'WHEN' },
+            ],
+          },
+          {
+            label: '分支类',
+            options: [
+              { label: '选择编排(SWITCH)', value: 'SWITCH' },
+              { label: '条件编排(IF)', value: 'IF' },
+            ],
+          },
+          {
+            label: '循环类',
+            options: [
+              { label: 'FOR循环', value: 'FOR' },
+              { label: 'WHILE循环', value: 'WHILE' },
+            ],
+          },
+        ]}
+      />
     </div>
   );
 };
