@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>juecefenzu</title>
-    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="策略项目管理" transform="translate(-1293.000000, -431.000000)" stroke="#0086FF" stroke-width="1.6">
-            <g id="流程控制" transform="translate(1268.000000, 196.000000)">
-                <g id="icon" transform="translate(12.000000, 235.000000)">
-                    <g id="编组" transform="translate(12.000000, 1.000000)">
-                        <g id="编组" transform="translate(1.200000, 2.300000)">
-                            <line x1="1.9" y1="1.365625" x2="4.75" y2="1.365625" id="直线-2" stroke-linecap="square"></line>
-                            <line x1="0" y1="8.64895833" x2="4.75" y2="8.64895833" id="直线-2备份" stroke-linecap="square"></line>
-                            <line x1="1.425" y1="1.365625" x2="1.425" y2="15.9322917" id="直线-2备份-3" stroke-linecap="square"></line>
-                            <line x1="1.9" y1="15.9322917" x2="4.75" y2="15.9322917" id="直线-2备份-2" stroke-linecap="square"></line>
-                            <line x1="18.05" y1="1.365625" x2="20.9" y2="1.365625" id="直线-2备份-7" stroke-linecap="square"></line>
-                            <line x1="18.05" y1="8.64895833" x2="22.8" y2="8.64895833" id="直线-2备份-6" stroke-linecap="square"></line>
-                            <line x1="21.375" y1="1.365625" x2="21.375" y2="15.9322917" id="直线-2备份-5" stroke-linecap="square"></line>
-                            <line x1="18.05" y1="15.9322917" x2="20.9" y2="15.9322917" id="直线-2备份-4" stroke-linecap="square"></line>
-                            <rect id="矩形" x="7.125" y="0" width="8.55" height="2.73125"></rect>
-                            <rect id="矩形备份" x="7.125" y="7.28333333" width="8.55" height="2.73125"></rect>
-                            <rect id="矩形备份-2" x="7.125" y="14.5666667" width="8.55" height="2.73125"></rect>
-                        </g>
-                    </g>
-                </g>
-            </g>
-        </g>
+<svg width="24px" height="24px" viewBox="64 64 896 896" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g stroke="#0086FF" fill="#0086FF">
+        <path d="M909.1 209.3l-56.4 44.1C775.8 155.1 656.2 92 521.9 92 290 92 102.3 279.5 102 511.5 101.7 743.7 289.8 932 521.9 932c181.3 0 335.8-115 394.6-276.1 1.5-4.2-.7-8.9-4.9-10.3l-56.7-19.5a8 8 0 00-10.1 4.8c-1.8 5-3.8 10-5.9 14.9-17.3 41-42.1 77.8-73.7 109.4A344.77 344.77 0 01655.9 829c-42.3 17.9-87.4 27-133.8 27-46.5 0-91.5-9.1-133.8-27A341.5 341.5 0 01279 755.2a342.16 342.16 0 01-73.7-109.4c-17.9-42.4-27-87.4-27-133.9s9.1-91.5 27-133.9c17.3-41 42.1-77.8 73.7-109.4 31.6-31.6 68.4-56.4 109.3-73.8 42.3-17.9 87.4-27 133.8-27 46.5 0 91.5 9.1 133.8 27a341.5 341.5 0 01109.3 73.8c9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47a8 8 0 003 14.1l175.6 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c-.1-6.6-7.8-10.3-13-6.2z"></path>
     </g>
 </svg>
