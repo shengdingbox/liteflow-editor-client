@@ -45,6 +45,7 @@ function parse({
   options,
 }: ParseParameters): Record<string, any> {
   switch (data.type) {
+    // 1、编排类：顺序、分支、循环
     case 'THEN':
       return parseThen({ data, cells, previous, options });
     case 'WHEN':
@@ -57,6 +58,8 @@ function parse({
     case 'WHILE':
     case 'ITERATOR':
       return parseLoop({ data, cells, previous, options });
+
+    // 2、组件类：顺序、分支、循环
     case 'CommonComponent':
     default:
       return parseCommon({ data, cells, previous, options });
