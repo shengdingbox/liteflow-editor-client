@@ -16,6 +16,7 @@ import { default as Branch } from './branch';
 import { default as For } from './for';
 import { default as While } from './while';
 import { default as Iterator } from './iterator';
+import { default as Group } from './group';
 // 其他辅助节点
 import { default as Virtual } from './virtual';
 import { default as Placeholder } from './placeholder';
@@ -43,9 +44,10 @@ export const View: React.FC<any> = (props) => {
   For,
   While,
   Iterator,
+  Group,
   Virtual,
   Placeholder,
-].forEach((cell) => {
+].forEach((cell: any) => {
   // 注册AntV X6节点
   const { type, label, icon, node = {} } = cell;
   Graph.registerNode(type, {
