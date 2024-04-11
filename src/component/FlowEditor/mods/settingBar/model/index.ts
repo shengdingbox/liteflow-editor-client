@@ -246,14 +246,25 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
       label: { text: '' },
     },
   };
-  children.forEach((child: Record<string, any>) => {
-    const next = parse({ data: child, cells, previous: start, options });
-    cells.push({
-      shape: 'edge',
-      source: next.id,
-      target: end.id,
+  if (children.length === 1 && children[0].type === 'THEN') {
+    children[0].children.forEach((child: Record<string, any>) => {
+      const next = parse({ data: child, cells, previous: start, options });
+      cells.push({
+        shape: 'edge',
+        source: next.id,
+        target: end.id,
+      });
     });
-  });
+  } else {
+    children.forEach((child: Record<string, any>) => {
+      const next = parse({ data: child, cells, previous: start, options });
+      cells.push({
+        shape: 'edge',
+        source: next.id,
+        target: end.id,
+      });
+    });
+  }
   cells.push(end);
   return end;
 }
