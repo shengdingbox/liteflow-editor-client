@@ -99,5 +99,5 @@ export const BRANCH_GROUP = {
 export const CONTROL_GROUP = {
   key: 'control',
   name: '循环类',
-  cellTypes: [For, While, Iterator],
+  cellTypes: [For, While],
 };

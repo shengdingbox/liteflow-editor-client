@@ -34,7 +34,6 @@ const Basic: React.FC<IProps> = (props) => {
         <Select.Option value="IF">条件编排(IF)</Select.Option>
         <Select.Option value="FOR">FOR循环</Select.Option>
         <Select.Option value="WHILE">WHILE循环</Select.Option>
-        <Select.Option value="ITERATOR">ITERATOR循环</Select.Option>
       </Select>
     </div>
   );
