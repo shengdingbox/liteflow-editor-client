@@ -3,55 +3,55 @@ export default {
   THEN: {
     type: 'THEN',
     children: [
-      { type: 'Common', id: 'a' },
-      { type: 'Common', id: 'b' },
-      { type: 'Common', id: 'c' },
-      { type: 'Common', id: 'd' },
+      { type: 'CommonComponent', id: 'a' },
+      { type: 'CommonComponent', id: 'b' },
+      { type: 'CommonComponent', id: 'c' },
+      { type: 'CommonComponent', id: 'd' },
     ],
   },
   // 并行编排(WHEN)
   WHEN: {
     type: 'THEN',
     children: [
-      { type: 'Common', id: 'a' },
+      { type: 'CommonComponent', id: 'a' },
       {
         type: 'WHEN',
         children: [
-          { type: 'Common', id: 'b' },
-          { type: 'Common', id: 'c' },
-          { type: 'Common', id: 'd' },
+          { type: 'CommonComponent', id: 'b' },
+          { type: 'CommonComponent', id: 'c' },
+          { type: 'CommonComponent', id: 'd' },
         ],
       },
-      { type: 'Common', id: 'e' },
+      { type: 'CommonComponent', id: 'e' },
     ],
   },
   // 选择编排(SWITCH)
   SWITCH: {
     type: 'SWITCH',
-    condition: { type: 'Switch', id: 'x' },
+    condition: { type: 'SwitchComponent', id: 'x' },
     children: [
-      { type: 'Common', id: 'a' },
-      { type: 'Common', id: 'b' },
-      { type: 'Common', id: 'c' },
-      { type: 'Common', id: 'd' },
+      { type: 'CommonComponent', id: 'a' },
+      { type: 'CommonComponent', id: 'b' },
+      { type: 'CommonComponent', id: 'c' },
+      { type: 'CommonComponent', id: 'd' },
     ],
   },
   // 条件编排(IF)
   IF: {
     type: 'IF',
-    condition: { type: 'Branch', id: 'x' },
-    children: [{ type: 'Common', id: 'a' }],
+    condition: { type: 'IfComponent', id: 'x' },
+    children: [{ type: 'CommonComponent', id: 'a' }],
   },
   // FOR循环
   FOR: {
     type: 'FOR',
-    condition: { type: 'For', id: 'x' },
+    condition: { type: 'ForComponent', id: 'x' },
     children: [
       {
         type: 'THEN',
         children: [
-          { type: 'Common', id: 'a' },
-          { type: 'Common', id: 'b' },
+          { type: 'CommonComponent', id: 'a' },
+          { type: 'CommonComponent', id: 'b' },
         ],
       },
     ],
@@ -59,13 +59,13 @@ export default {
   // WHILE循环
   WHILE: {
     type: 'WHILE',
-    condition: { type: 'While', id: 'x' },
+    condition: { type: 'WhileComponent', id: 'x' },
     children: [
       {
         type: 'THEN',
         children: [
-          { type: 'Common', id: 'a' },
-          { type: 'Common', id: 'b' },
+          { type: 'CommonComponent', id: 'a' },
+          { type: 'CommonComponent', id: 'b' },
         ],
       },
     ],
@@ -73,13 +73,13 @@ export default {
   // ITERATOR循环
   ITERATOR: {
     type: 'ITERATOR',
-    condition: { type: 'Iterator', id: 'x' },
+    condition: { type: 'IteratorComponent', id: 'x' },
     children: [
       {
         type: 'THEN',
         children: [
-          { type: 'Common', id: 'a' },
-          { type: 'Common', id: 'b' },
+          { type: 'CommonComponent', id: 'a' },
+          { type: 'CommonComponent', id: 'b' },
         ],
       },
     ],

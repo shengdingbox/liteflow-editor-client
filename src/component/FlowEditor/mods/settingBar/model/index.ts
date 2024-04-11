@@ -57,7 +57,7 @@ function parse({
     case 'WHILE':
     case 'ITERATOR':
       return parseLoop({ data, cells, previous, options });
-    case 'Common':
+    case 'CommonComponent':
     default:
       return parseCommon({ data, cells, previous, options });
   }
