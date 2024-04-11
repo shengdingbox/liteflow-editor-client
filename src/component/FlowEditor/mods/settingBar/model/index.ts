@@ -1,3 +1,5 @@
+export { default as toString } from './toString';
+
 export default function render(data: Record<string, any>) {
   const cells: Record<string, any>[] = [];
   const start: Record<string, any> = {

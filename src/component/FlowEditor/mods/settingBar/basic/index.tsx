@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Graph } from '@antv/x6';
 import { Select } from 'antd';
 import { forceLayout } from '../../../utils/flowChartUtils';
 import mocks from './mockData';
-import render from '../model';
+import render, { toString } from '../model';
 import styles from './index.module.less';
 
 interface IProps {
@@ -12,18 +12,25 @@ interface IProps {
 
 const Basic: React.FC<IProps> = (props) => {
   const { flowChart } = props;
+
+  const [elString, setELString] = useState<string>('');
+
   const handleOnChange = (value: string) => {
     const mockData = mocks[value] as any;
     const modelJSON = render(mockData);
     flowChart.fromJSON(modelJSON);
     forceLayout(flowChart);
+
+    setELString(toString(mockData));
   };
 
   useEffect(() => {
     const modelJSON = render(mocks.THEN);
     flowChart.fromJSON(modelJSON);
     forceLayout(flowChart);
-  }, []);
+
+    setELString(toString(mocks.THEN));
+  }, [setELString]);
 
   return (
     <div className={styles.container}>
@@ -55,7 +62,7 @@ const Basic: React.FC<IProps> = (props) => {
           },
         ]}
       />
-      <div className={styles.elContentWrapper}>THEN(a, b, c, d)</div>
+      <div className={styles.elContentWrapper}>{elString}</div>
     </div>
   );
 };
