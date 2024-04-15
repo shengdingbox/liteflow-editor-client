@@ -97,6 +97,7 @@ function parseWhen({ data, cells, previous, options }: ParseParameters) {
     shape: 'edge',
     source: previous.id,
     target: parallelStart.id,
+    attrs: { line: { stroke: '#c1c1c1' } },
   });
   const parallelEnd = {
     id: 'parallelEnd',
@@ -117,6 +118,7 @@ function parseWhen({ data, cells, previous, options }: ParseParameters) {
       shape: 'edge',
       source: next.id,
       target: parallelEnd.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
     });
   });
   cells.push(parallelEnd);
@@ -138,6 +140,7 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
     shape: 'edge',
     source: previous.id,
     target: start.id,
+    attrs: { line: { stroke: '#c1c1c1' } },
   });
   const end = {
     id: 'switchEnd',
@@ -153,6 +156,7 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
       shape: 'edge',
       source: next.id,
       target: end.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
     });
   });
   cells.push(end);
@@ -174,6 +178,7 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     shape: 'edge',
     source: previous.id,
     target: start.id,
+    attrs: { line: { stroke: '#c1c1c1' } },
   });
   const end = {
     id: 'switchEnd',
@@ -194,6 +199,7 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     shape: 'edge',
     source: trueNode.id,
     target: end.id,
+    attrs: { line: { stroke: '#c1c1c1' } },
   });
   let falseNode;
   if (!last) {
@@ -219,6 +225,7 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     shape: 'edge',
     source: falseNode.id,
     target: end.id,
+    attrs: { line: { stroke: '#c1c1c1' } },
   });
   cells.push(end);
   return end;
@@ -239,6 +246,7 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
     shape: 'edge',
     source: previous.id,
     target: start.id,
+    attrs: { line: { stroke: '#c1c1c1' } },
   });
   const end = {
     id: 'loopEnd',
@@ -255,6 +263,7 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
         shape: 'edge',
         source: next.id,
         target: end.id,
+        attrs: { line: { stroke: '#c1c1c1' } },
       });
     });
   } else {
@@ -264,6 +273,7 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
         shape: 'edge',
         source: next.id,
         target: end.id,
+        attrs: { line: { stroke: '#c1c1c1' } },
       });
     });
   }
@@ -289,6 +299,7 @@ function parseCommon({ data, cells, previous, options = {} }: ParseParameters) {
       shape: 'edge',
       source: previous.id,
       target: common.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
       ...(options.edge || {}),
     });
   }
