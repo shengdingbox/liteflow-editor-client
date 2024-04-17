@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Graph } from '@antv/x6';
 import { Select } from 'antd';
 import { forceLayout } from '../../../utils/flowChartUtils';
-import mocks from './mockData';
-import render, { toString } from '../model';
+import mocks from '../../../utils/mockData';
+import render, { toString } from '../../../common/model';
 import styles from './index.module.less';
 
 interface IProps {
