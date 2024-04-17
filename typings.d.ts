@@ -9,14 +9,10 @@ declare module '*.svg' {
   export default url;
 }
 
-declare interface LogicComponentMeta {
-  label: string;
+declare interface FlowNode {
   type: string;
-}
-
-declare interface LogicComponent {
-  meta: LogicComponentMeta;
-  node: any;
-  view: any;
+  label: string;
+  icon: string;
+  node?: any;
   disabled?: boolean;
 }
