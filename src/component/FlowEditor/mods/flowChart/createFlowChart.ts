@@ -165,6 +165,7 @@ const createFlowChart = (
   miniMapContainer: HTMLDivElement,
 ): Graph => {
   const flowChart = new Graph({
+    autoResize: true,
     container,
     rotating: false,
     resizing: false,
