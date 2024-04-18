@@ -1,26 +1,33 @@
+import { StringExt } from '@antv/x6';
 export { default as toString } from './toString';
 
 export default function render(data: Record<string, any>) {
   const cells: Record<string, any>[] = [];
+  // 1. 首先：添加一个开始节点
   const start: Record<string, any> = {
-    id: 'start',
+    id: StringExt.uuid(),
     shape: 'Start',
     view: 'react-shape-view',
     attrs: {
       label: { text: '开始' },
     },
+    data,
   };
+
   cells.push(start);
 
+  // 2. 其次：解析已有的节点
   const next: Record<string, any> = parse({ data, cells, previous: start });
 
+  // 3. 最后：添加一个结束节点
   const last = {
-    id: 'end',
+    id: StringExt.uuid(),
     shape: 'End',
     view: 'react-shape-view',
     attrs: {
       label: { text: '结束' },
     },
+    data,
   };
   cells.push(last);
 
@@ -46,6 +53,8 @@ function parse({
   previous,
   options,
 }: ParseParameters): Record<string, any> {
+  if (!data.type) return previous;
+
   switch (data.type) {
     // 1、编排类：顺序、分支、循环
     case 'THEN':
@@ -85,12 +94,13 @@ function parseThen({ data, cells, previous, options }: ParseParameters) {
 function parseWhen({ data, cells, previous, options }: ParseParameters) {
   const { children } = data;
   const parallelStart = {
-    id: 'parallelStart',
+    id: StringExt.uuid(),
     shape: 'ParallelStart',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
+    data,
   };
   cells.push(parallelStart);
   cells.push({
@@ -100,12 +110,13 @@ function parseWhen({ data, cells, previous, options }: ParseParameters) {
     attrs: { line: { stroke: '#c1c1c1' } },
   });
   const parallelEnd = {
-    id: 'parallelEnd',
+    id: StringExt.uuid(),
     shape: 'ParallelEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
+    data,
   };
   children.forEach((child: Record<string, any>) => {
     const next = parse({
@@ -128,12 +139,13 @@ function parseWhen({ data, cells, previous, options }: ParseParameters) {
 function parseSwitch({ data, cells, previous, options }: ParseParameters) {
   const { condition, children } = data;
   const start = {
-    id: condition.id,
+    id: StringExt.uuid(),
     shape: condition.type,
     view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
+    data,
   };
   cells.push(start);
   cells.push({
@@ -143,12 +155,13 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
     attrs: { line: { stroke: '#c1c1c1' } },
   });
   const end = {
-    id: 'switchEnd',
+    id: StringExt.uuid(),
     shape: 'ParallelEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
+    data,
   };
   children.forEach((child: Record<string, any>) => {
     const next = parse({ data: child, cells, previous: start, options });
@@ -166,12 +179,13 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
 function parseIf({ data, cells, previous, options }: ParseParameters) {
   const { condition, children = [] } = data;
   const start = {
-    id: condition.id,
+    id: StringExt.uuid(),
     shape: condition.type,
     view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
+    data,
   };
   cells.push(start);
   cells.push({
@@ -181,12 +195,13 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     attrs: { line: { stroke: '#c1c1c1' } },
   });
   const end = {
-    id: 'switchEnd',
+    id: StringExt.uuid(),
     shape: 'ParallelEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
+    data,
   };
   const [first, last] = children;
   const trueNode = parse({
@@ -234,12 +249,13 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
 function parseLoop({ data, cells, previous, options }: ParseParameters) {
   const { condition, children } = data;
   const start = {
-    id: condition.id,
+    id: StringExt.uuid(),
     shape: condition.type,
     view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
+    data,
   };
   cells.push(start);
   cells.push({
@@ -249,12 +265,13 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
     attrs: { line: { stroke: '#c1c1c1' } },
   });
   const end = {
-    id: 'loopEnd',
+    id: StringExt.uuid(),
     shape: 'ParallelEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
+    data,
   };
   if (children.length === 1 && children[0].type === 'THEN') {
     children[0].children.forEach((child: Record<string, any>) => {
@@ -284,12 +301,13 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
 function parseCommon({ data, cells, previous, options = {} }: ParseParameters) {
   const { id, type } = data;
   const common = {
-    id,
+    id: StringExt.uuid(),
     shape: type,
     view: 'react-shape-view',
     attrs: {
       label: { text: id },
     },
+    data,
     ...(options.node || {}),
   };
   cells.push(common);
