@@ -35,6 +35,7 @@ export default function render(data: Record<string, any>) {
     shape: 'edge',
     source: next.id,
     target: last.id,
+    attrs: { line: { stroke: '#c1c1c1' } },
   });
 
   return { cells };
