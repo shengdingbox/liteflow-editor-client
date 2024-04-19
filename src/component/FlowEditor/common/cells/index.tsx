@@ -70,9 +70,6 @@ export const View: React.FC<any> = (props) => {
         },
       },
     },
-    data: {
-      label: label,
-    },
     ...node,
   });
 });

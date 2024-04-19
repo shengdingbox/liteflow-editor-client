@@ -1,6 +1,14 @@
 import { Cell, Node, Edge } from '@antv/x6';
 export { default as toString } from './toString';
 
+interface ParseParameters {
+  data: Record<string, any>;
+  parent: Record<string, any> | undefined;
+  cells: Cell[];
+  previous: Node;
+  options?: Record<string, any>;
+}
+
 export default function render(data: Record<string, any>) {
   const cells: Cell[] = [];
   // 1. 首先：添加一个开始节点
@@ -12,12 +20,12 @@ export default function render(data: Record<string, any>) {
     },
     data,
   });
-  start.setData({ model: data }, { overwrite: true });
+  start.setData({ model: data, parent: undefined }, { overwrite: true });
 
   cells.push(start);
 
   // 2. 其次：解析已有的节点
-  const next: Cell = parse({ data, cells, previous: start });
+  const next: Cell = parse({ data, parent: undefined, cells, previous: start });
 
   // 3. 最后：添加一个结束节点
   const last: Node = Node.create({
@@ -28,7 +36,7 @@ export default function render(data: Record<string, any>) {
     },
     data,
   });
-  last.setData({ model: data }, { overwrite: true });
+  last.setData({ model: data, parent: undefined }, { overwrite: true });
   cells.push(last);
 
   cells.push(
@@ -43,15 +51,9 @@ export default function render(data: Record<string, any>) {
   return cells;
 }
 
-interface ParseParameters {
-  data: Record<string, any>;
-  cells: Cell[];
-  previous: Node;
-  options?: Record<string, any>;
-}
-
 export function parse({
   data,
+  parent,
   cells,
   previous,
   options,
@@ -61,31 +63,38 @@ export function parse({
   switch (data.type) {
     // 1、编排类：顺序、分支、循环
     case 'THEN':
-      return parseThen({ data, cells, previous, options });
+      return parseThen({ data, parent, cells, previous, options });
     case 'WHEN':
-      return parseWhen({ data, cells, previous, options });
+      return parseWhen({ data, parent, cells, previous, options });
     case 'SWITCH':
-      return parseSwitch({ data, cells, previous, options });
+      return parseSwitch({ data, parent, cells, previous, options });
     case 'IF':
-      return parseIf({ data, cells, previous, options });
+      return parseIf({ data, parent, cells, previous, options });
     case 'FOR':
     case 'WHILE':
     case 'ITERATOR':
-      return parseLoop({ data, cells, previous, options });
+      return parseLoop({ data, parent, cells, previous, options });
 
     // 2、组件类：顺序、分支、循环
     case 'CommonComponent':
     default:
-      return parseCommon({ data, cells, previous, options });
+      return parseCommon({ data, parent, cells, previous, options });
   }
 }
 
-function parseThen({ data, cells, previous, options }: ParseParameters) {
+function parseThen({
+  data,
+  parent,
+  cells,
+  previous,
+  options,
+}: ParseParameters) {
   const { children } = data;
   let last: Node = previous;
-  children.forEach((child: Record<string, any>, index: number) => {
+  children.forEach((child: Record<string, any>) => {
     last = parse({
       data: child,
+      parent: data,
       cells,
       previous: last,
       options,
@@ -94,7 +103,13 @@ function parseThen({ data, cells, previous, options }: ParseParameters) {
   return last;
 }
 
-function parseWhen({ data, cells, previous, options }: ParseParameters) {
+function parseWhen({
+  data,
+  parent,
+  cells,
+  previous,
+  options,
+}: ParseParameters) {
   const { children } = data;
   const start = Node.create({
     shape: 'When',
@@ -104,7 +119,7 @@ function parseWhen({ data, cells, previous, options }: ParseParameters) {
     },
     data,
   });
-  start.setData({ model: data }, { overwrite: true });
+  start.setData({ model: data, parent }, { overwrite: true });
   cells.push(start);
   cells.push(
     Edge.create({
@@ -122,10 +137,11 @@ function parseWhen({ data, cells, previous, options }: ParseParameters) {
     },
     data,
   });
-  end.setData({ model: data }, { overwrite: true });
+  end.setData({ model: data, parent }, { overwrite: true });
   children.forEach((child: Record<string, any>) => {
     const next = parse({
       data: child,
+      parent: data,
       cells,
       previous: start,
       options,
@@ -143,7 +159,13 @@ function parseWhen({ data, cells, previous, options }: ParseParameters) {
   return end;
 }
 
-function parseSwitch({ data, cells, previous, options }: ParseParameters) {
+function parseSwitch({
+  data,
+  parent,
+  cells,
+  previous,
+  options,
+}: ParseParameters) {
   const { condition, children } = data;
   const start = Node.create({
     shape: condition.type,
@@ -153,7 +175,7 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
     },
     data,
   });
-  start.setData({ model: data }, { overwrite: true });
+  start.setData({ model: data, parent }, { overwrite: true });
   cells.push(start);
   cells.push(
     Edge.create({
@@ -171,9 +193,15 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
     },
     data,
   });
-  end.setData({ model: data }, { overwrite: true });
+  end.setData({ model: data, parent }, { overwrite: true });
   children.forEach((child: Record<string, any>) => {
-    const next = parse({ data: child, cells, previous: start, options });
+    const next = parse({
+      data: child,
+      parent: data,
+      cells,
+      previous: start,
+      options,
+    });
     cells.push(
       Edge.create({
         shape: 'edge',
@@ -187,7 +215,7 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
   return end;
 }
 
-function parseIf({ data, cells, previous, options }: ParseParameters) {
+function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
   const { condition, children = [] } = data;
   const start = Node.create({
     shape: condition.type,
@@ -197,7 +225,7 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     },
     data,
   });
-  start.setData({ model: data }, { overwrite: true });
+  start.setData({ model: data, parent }, { overwrite: true });
   cells.push(start);
   cells.push(
     Edge.create({
@@ -215,10 +243,11 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     },
     data,
   });
-  end.setData({ model: data }, { overwrite: true });
+  end.setData({ model: data, parent }, { overwrite: true });
   const [first, last] = children;
   const trueNode = parse({
     data: first,
+    parent: data,
     cells,
     previous: start,
     options: { edge: { label: 'true' } },
@@ -235,6 +264,7 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
   if (!last) {
     falseNode = parse({
       data: { type: 'Virtual', id: 'v' },
+      parent: data,
       cells,
       previous: start,
       options: {
@@ -245,6 +275,7 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
   } else {
     falseNode = parse({
       data: last,
+      parent: data,
       cells,
       previous: start,
       options: { edge: { label: 'false' } },
@@ -263,7 +294,13 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
   return end;
 }
 
-function parseLoop({ data, cells, previous, options }: ParseParameters) {
+function parseLoop({
+  data,
+  parent,
+  cells,
+  previous,
+  options,
+}: ParseParameters) {
   const { condition, children } = data;
   const start = Node.create({
     shape: condition.type,
@@ -273,7 +310,7 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
     },
     data,
   });
-  start.setData({ model: data }, { overwrite: true });
+  start.setData({ model: data, parent }, { overwrite: true });
   cells.push(start);
   cells.push(
     Edge.create({
@@ -291,10 +328,16 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
     },
     data,
   });
-  end.setData({ model: data }, { overwrite: true });
+  end.setData({ model: data, parent }, { overwrite: true });
   if (children.length === 1 && children[0].type === 'THEN') {
     children[0].children.forEach((child: Record<string, any>) => {
-      const next = parse({ data: child, cells, previous: start, options });
+      const next = parse({
+        data: child,
+        parent: data,
+        cells,
+        previous: start,
+        options,
+      });
       cells.push(
         Edge.create({
           shape: 'edge',
@@ -306,7 +349,13 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
     });
   } else {
     children.forEach((child: Record<string, any>) => {
-      const next = parse({ data: child, cells, previous: start, options });
+      const next = parse({
+        data: child,
+        parent: data,
+        cells,
+        previous: start,
+        options,
+      });
       cells.push(
         Edge.create({
           shape: 'edge',
@@ -321,7 +370,13 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
   return end;
 }
 
-function parseCommon({ data, cells, previous, options = {} }: ParseParameters) {
+function parseCommon({
+  data,
+  parent,
+  cells,
+  previous,
+  options = {},
+}: ParseParameters) {
   const { id, type } = data;
   const common = Node.create({
     shape: type,
@@ -332,7 +387,7 @@ function parseCommon({ data, cells, previous, options = {} }: ParseParameters) {
     data,
     ...(options.node || {}),
   });
-  common.setData({ model: data }, { overwrite: true });
+  common.setData({ model: data, parent }, { overwrite: true });
   cells.push(common);
 
   if (previous) {

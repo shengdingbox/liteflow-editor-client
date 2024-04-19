@@ -13,7 +13,7 @@ interface IProps {
 const Basic: React.FC<IProps> = (props) => {
   const { flowChart } = props;
 
-  const [selectedValue, setSelectedValue] = useState<string>('WHEN');
+  const [selectedValue, setSelectedValue] = useState<string>('THEN');
   const [elString, setELString] = useState<string>('');
 
   const handleOnChange = (value: string = selectedValue) => {
@@ -27,12 +27,12 @@ const Basic: React.FC<IProps> = (props) => {
   };
 
   useEffect(() => {
-    const modelJSON = render(mocks.WHEN);
+    const modelJSON = render(mocks[selectedValue]);
     flowChart.resetCells(modelJSON);
     forceLayout(flowChart);
 
-    setELString(toString(mocks.WHEN));
-  }, [setELString]);
+    setELString(toString(mocks[selectedValue]));
+  }, [setELString, selectedValue]);
 
   useEffect(() => {
     flowChart.on('model:change', handleOnChange);

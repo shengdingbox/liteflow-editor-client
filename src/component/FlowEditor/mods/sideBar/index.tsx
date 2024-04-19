@@ -51,6 +51,30 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             ) as Edge;
             switch (droppingNode.shape) {
               case 'When':
+                let targetNode = currentEdge.getTargetNode();
+                let targetData = targetNode?.getData();
+                let targetModel = targetData.model;
+                let targetParent = targetData.parent;
+                let targetIndex;
+                if (!targetParent) {
+                  targetNode = currentEdge.getSourceNode();
+                  targetData = targetNode?.getData();
+                  targetModel = targetData.model;
+                  targetParent = targetData.parent;
+                  targetIndex = targetParent.children.indexOf(targetModel) + 1;
+                } else {
+                  targetIndex = targetParent.children.indexOf(targetModel);
+                }
+                targetParent.children.splice(targetIndex, 0, {
+                  type: 'WHEN',
+                  children: [
+                    {
+                      type: 'CommonComponent',
+                      id: `xxx${Math.ceil(Math.random() * 100)}`,
+                    },
+                  ],
+                });
+                flowChart.trigger('model:change');
                 break;
               case 'SwitchComponent':
                 break;

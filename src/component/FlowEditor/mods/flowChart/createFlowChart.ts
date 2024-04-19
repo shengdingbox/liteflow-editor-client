@@ -133,6 +133,7 @@ const registerEvents = (flowChart: Graph): void => {
         type: 'CommonComponent',
         id: `xxx${Math.ceil(Math.random() * 100)}`,
       });
+      flowChart.cleanSelection();
       flowChart.trigger('model:change');
     }
   });
