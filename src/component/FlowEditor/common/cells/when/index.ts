@@ -1,12 +1,12 @@
 import icon from './icon.svg';
 
 const config = {
-  label: '结束',
-  type: 'ParallelEnd',
+  label: '并行(When)',
+  type: 'When',
   icon,
   node: {
-    primer: 'circle'
-  }
+    primer: 'circle',
+  },
 };
 
 export default config;

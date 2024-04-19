@@ -97,7 +97,7 @@ function parseThen({ data, cells, previous, options }: ParseParameters) {
 function parseWhen({ data, cells, previous, options }: ParseParameters) {
   const { children } = data;
   const start = Node.create({
-    shape: 'ParallelStart',
+    shape: 'When',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
@@ -115,7 +115,7 @@ function parseWhen({ data, cells, previous, options }: ParseParameters) {
     }),
   );
   const end = Node.create({
-    shape: 'ParallelEnd',
+    shape: 'IntermediateEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
@@ -164,7 +164,7 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
     }),
   );
   const end = Node.create({
-    shape: 'ParallelEnd',
+    shape: 'IntermediateEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
@@ -208,7 +208,7 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     }),
   );
   const end = Node.create({
-    shape: 'ParallelEnd',
+    shape: 'IntermediateEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
@@ -284,7 +284,7 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
     }),
   );
   const end = Node.create({
-    shape: 'ParallelEnd',
+    shape: 'IntermediateEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },

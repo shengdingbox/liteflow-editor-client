@@ -127,7 +127,7 @@ const registerEvents = (flowChart: Graph): void => {
   });
   flowChart.on('node:click', (args) => {
     const targetNode = args.node;
-    if (targetNode.shape === 'ParallelStart') {
+    if (targetNode.shape === 'When') {
       const targetNodeData = targetNode.getData().model;
       targetNodeData.children.push({
         type: 'CommonComponent',

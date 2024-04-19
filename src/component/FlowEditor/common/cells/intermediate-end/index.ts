@@ -1,9 +1,12 @@
 import icon from './icon.svg';
 
 const config = {
-  label: '',
-  type: 'Placeholder',
+  label: '结束',
+  type: 'IntermediateEnd',
   icon,
+  node: {
+    primer: 'circle',
+  },
 };
 
 export default config;

@@ -50,7 +50,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
               edgeViews[0].cell.id,
             ) as Edge;
             switch (droppingNode.shape) {
-              case 'ParallelStart':
+              case 'When':
                 break;
               case 'SwitchComponent':
                 break;

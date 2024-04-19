@@ -7,11 +7,11 @@ import { default as Start } from './start';
 import { default as End } from './end';
 // 顺序：串行、并行
 import { default as Common } from './common';
-import { default as ParallelStart } from './parallel-start';
-import { default as ParallelEnd } from './parallel-end';
+import { default as When } from './when';
+import { default as IntermediateEnd } from './intermediate-end';
 // 分支：选择、条件
 import { default as Switch } from './switch';
-import { default as Branch } from './branch';
+import { default as If } from './if';
 // 循环
 import { default as For } from './for';
 import { default as While } from './while';
@@ -19,7 +19,6 @@ import { default as Iterator } from './iterator';
 import { default as Group } from './group';
 // 其他辅助节点
 import { default as Virtual } from './virtual';
-import { default as Placeholder } from './placeholder';
 
 export const View: React.FC<any> = (props) => {
   const { node, icon, ...rest } = props;
@@ -37,16 +36,15 @@ export const View: React.FC<any> = (props) => {
   Start,
   End,
   Common,
-  ParallelStart,
-  ParallelEnd,
-  Branch,
+  When,
+  IntermediateEnd,
+  If,
   Switch,
   For,
   While,
   Iterator,
   Group,
   Virtual,
-  Placeholder,
 ].forEach((cell: any) => {
   // 注册AntV X6节点
   const { type, label, icon, node = {} } = cell;
@@ -86,14 +84,14 @@ export const View: React.FC<any> = (props) => {
 export const NODE_GROUP = {
   key: 'node',
   name: '顺序类',
-  cellTypes: [Common, ParallelStart],
+  cellTypes: [Common, When],
 };
 
 // Switch.disabled = true;
 export const BRANCH_GROUP = {
   key: 'branch',
   name: '分支类',
-  cellTypes: [Switch, Branch],
+  cellTypes: [Switch, If],
 };
 
 export const CONTROL_GROUP = {
