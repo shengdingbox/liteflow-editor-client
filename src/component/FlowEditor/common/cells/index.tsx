@@ -15,8 +15,6 @@ import { default as If } from './if';
 // 循环
 import { default as For } from './for';
 import { default as While } from './while';
-import { default as Iterator } from './iterator';
-import { default as Group } from './group';
 // 其他辅助节点
 import { default as Virtual } from './virtual';
 
@@ -42,8 +40,6 @@ export const View: React.FC<any> = (props) => {
   Switch,
   For,
   While,
-  Iterator,
-  Group,
   Virtual,
 ].forEach((cell: any) => {
   // 注册AntV X6节点
