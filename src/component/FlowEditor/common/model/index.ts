@@ -1,50 +1,52 @@
-import { StringExt } from '@antv/x6';
+import { Cell, Node, Edge } from '@antv/x6';
 export { default as toString } from './toString';
 
 export default function render(data: Record<string, any>) {
-  const cells: Record<string, any>[] = [];
+  const cells: Cell[] = [];
   // 1. 首先：添加一个开始节点
-  const start: Record<string, any> = {
-    id: StringExt.uuid(),
+  const start: Node = Node.create({
     shape: 'Start',
     view: 'react-shape-view',
     attrs: {
       label: { text: '开始' },
     },
     data,
-  };
+  });
+  start.setData({ model: data }, { overwrite: true });
 
   cells.push(start);
 
   // 2. 其次：解析已有的节点
-  const next: Record<string, any> = parse({ data, cells, previous: start });
+  const next: Cell = parse({ data, cells, previous: start });
 
   // 3. 最后：添加一个结束节点
-  const last = {
-    id: StringExt.uuid(),
+  const last: Node = Node.create({
     shape: 'End',
     view: 'react-shape-view',
     attrs: {
       label: { text: '结束' },
     },
     data,
-  };
+  });
+  last.setData({ model: data }, { overwrite: true });
   cells.push(last);
 
-  cells.push({
-    shape: 'edge',
-    source: next.id,
-    target: last.id,
-    attrs: { line: { stroke: '#c1c1c1' } },
-  });
+  cells.push(
+    Edge.create({
+      shape: 'edge',
+      source: next.id,
+      target: last.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
+    }),
+  );
 
-  return { cells };
+  return cells;
 }
 
 interface ParseParameters {
   data: Record<string, any>;
-  cells: Record<string, any>[];
-  previous: Record<string, any>;
+  cells: Cell[];
+  previous: Node;
   options?: Record<string, any>;
 }
 
@@ -53,7 +55,7 @@ export function parse({
   cells,
   previous,
   options,
-}: ParseParameters): Record<string, any> {
+}: ParseParameters): Node {
   if (!data.type) return previous;
 
   switch (data.type) {
@@ -80,12 +82,12 @@ export function parse({
 
 function parseThen({ data, cells, previous, options }: ParseParameters) {
   const { children } = data;
-  let last: Record<string, any> = {};
+  let last: Node = previous;
   children.forEach((child: Record<string, any>, index: number) => {
     last = parse({
       data: child,
       cells,
-      previous: index === 0 ? previous : last,
+      previous: last,
       options,
     });
   });
@@ -94,84 +96,92 @@ function parseThen({ data, cells, previous, options }: ParseParameters) {
 
 function parseWhen({ data, cells, previous, options }: ParseParameters) {
   const { children } = data;
-  const parallelStart = {
-    id: StringExt.uuid(),
+  const start = Node.create({
     shape: 'ParallelStart',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
     data,
-  };
-  cells.push(parallelStart);
-  cells.push({
-    shape: 'edge',
-    source: previous.id,
-    target: parallelStart.id,
-    attrs: { line: { stroke: '#c1c1c1' } },
   });
-  const parallelEnd = {
-    id: StringExt.uuid(),
+  start.setData({ model: data }, { overwrite: true });
+  cells.push(start);
+  cells.push(
+    Edge.create({
+      shape: 'edge',
+      source: previous.id,
+      target: start.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
+    }),
+  );
+  const end = Node.create({
     shape: 'ParallelEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
     data,
-  };
+  });
+  end.setData({ model: data }, { overwrite: true });
   children.forEach((child: Record<string, any>) => {
     const next = parse({
       data: child,
       cells,
-      previous: parallelStart,
+      previous: start,
       options,
     });
-    cells.push({
-      shape: 'edge',
-      source: next.id,
-      target: parallelEnd.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
-    });
+    cells.push(
+      Edge.create({
+        shape: 'edge',
+        source: next.id,
+        target: end.id,
+        attrs: { line: { stroke: '#c1c1c1' } },
+      }),
+    );
   });
-  cells.push(parallelEnd);
-  return parallelEnd;
+  cells.push(end);
+  return end;
 }
 
 function parseSwitch({ data, cells, previous, options }: ParseParameters) {
   const { condition, children } = data;
-  const start = {
-    id: StringExt.uuid(),
+  const start = Node.create({
     shape: condition.type,
     view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
     data,
-  };
-  cells.push(start);
-  cells.push({
-    shape: 'edge',
-    source: previous.id,
-    target: start.id,
-    attrs: { line: { stroke: '#c1c1c1' } },
   });
-  const end = {
-    id: StringExt.uuid(),
+  start.setData({ model: data }, { overwrite: true });
+  cells.push(start);
+  cells.push(
+    Edge.create({
+      shape: 'edge',
+      source: previous.id,
+      target: start.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
+    }),
+  );
+  const end = Node.create({
     shape: 'ParallelEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
     data,
-  };
+  });
+  end.setData({ model: data }, { overwrite: true });
   children.forEach((child: Record<string, any>) => {
     const next = parse({ data: child, cells, previous: start, options });
-    cells.push({
-      shape: 'edge',
-      source: next.id,
-      target: end.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
-    });
+    cells.push(
+      Edge.create({
+        shape: 'edge',
+        source: next.id,
+        target: end.id,
+        attrs: { line: { stroke: '#c1c1c1' } },
+      }),
+    );
   });
   cells.push(end);
   return end;
@@ -179,31 +189,33 @@ function parseSwitch({ data, cells, previous, options }: ParseParameters) {
 
 function parseIf({ data, cells, previous, options }: ParseParameters) {
   const { condition, children = [] } = data;
-  const start = {
-    id: StringExt.uuid(),
+  const start = Node.create({
     shape: condition.type,
     view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
     data,
-  };
-  cells.push(start);
-  cells.push({
-    shape: 'edge',
-    source: previous.id,
-    target: start.id,
-    attrs: { line: { stroke: '#c1c1c1' } },
   });
-  const end = {
-    id: StringExt.uuid(),
+  start.setData({ model: data }, { overwrite: true });
+  cells.push(start);
+  cells.push(
+    Edge.create({
+      shape: 'edge',
+      source: previous.id,
+      target: start.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
+    }),
+  );
+  const end = Node.create({
     shape: 'ParallelEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
     data,
-  };
+  });
+  end.setData({ model: data }, { overwrite: true });
   const [first, last] = children;
   const trueNode = parse({
     data: first,
@@ -211,12 +223,14 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     previous: start,
     options: { edge: { label: 'true' } },
   });
-  cells.push({
-    shape: 'edge',
-    source: trueNode.id,
-    target: end.id,
-    attrs: { line: { stroke: '#c1c1c1' } },
-  });
+  cells.push(
+    Edge.create({
+      shape: 'edge',
+      source: trueNode.id,
+      target: end.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
+    }),
+  );
   let falseNode;
   if (!last) {
     falseNode = parse({
@@ -237,62 +251,70 @@ function parseIf({ data, cells, previous, options }: ParseParameters) {
     });
   }
 
-  cells.push({
-    shape: 'edge',
-    source: falseNode.id,
-    target: end.id,
-    attrs: { line: { stroke: '#c1c1c1' } },
-  });
+  cells.push(
+    Edge.create({
+      shape: 'edge',
+      source: falseNode.id,
+      target: end.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
+    }),
+  );
   cells.push(end);
   return end;
 }
 
 function parseLoop({ data, cells, previous, options }: ParseParameters) {
   const { condition, children } = data;
-  const start = {
-    id: StringExt.uuid(),
+  const start = Node.create({
     shape: condition.type,
     view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
     data,
-  };
-  cells.push(start);
-  cells.push({
-    shape: 'edge',
-    source: previous.id,
-    target: start.id,
-    attrs: { line: { stroke: '#c1c1c1' } },
   });
-  const end = {
-    id: StringExt.uuid(),
+  start.setData({ model: data }, { overwrite: true });
+  cells.push(start);
+  cells.push(
+    Edge.create({
+      shape: 'edge',
+      source: previous.id,
+      target: start.id,
+      attrs: { line: { stroke: '#c1c1c1' } },
+    }),
+  );
+  const end = Node.create({
     shape: 'ParallelEnd',
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
     data,
-  };
+  });
+  end.setData({ model: data }, { overwrite: true });
   if (children.length === 1 && children[0].type === 'THEN') {
     children[0].children.forEach((child: Record<string, any>) => {
       const next = parse({ data: child, cells, previous: start, options });
-      cells.push({
-        shape: 'edge',
-        source: next.id,
-        target: end.id,
-        attrs: { line: { stroke: '#c1c1c1' } },
-      });
+      cells.push(
+        Edge.create({
+          shape: 'edge',
+          source: next.id,
+          target: end.id,
+          attrs: { line: { stroke: '#c1c1c1' } },
+        }),
+      );
     });
   } else {
     children.forEach((child: Record<string, any>) => {
       const next = parse({ data: child, cells, previous: start, options });
-      cells.push({
-        shape: 'edge',
-        source: next.id,
-        target: end.id,
-        attrs: { line: { stroke: '#c1c1c1' } },
-      });
+      cells.push(
+        Edge.create({
+          shape: 'edge',
+          source: next.id,
+          target: end.id,
+          attrs: { line: { stroke: '#c1c1c1' } },
+        }),
+      );
     });
   }
   cells.push(end);
@@ -301,8 +323,7 @@ function parseLoop({ data, cells, previous, options }: ParseParameters) {
 
 function parseCommon({ data, cells, previous, options = {} }: ParseParameters) {
   const { id, type } = data;
-  const common = {
-    id: StringExt.uuid(),
+  const common = Node.create({
     shape: type,
     view: 'react-shape-view',
     attrs: {
@@ -310,17 +331,20 @@ function parseCommon({ data, cells, previous, options = {} }: ParseParameters) {
     },
     data,
     ...(options.node || {}),
-  };
+  });
+  common.setData({ model: data }, { overwrite: true });
   cells.push(common);
 
   if (previous) {
-    cells.push({
-      shape: 'edge',
-      source: previous.id,
-      target: common.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
-      ...(options.edge || {}),
-    });
+    cells.push(
+      Edge.create({
+        shape: 'edge',
+        source: previous.id,
+        target: common.id,
+        attrs: { line: { stroke: '#c1c1c1' } },
+        ...(options.edge || {}),
+      }),
+    );
   }
   return common;
 }

@@ -125,6 +125,17 @@ const registerEvents = (flowChart: Graph): void => {
   flowChart.on('node:dblclick', () => {
     flowChart.trigger('graph:editNode');
   });
+  flowChart.on('node:click', (args) => {
+    const targetNode = args.node;
+    if (targetNode.shape === 'ParallelStart') {
+      const targetNodeData = targetNode.getData().model;
+      targetNodeData.children.push({
+        type: 'CommonComponent',
+        id: `xxx${Math.ceil(Math.random() * 100)}`,
+      });
+      flowChart.trigger('model:change');
+    }
+  });
   flowChart.on('blank:contextmenu', (args) => {
     const {
       e: { clientX, clientY },

@@ -13,29 +13,38 @@ interface IProps {
 const Basic: React.FC<IProps> = (props) => {
   const { flowChart } = props;
 
+  const [selectedValue, setSelectedValue] = useState<string>('WHEN');
   const [elString, setELString] = useState<string>('');
 
-  const handleOnChange = (value: string) => {
+  const handleOnChange = (value: string = selectedValue) => {
     const mockData = mocks[value] as any;
     const modelJSON = render(mockData);
-    flowChart.fromJSON(modelJSON);
+    flowChart.resetCells(modelJSON);
     forceLayout(flowChart);
 
     setELString(toString(mockData));
+    setSelectedValue(value);
   };
 
   useEffect(() => {
-    const modelJSON = render(mocks.THEN);
-    flowChart.fromJSON(modelJSON);
+    const modelJSON = render(mocks.WHEN);
+    flowChart.resetCells(modelJSON);
     forceLayout(flowChart);
 
-    setELString(toString(mocks.THEN));
+    setELString(toString(mocks.WHEN));
   }, [setELString]);
+
+  useEffect(() => {
+    flowChart.on('model:change', handleOnChange);
+    return () => {
+      flowChart.off('model:change', handleOnChange);
+    };
+  }, [flowChart, handleOnChange]);
 
   return (
     <div className={styles.container}>
       <Select
-        defaultValue={'THEN'}
+        value={selectedValue}
         style={{ width: 200 }}
         onChange={handleOnChange}
         options={[
