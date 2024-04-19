@@ -13,6 +13,29 @@ import { MIN_ZOOM, MAX_ZOOM } from '../../constant';
 import { getSelectedEdges, forceLayout } from '../../utils/flowChartUtils';
 // import MiniMapSimpleNode from './miniMapSimpleNode';
 
+export function findViewsFromPoint(flowChart: Graph, x: number, y: number) {
+  return flowChart
+    .getCells()
+    .map((cell) => flowChart.findViewByCell(cell))
+    .filter((view) => {
+      if (view != null) {
+        let bBox = Dom.getBBox(view.container as any, {
+          target: flowChart.view.stage,
+        });
+        if (bBox.height < 16) {
+          bBox = Rectangle.create({
+            x: bBox.x,
+            y: bBox.y - 8 + bBox.height / 2,
+            width: bBox.width,
+            height: 16,
+          });
+        }
+        return bBox.containsPoint({ x, y });
+      }
+      return false;
+    }) as any[];
+}
+
 const registerEvents = (flowChart: Graph): void => {
   // 当前拖动的节点、自动连接到边
   function autoLinkEdge(edge: Edge | null, args: any) {
@@ -39,34 +62,12 @@ const registerEvents = (flowChart: Graph): void => {
     flowChart.cleanSelection();
     flowChart.select(args.cell);
   });
-  function findViewsFromPoint(x: number, y: number) {
-    return flowChart
-      .getCells()
-      .map((cell) => flowChart.findViewByCell(cell))
-      .filter((view) => {
-        if (view != null) {
-          let bBox = Dom.getBBox(view.container as any, {
-            target: flowChart.view.stage,
-          });
-          if (bBox.height < 16) {
-            bBox = Rectangle.create({
-              x: bBox.x,
-              y: bBox.y - 8 + bBox.height / 2,
-              width: bBox.width,
-              height: 16,
-            });
-          }
-          return bBox.containsPoint({ x, y });
-        }
-        return false;
-      }) as any[];
-  }
-  flowChart.on('node:moving', (args) => {
+  flowChart.on('node:moving', (args: any) => {
     flowChart.getEdges().forEach((edge: Edge) => {
       const edgeView = flowChart.findViewByCell(edge) as EdgeView;
       edgeView?.unhighlight();
     });
-    const cellViews = findViewsFromPoint(args.x, args.y);
+    const cellViews = findViewsFromPoint(flowChart, args.x, args.y);
     const edgeViews = cellViews.filter((cellView: CellView) =>
       cellView.isEdgeView(),
     );
@@ -74,12 +75,12 @@ const registerEvents = (flowChart: Graph): void => {
       edgeView.highlight();
     });
   });
-  flowChart.on('node:moved', (args) => {
+  flowChart.on('node:moved', (args: any) => {
     flowChart.getEdges().forEach((edge: Edge) => {
       const edgeView = flowChart.findViewByCell(edge) as EdgeView;
       edgeView?.unhighlight();
     });
-    const cellViews = findViewsFromPoint(args.x, args.y);
+    const cellViews = findViewsFromPoint(flowChart, args.x, args.y);
     const edgeViews = cellViews.filter((cellView: CellView) =>
       cellView.isEdgeView(),
     );

@@ -3,11 +3,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import 'antd/es/collapse/style';
 import styles from './index.module.less';
 import { Collapse } from 'antd';
-import { Addon, Graph, Node } from '@antv/x6';
+import { Addon, Edge, Graph, Node } from '@antv/x6';
 import classNames from 'classnames';
 import { NODE_GROUP, BRANCH_GROUP, CONTROL_GROUP } from '../../common/cells';
 import { Dnd } from '@antv/x6/lib/addon';
-import { View } from '../../common/cells'
+import { View } from '../../common/cells';
+import { findViewsFromPoint } from '../flowChart/createFlowChart';
+import { parse } from '../../common/model';
 
 const { Panel } = Collapse;
 
@@ -33,7 +35,36 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
           droppingNode: Node,
           options: Dnd.ValidateNodeOptions,
         ) => {
-          return true;
+          const position = droppingNode.getPosition();
+          const size = droppingNode.getSize();
+          const cellViewsFromPoint = findViewsFromPoint(
+            flowChart,
+            position.x + size.width / 2,
+            position.y + size.height / 2,
+          );
+          const edgeViews =
+            cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) ||
+            [];
+          if (edgeViews && edgeViews.length) {
+            const currentEdge: Edge = flowChart.getCellById(
+              edgeViews[0].cell.id,
+            ) as Edge;
+            switch (droppingNode.shape) {
+              case 'ParallelStart':
+                break;
+              case 'SwitchComponent':
+                break;
+              case 'IfComponent':
+                break;
+              case 'ForComponent':
+                break;
+              case 'WhileComponent':
+                break;
+              case 'CommonComponent':
+              default:
+            }
+          }
+          return false;
         },
       }),
     [flowChart],

@@ -48,7 +48,7 @@ interface ParseParameters {
   options?: Record<string, any>;
 }
 
-function parse({
+export function parse({
   data,
   cells,
   previous,
