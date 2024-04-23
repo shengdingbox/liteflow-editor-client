@@ -5,8 +5,8 @@ const config = {
   type: 'End',
   icon,
   node: {
-    primer: 'circle'
-  }
+    primer: 'circle',
+  },
 };
 
 export default config;

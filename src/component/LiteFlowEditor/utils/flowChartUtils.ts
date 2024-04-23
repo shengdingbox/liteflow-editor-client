@@ -92,4 +92,3 @@ export const forceLayout = (flowChart: Graph, cfg: any = {}): void => {
     }
   });
 };
-
