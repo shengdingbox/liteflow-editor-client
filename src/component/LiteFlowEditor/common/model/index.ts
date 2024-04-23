@@ -1,4 +1,5 @@
 import { Cell, Node, Edge } from '@antv/x6';
+import { NodeTypeEnum, ConditionTypeEnum } from '../../constant';
 export { default as toString } from './toString';
 
 interface ParseParameters {
@@ -60,21 +61,21 @@ export function parse({
 
   switch (data.type) {
     // 1、编排类：顺序、分支、循环
-    case 'THEN':
+    case ConditionTypeEnum.TYPE_THEN:
       return parseThen({ data, parent, cells, previous, options });
-    case 'WHEN':
+    case ConditionTypeEnum.TYPE_WHEN:
       return parseWhen({ data, parent, cells, previous, options });
-    case 'SWITCH':
+    case ConditionTypeEnum.TYPE_SWITCH:
       return parseSwitch({ data, parent, cells, previous, options });
-    case 'IF':
+    case ConditionTypeEnum.TYPE_IF:
       return parseIf({ data, parent, cells, previous, options });
-    case 'FOR':
-    case 'WHILE':
-    case 'ITERATOR':
+    case ConditionTypeEnum.TYPE_FOR:
+    case ConditionTypeEnum.TYPE_WHILE:
+    case ConditionTypeEnum.TYPE_ITERATOR:
       return parseLoop({ data, parent, cells, previous, options });
 
     // 2、组件类：顺序、分支、循环
-    case 'CommonComponent':
+    case NodeTypeEnum.COMMON:
     default:
       return parseCommon({ data, parent, cells, previous, options });
   }
@@ -319,7 +320,10 @@ function parseLoop({
     },
   });
   end.setData({ model: data, parent }, { overwrite: true });
-  if (children.length === 1 && children[0].type === 'THEN') {
+  if (
+    children.length === 1 &&
+    children[0].type === ConditionTypeEnum.TYPE_THEN
+  ) {
     children[0].children.forEach((child: Record<string, any>) => {
       const next = parse({
         data: child,

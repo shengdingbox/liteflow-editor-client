@@ -1,8 +1,9 @@
+import { NodeTypeEnum } from '../../../constant';
 import icon from './icon.svg';
 
 const config = {
   label: '选择(Switch)',
-  type: 'SwitchComponent',
+  type: NodeTypeEnum.SWITCH,
   icon,
 };
 

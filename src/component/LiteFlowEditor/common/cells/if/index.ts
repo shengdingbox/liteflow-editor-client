@@ -1,8 +1,9 @@
+import { NodeTypeEnum } from '../../../constant';
 import icon from './icon.svg';
 
 const config = {
   label: '条件(If)',
-  type: 'IfComponent',
+  type: NodeTypeEnum.IF,
   icon,
 };
 

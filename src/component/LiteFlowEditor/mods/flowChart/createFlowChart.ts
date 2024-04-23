@@ -8,7 +8,12 @@ import {
   Graph,
   Rectangle,
 } from '@antv/x6';
-import { MIN_ZOOM, MAX_ZOOM } from '../../constant';
+import {
+  MIN_ZOOM,
+  MAX_ZOOM,
+  NodeTypeEnum,
+  ConditionTypeEnum,
+} from '../../constant';
 import { getSelectedEdges, forceLayout } from '../../utils/flowChartUtils';
 import MiniMapSimpleNode from './miniMapSimpleNode';
 
@@ -110,10 +115,10 @@ const registerEvents = (flowChart: Graph): void => {
   });
   flowChart.on('node:click', (args) => {
     const targetNode = args.node;
-    if (targetNode.shape === 'When') {
+    if (targetNode.shape === ConditionTypeEnum.TYPE_WHEN) {
       const targetNodeData = targetNode.getData().model;
       targetNodeData.children.push({
-        type: 'CommonComponent',
+        type: NodeTypeEnum.COMMON,
         id: `xxx${Math.ceil(Math.random() * 100)}`,
       });
       flowChart.cleanSelection();

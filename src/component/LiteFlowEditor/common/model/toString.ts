@@ -1,3 +1,5 @@
+import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
+
 export default function toString(data: Record<string, any>) {
   let result: string = '';
   result += parse(data);
@@ -7,21 +9,21 @@ export default function toString(data: Record<string, any>) {
 function parse(data: Record<string, any>): string {
   switch (data.type) {
     // 1、编排类：顺序、分支、循环
-    case 'THEN':
+    case ConditionTypeEnum.TYPE_THEN:
       return parseThen(data);
-    case 'WHEN':
+    case ConditionTypeEnum.TYPE_WHEN:
       return parseWhen(data);
-    case 'SWITCH':
+    case ConditionTypeEnum.TYPE_SWITCH:
       return parseSwitch(data);
-    case 'IF':
+    case ConditionTypeEnum.TYPE_IF:
       return parseIf(data);
-    case 'FOR':
-    case 'WHILE':
-    case 'ITERATOR':
+    case ConditionTypeEnum.TYPE_FOR:
+    case ConditionTypeEnum.TYPE_WHILE:
+    case ConditionTypeEnum.TYPE_ITERATOR:
       return parseLoop(data);
 
     // 2、组件类：顺序、分支、循环
-    case 'CommonComponent':
+    case NodeTypeEnum.COMMON:
     default:
       return parseCommon(data);
   }

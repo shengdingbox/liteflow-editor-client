@@ -14,6 +14,7 @@ import {
 import { Dnd } from '@antv/x6/lib/addon';
 import { View } from '../../common/cells';
 import { findViewsFromPoint } from '../flowChart/createFlowChart';
+import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
 
 const { Panel } = Collapse;
 
@@ -70,61 +71,61 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             switch (droppingNode.shape) {
               case 'When':
                 targetParent.children.splice(targetIndex, 0, {
-                  type: 'WHEN',
+                  type: ConditionTypeEnum.TYPE_WHEN,
                   children: [
                     {
-                      type: 'CommonComponent',
+                      type: NodeTypeEnum.COMMON,
                       id: `common${Math.ceil(Math.random() * 100)}`,
                     },
                   ],
                 });
                 flowChart.trigger('model:change');
                 break;
-              case 'SwitchComponent':
+              case NodeTypeEnum.SWITCH:
                 targetParent.children.splice(targetIndex, 0, {
-                  type: 'SWITCH',
+                  type: ConditionTypeEnum.TYPE_SWITCH,
                   condition: {
-                    type: 'SwitchComponent',
+                    type: NodeTypeEnum.SWITCH,
                     id: `x${Math.ceil(Math.random() * 100)}`,
                   },
                   children: [
                     {
-                      type: 'CommonComponent',
+                      type: NodeTypeEnum.COMMON,
                       id: `common${Math.ceil(Math.random() * 100)}`,
                     },
                   ],
                 });
                 flowChart.trigger('model:change');
                 break;
-              case 'IfComponent':
+              case NodeTypeEnum.IF:
                 targetParent.children.splice(targetIndex, 0, {
-                  type: 'IF',
+                  type: ConditionTypeEnum.TYPE_IF,
                   condition: {
-                    type: 'IfComponent',
+                    type: NodeTypeEnum.IF,
                     id: `x${Math.ceil(Math.random() * 100)}`,
                   },
                   children: [
                     {
-                      type: 'CommonComponent',
+                      type: NodeTypeEnum.COMMON,
                       id: `common${Math.ceil(Math.random() * 100)}`,
                     },
                   ],
                 });
                 flowChart.trigger('model:change');
                 break;
-              case 'ForComponent':
+              case NodeTypeEnum.FOR:
                 targetParent.children.splice(targetIndex, 0, {
-                  type: 'FOR',
+                  type: ConditionTypeEnum.TYPE_FOR,
                   condition: {
-                    type: 'ForComponent',
+                    type: NodeTypeEnum.FOR,
                     id: `x${Math.ceil(Math.random() * 100)}`,
                   },
                   children: [
                     {
-                      type: 'THEN',
+                      type: ConditionTypeEnum.TYPE_THEN,
                       children: [
                         {
-                          type: 'CommonComponent',
+                          type: NodeTypeEnum.COMMON,
                           id: `common${Math.ceil(Math.random() * 100)}`,
                         },
                       ],
@@ -133,19 +134,19 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
                 });
                 flowChart.trigger('model:change');
                 break;
-              case 'WhileComponent':
+              case NodeTypeEnum.WHILE:
                 targetParent.children.splice(targetIndex, 0, {
-                  type: 'WHILE',
+                  type: ConditionTypeEnum.TYPE_WHILE,
                   condition: {
-                    type: 'WhileComponent',
+                    type: NodeTypeEnum.WHILE,
                     id: `x${Math.ceil(Math.random() * 100)}`,
                   },
                   children: [
                     {
-                      type: 'THEN',
+                      type: ConditionTypeEnum.TYPE_THEN,
                       children: [
                         {
-                          type: 'CommonComponent',
+                          type: NodeTypeEnum.COMMON,
                           id: `common${Math.ceil(Math.random() * 100)}`,
                         },
                       ],
@@ -154,12 +155,12 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
                 });
                 flowChart.trigger('model:change');
                 break;
-              case 'CommonComponent':
+              case NodeTypeEnum.COMMON:
                 targetParent.children.splice(targetIndex, 0, {
-                  type: 'THEN',
+                  type: ConditionTypeEnum.TYPE_THEN,
                   children: [
                     {
-                      type: 'CommonComponent',
+                      type: NodeTypeEnum.COMMON,
                       id: `common${Math.ceil(Math.random() * 100)}`,
                     },
                   ],
@@ -168,7 +169,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
                 break;
               default:
                 targetParent.children.splice(targetIndex, 0, {
-                  type: 'CommonComponent',
+                  type: NodeTypeEnum.COMMON,
                   id: `common${Math.ceil(Math.random() * 100)}`,
                 });
                 flowChart.trigger('model:change');

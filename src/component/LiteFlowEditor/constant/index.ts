@@ -3,7 +3,7 @@ export const MIN_ZOOM = 0.5;
 export const MAX_ZOOM = 1.5;
 export const ZOOM_STEP = 0.1;
 
-/** 节点组件类型 */
+/** 逻辑组件类型 */
 export enum NodeTypeEnum {
   COMMON = 'NodeComponent', // common, 普通
 
@@ -34,7 +34,7 @@ export enum NodeTypeEnum {
   FALLBACK = 'fallback', // 降级
 }
 
-/** 编排类型 */
+/** 逻辑编排类型 */
 export enum ConditionTypeEnum {
   TYPE_THEN = 'THEN', // then
 

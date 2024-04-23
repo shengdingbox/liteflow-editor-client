@@ -1,8 +1,9 @@
+import { NodeTypeEnum } from '../../../constant';
 import icon from './icon.svg';
 
 const config = {
   label: 'For循环',
-  type: 'ForComponent',
+  type: NodeTypeEnum.FOR,
   icon,
 };
 

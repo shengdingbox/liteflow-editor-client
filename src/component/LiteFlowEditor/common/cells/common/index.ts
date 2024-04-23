@@ -1,8 +1,9 @@
+import { NodeTypeEnum } from '../../../constant';
 import icon from './icon.svg';
 
 const config = {
   label: '串行(Then)',
-  type: 'CommonComponent',
+  type: NodeTypeEnum.COMMON,
   icon,
 };
 
