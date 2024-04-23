@@ -3,7 +3,7 @@ import { Graph } from '@antv/x6';
 import React from 'react';
 
 import makeBtnWidget from './common/makeBtnWidget';
-import { forceLayout } from '../../../utils/flowChartUtils';
+import { forceLayout } from '../../../utils/layout';
 
 interface IProps {
   flowChart: Graph;

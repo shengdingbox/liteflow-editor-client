@@ -14,7 +14,8 @@ import {
   NodeTypeEnum,
   ConditionTypeEnum,
 } from '../../constant';
-import { getSelectedEdges, forceLayout } from '../../utils/flowChartUtils';
+import { forceLayout } from '../../utils/layout';
+import { getSelectedEdges } from '../../utils/flowChartUtils';
 import MiniMapSimpleNode from './miniMapSimpleNode';
 
 export function findViewsFromPoint(flowChart: Graph, x: number, y: number) {
