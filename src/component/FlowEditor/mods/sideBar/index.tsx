@@ -189,7 +189,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
     <div className={styles.container}>
       <Collapse
         className={styles.collapse}
-        defaultActiveKey={['node', 'branch', 'control']}
+        defaultActiveKey={['node', 'sequence', 'branch', 'control']}
       >
         {groups.map((group) => (
           <Panel key={group.key} header={group.name}>
