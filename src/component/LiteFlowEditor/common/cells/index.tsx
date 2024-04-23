@@ -23,12 +23,12 @@ export const View: React.FC<any> = (props) => {
   return (
     <div
       className={classNames(
-        styles.liteFlowShapeWrapper,
-        styles.liteFlowEventShape,
+        styles.liteflowShapeWrapper,
+        styles.liteflowEventShape,
       )}
       {...rest}
     >
-      <img className={styles.liteFlowShapeSvg} src={icon}></img>
+      <img className={styles.liteflowShapeSvg} src={icon}></img>
     </div>
   );
 };

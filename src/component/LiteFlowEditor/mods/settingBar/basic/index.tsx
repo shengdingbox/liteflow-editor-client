@@ -40,7 +40,7 @@ const Basic: React.FC<IProps> = (props) => {
   }, [flowChart, handleOnChange]);
 
   return (
-    <div className={styles.liteFlowEditorBasicContainer}>
+    <div className={styles.liteflowEditorBasicContainer}>
       <Select
         value={selectedValue}
         style={{ width: 200 }}

@@ -186,9 +186,9 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
   }, []);
 
   return (
-    <div className={styles.liteFlowEditorSideBarContainer}>
+    <div className={styles.liteflowEditorSideBarContainer}>
       <Collapse
-        className={styles.liteFlowEditorSideBarCollapse}
+        className={styles.liteflowEditorSideBarCollapse}
         defaultActiveKey={['node', 'sequence', 'branch', 'control']}
       >
         {groups.map((group) => (
@@ -212,16 +212,16 @@ const PanelContent: React.FC<IPanelContentProps> = (props) => {
     dnd.start(Node.create({ shape: cellType }), evt);
   };
   return (
-    <div className={styles.liteFlowEditorSideBarPanelContent}>
+    <div className={styles.liteflowEditorSideBarPanelContent}>
       {cellTypes.map((cellType, index) => {
         return (
           <div
             key={index}
-            className={classNames(styles.liteFlowEditorSideBarCellContainer, {
+            className={classNames(styles.liteflowEditorSideBarCellContainer, {
               [styles.disabled]: cellType.disabled,
             })}
           >
-            <div className={styles.liteFlowEditorSideBarCellWrapper}>
+            <div className={styles.liteflowEditorSideBarCellWrapper}>
               <View
                 icon={cellType.icon}
                 onMouseDown={(evt: any) => {
@@ -231,7 +231,7 @@ const PanelContent: React.FC<IPanelContentProps> = (props) => {
                 }}
               />
             </div>
-            <p className={styles.liteFlowEditorSideBarCellTitle}>
+            <p className={styles.liteflowEditorSideBarCellTitle}>
               {cellType.label}
             </p>
           </div>

@@ -89,9 +89,9 @@ const FlowChart: React.FC<IProps> = (props) => {
   };
 
   return (
-    <div className={styles.liteFlowEditorContainer} ref={wrapperRef}>
-      <div className={styles.liteFlowEditorGraph} ref={graphRef} />
-      <div className={styles.liteFlowEditorMiniMap} ref={miniMapRef} />
+    <div className={styles.liteflowEditorContainer} ref={wrapperRef}>
+      <div className={styles.liteflowEditorGraph} ref={graphRef} />
+      <div className={styles.liteflowEditorMiniMap} ref={miniMapRef} />
       {flowChart && <NodeEditorModal flowChart={flowChart} />}
       {flowChart && (
         <FlowChartContextMenu {...contextMenuInfo} flowChart={flowChart} />

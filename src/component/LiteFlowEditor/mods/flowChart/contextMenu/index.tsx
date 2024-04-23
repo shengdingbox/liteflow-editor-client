@@ -56,7 +56,7 @@ const FlowChartContextMenu: React.FC<IProps> = (props) => {
   return !visible ? null : (
     <div
       ref={menuRef}
-      className={styles.liteFlowEditorContextMenu}
+      className={styles.liteflowEditorContextMenu}
       style={{ left: x, top: y }}
     >
       <Menu mode={'vertical'} selectable={false} onClick={onClickMenu}>
