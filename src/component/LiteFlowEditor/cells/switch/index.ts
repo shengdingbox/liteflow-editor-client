@@ -1,4 +1,4 @@
-import { NodeTypeEnum } from '../../../constant';
+import { NodeTypeEnum } from '../../constant';
 import icon from './icon.svg';
 
 const config = {

@@ -10,9 +10,9 @@ import {
   SEQUENCE_GROUP,
   BRANCH_GROUP,
   CONTROL_GROUP,
-} from '../../common/cells';
+} from '../../cells';
 import { Dnd } from '@antv/x6/lib/addon';
-import { View } from '../../common/cells';
+import { View } from '../../cells';
 import { findViewsFromPoint } from '../flowChart/createFlowChart';
 import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
 
@@ -69,7 +69,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
               targetIndex = targetParent.children.indexOf(targetModel);
             }
             switch (droppingNode.shape) {
-              case 'When':
+              case ConditionTypeEnum.TYPE_WHEN:
                 targetParent.children.splice(targetIndex, 0, {
                   type: ConditionTypeEnum.TYPE_WHEN,
                   children: [

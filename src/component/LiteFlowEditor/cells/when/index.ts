@@ -1,4 +1,4 @@
-import { ConditionTypeEnum } from '../../../constant';
+import { ConditionTypeEnum } from '../../constant';
 import icon from './icon.svg';
 
 const config = {

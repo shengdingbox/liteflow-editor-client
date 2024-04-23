@@ -1,5 +1,5 @@
 import { Cell, Node, Edge } from '@antv/x6';
-import { NodeTypeEnum, ConditionTypeEnum } from '../../constant';
+import { NodeTypeEnum, ConditionTypeEnum } from '../constant';
 export { default as toString } from './toString';
 
 interface ParseParameters {
@@ -111,7 +111,7 @@ function parseWhen({
 }: ParseParameters) {
   const { children } = data;
   const start = Node.create({
-    shape: 'When',
+    shape: ConditionTypeEnum.TYPE_WHEN,
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },

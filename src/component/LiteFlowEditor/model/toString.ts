@@ -1,4 +1,4 @@
-import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
+import { ConditionTypeEnum, NodeTypeEnum } from '../constant';
 
 export default function toString(data: Record<string, any>) {
   let result: string = '';
