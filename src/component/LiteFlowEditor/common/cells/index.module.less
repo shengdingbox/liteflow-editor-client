@@ -1,94 +1,18 @@
-.shapeWrapper {
+.liteFlowShapeWrapper {
   font-size: 12px;
   cursor: pointer;
   pointer-events: auto;
   width: 100%;
   height: 100%;
-  &:hover {
-    .debugPoint {
-      display: flex;
-    }
-  }
 }
 
-.shapeSvg {
+.liteFlowShapeSvg {
   width: 100%;
   height: 100%;
   overflow: visible !important;
 }
 
-.eventShape {
+.liteFlowEventShape {
   width: 100%;
   height: 100%;
-}
-
-.shapeRectangle {
-  width: 100%;
-  height: 100%;
-  overflow: visible !important;
-  border: 2px solid #4ec4fe;
-  background-color: #d9f3ff;
-  border-radius: 10px;
-}
-
-.contentWrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-.iconContainer {
-  width: 16px;
-  height: 16px;
-  margin-left: 4px;
-
-  .icon {
-    font-size: 16px;
-  }
-}
-
-.titleContainer {
-  flex: 1;
-  padding: 10px 6px;
-  text-align: center;
-}
-
-.statusWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 0;
-  font-size: 14px;
-  transform: translateZ(0);
-}
-
-.statusIcon {
-  display: flex;
-  flex-grow: 0;
-  align-items: center;
-  justify-content: center;
-  transform: translateZ(0);
-}
-
-.debugPoint {
-  flex-grow: 0;
-  align-items: center;
-  justify-content: center;
-  transform: translate3d(-14px, -12px, 0);
-  display: flex;
-  opacity: 0.3;
-}
-
-.nodeFocus {
-  .shapeBorderHighlight {
-    stroke: #0098ec;
-    stroke-width: 3px;
-  }
-
-  .shapeRectangle {
-    border-color: #0098ec;
-  }
 }

@@ -23,9 +23,9 @@ const ToolBar: React.FC<IProps> = (props) => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.liteFlowEditorToolBarcontainer}>
       {widgets.map((group, index) => (
-        <div key={index} className={styles.group}>
+        <div key={index} className={styles.liteFlowEditorToolBarGroup}>
           {group.map((ToolItem, index) => {
             return <ToolItem key={index} flowChart={flowChart} />;
           })}

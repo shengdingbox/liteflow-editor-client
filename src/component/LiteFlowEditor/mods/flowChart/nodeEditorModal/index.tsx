@@ -44,7 +44,7 @@ const NodeEditModal: React.FC<IProps> = (props) => {
 
   return (
     <Modal
-      className={styles.modal}
+      className={styles.liteFlowEditorModal}
       width={560}
       title={`${title}-${label}`}
       visible={visible}

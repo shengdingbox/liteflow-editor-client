@@ -29,11 +29,11 @@ const Layout: React.FC<IProps> = (props) => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.toolBar}>{toolBar}</div>
+    <div className={styles.liteFlowEditorLayoutContainer}>
+      <div className={styles.liteFlowEditorToolBar}>{toolBar}</div>
       <SplitPane split={'vertical'}>
         <Pane
-          className={styles.sideBar}
+          className={styles.liteFlowEditorSideBar}
           minSize={'145px'}
           maxSize={'443px'}
           initialSize={'267px'}
@@ -43,7 +43,7 @@ const Layout: React.FC<IProps> = (props) => {
         <SplitPane split={'horizontal'}>
           {props.children}
           <Pane
-            className={styles.settingBar}
+            className={styles.liteFlowEditorSettingBar}
             minSize={'50px'}
             maxSize={'500px'}
             initialSize={'200px'}

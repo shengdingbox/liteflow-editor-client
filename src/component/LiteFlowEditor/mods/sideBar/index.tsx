@@ -186,9 +186,9 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.liteFlowEditorSideBarContainer}>
       <Collapse
-        className={styles.collapse}
+        className={styles.liteFlowEditorSideBarCollapse}
         defaultActiveKey={['node', 'sequence', 'branch', 'control']}
       >
         {groups.map((group) => (
@@ -212,16 +212,16 @@ const PanelContent: React.FC<IPanelContentProps> = (props) => {
     dnd.start(Node.create({ shape: cellType }), evt);
   };
   return (
-    <div className={styles.panelContent}>
+    <div className={styles.liteFlowEditorSideBarPanelContent}>
       {cellTypes.map((cellType, index) => {
         return (
           <div
             key={index}
-            className={classNames(styles.cellContainer, {
+            className={classNames(styles.liteFlowEditorSideBarCellContainer, {
               [styles.disabled]: cellType.disabled,
             })}
           >
-            <div className={styles.cellWrapper}>
+            <div className={styles.liteFlowEditorSideBarCellWrapper}>
               <View
                 icon={cellType.icon}
                 onMouseDown={(evt: any) => {
@@ -231,7 +231,9 @@ const PanelContent: React.FC<IPanelContentProps> = (props) => {
                 }}
               />
             </div>
-            <p className={styles.cellTitle}>{cellType.label}</p>
+            <p className={styles.liteFlowEditorSideBarCellTitle}>
+              {cellType.label}
+            </p>
           </div>
         );
       })}

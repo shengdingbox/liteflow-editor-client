@@ -26,7 +26,7 @@ const SettingBar: React.FC<IProps> = (props) => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.liteFlowEditorSettingBarContainer}>
       <Tabs
         tabBarGutter={0}
         defaultActiveKey={'basic'}
