@@ -6,7 +6,7 @@ import { Graph } from '@antv/x6';
 import createFlowChart from './createFlowChart';
 import NodeEditorModal from './nodeEditorModal';
 import FlowChartContextMenu from './contextMenu';
-import mock from './mock.json';
+import { Provider } from '../../context/GraphContext';
 
 interface IProps {
   onReady: (graph: Graph) => void;
@@ -84,19 +84,22 @@ const FlowChart: React.FC<IProps> = (props) => {
   }, [flowChart]);
 
   const fetchData = (flowChart: Graph) => {
-    // @ts-ignore
-    flowChart.fromJSON(mock);
+    flowChart.fromJSON({ cells: [] });
   };
 
   return (
-    <div className={styles.liteflowEditorContainer} ref={wrapperRef}>
-      <div className={styles.liteflowEditorGraph} ref={graphRef} />
-      <div className={styles.liteflowEditorMiniMap} ref={miniMapRef} />
-      {flowChart && <NodeEditorModal flowChart={flowChart} />}
-      {flowChart && (
-        <FlowChartContextMenu {...contextMenuInfo} flowChart={flowChart} />
-      )}
-    </div>
+    <Provider
+      value={{ graph: flowChart, graphWrapper: wrapperRef, model: null }}
+    >
+      <div className={styles.liteflowEditorContainer} ref={wrapperRef}>
+        <div className={styles.liteflowEditorGraph} ref={graphRef} />
+        <div className={styles.liteflowEditorMiniMap} ref={miniMapRef} />
+        {flowChart && <NodeEditorModal flowChart={flowChart} />}
+        {flowChart && (
+          <FlowChartContextMenu {...contextMenuInfo} flowChart={flowChart} />
+        )}
+      </div>
+    </Provider>
   );
 };
 

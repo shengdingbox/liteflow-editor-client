@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { Context, createContext, RefObject } from 'react';
 import { Graph } from '@antv/x6';
 
 /**
@@ -8,7 +8,7 @@ import { Graph } from '@antv/x6';
 interface IGraphContext {
   model: any;
   graph: Graph | undefined;
-  graphWrapper: HTMLDivElement | undefined;
+  graphWrapper: HTMLDivElement | RefObject<HTMLDivElement> | undefined;
 }
 
 const defaultValue: IGraphContext = {
@@ -17,8 +17,8 @@ const defaultValue: IGraphContext = {
   model: undefined,
 };
 
-export const GraphContext = createContext<IGraphContext>(defaultValue);
-export const GraphProvider = GraphContext.Provider;
-export const GraphConsumer = GraphContext.Consumer;
+export const GraphContext: Context<IGraphContext> = createContext(defaultValue);
+export const Provider = GraphContext.Provider;
+export const Consumer = GraphContext.Consumer;
 
 export default GraphContext;
