@@ -18,7 +18,6 @@ export default function render(data: Record<string, any>) {
     attrs: {
       label: { text: '开始' },
     },
-    data,
   });
   start.setData({ model: data, parent: undefined }, { overwrite: true });
 
@@ -34,7 +33,6 @@ export default function render(data: Record<string, any>) {
     attrs: {
       label: { text: '结束' },
     },
-    data,
   });
   last.setData({ model: data, parent: undefined }, { overwrite: true });
   cells.push(last);
@@ -117,7 +115,6 @@ function parseWhen({
     attrs: {
       label: { text: '' },
     },
-    data,
   });
   start.setData({ model: data, parent }, { overwrite: true });
   cells.push(start);
@@ -135,7 +132,6 @@ function parseWhen({
     attrs: {
       label: { text: '' },
     },
-    data,
   });
   end.setData({ model: data, parent }, { overwrite: true });
   children.forEach((child: Record<string, any>) => {
@@ -173,7 +169,6 @@ function parseSwitch({
     attrs: {
       label: { text: condition.id },
     },
-    data,
   });
   start.setData({ model: data, parent }, { overwrite: true });
   cells.push(start);
@@ -191,7 +186,6 @@ function parseSwitch({
     attrs: {
       label: { text: '' },
     },
-    data,
   });
   end.setData({ model: data, parent }, { overwrite: true });
   children.forEach((child: Record<string, any>) => {
@@ -223,7 +217,6 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
     attrs: {
       label: { text: condition.id },
     },
-    data,
   });
   start.setData({ model: data, parent }, { overwrite: true });
   cells.push(start);
@@ -241,7 +234,6 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
     attrs: {
       label: { text: '' },
     },
-    data,
   });
   end.setData({ model: data, parent }, { overwrite: true });
   const [first, last] = children;
@@ -308,7 +300,6 @@ function parseLoop({
     attrs: {
       label: { text: condition.id },
     },
-    data,
   });
   start.setData({ model: data, parent }, { overwrite: true });
   cells.push(start);
@@ -326,7 +317,6 @@ function parseLoop({
     attrs: {
       label: { text: '' },
     },
-    data,
   });
   end.setData({ model: data, parent }, { overwrite: true });
   if (children.length === 1 && children[0].type === 'THEN') {
@@ -384,7 +374,6 @@ function parseCommon({
     attrs: {
       label: { text: id },
     },
-    data,
     ...(options.node || {}),
   });
   common.setData({ model: data, parent }, { overwrite: true });

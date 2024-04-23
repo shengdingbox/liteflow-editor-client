@@ -9,7 +9,6 @@ import { NODE_GROUP, BRANCH_GROUP, CONTROL_GROUP } from '../../common/cells';
 import { Dnd } from '@antv/x6/lib/addon';
 import { View } from '../../common/cells';
 import { findViewsFromPoint } from '../flowChart/createFlowChart';
-import { parse } from '../../common/model';
 
 const { Panel } = Collapse;
 

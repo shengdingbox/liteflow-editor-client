@@ -6,12 +6,11 @@ import {
   Edge,
   EdgeView,
   Graph,
-  Node,
   Rectangle,
 } from '@antv/x6';
 import { MIN_ZOOM, MAX_ZOOM } from '../../constant';
 import { getSelectedEdges, forceLayout } from '../../utils/flowChartUtils';
-// import MiniMapSimpleNode from './miniMapSimpleNode';
+import MiniMapSimpleNode from './miniMapSimpleNode';
 
 export function findViewsFromPoint(flowChart: Graph, x: number, y: number) {
   return flowChart
@@ -41,16 +40,11 @@ const registerEvents = (flowChart: Graph): void => {
   function autoLinkEdge(edge: Edge | null, args: any) {
     if (edge) {
       flowChart.startBatch('update');
-      const parentNode = edge.getSourceNode()?.getParent();
-      parentNode?.addChild(args.node);
       const oldTarget = edge.getTargetNode() || undefined;
-      const oldPort = edge.getTargetPortId() || 'left';
-      edge.setTarget(args.node, { port: 'left' });
+      edge.setTarget(args.node);
       flowChart.addEdge({
         source: args.node,
-        sourcePort: 'right',
         target: oldTarget,
-        targetPort: oldPort,
       });
       forceLayout(flowChart);
       flowChart.stopBatch('update');
@@ -92,17 +86,6 @@ const registerEvents = (flowChart: Graph): void => {
   flowChart.on('selection:changed', () => {
     flowChart.trigger('toolBar:forceUpdate');
     flowChart.trigger('settingBar:forceUpdate');
-  });
-  flowChart.on('edge:connected', (args) => {
-    const edge = args.edge as Edge;
-    const sourceNode = edge.getSourceNode() as Node;
-    if (sourceNode && sourceNode.shape === 'flow-branch') {
-      const portId = edge.getSourcePortId();
-      if (portId === 'right' || portId === 'bottom') {
-        edge.setLabelAt(0, sourceNode.getPortProp(portId, 'attrs/text/text'));
-        sourceNode.setPortProp(portId, 'attrs/text/text', '');
-      }
-    }
   });
   flowChart.on('edge:selected', (args) => {
     args.edge.attr('line/stroke', '#feb663', { ignore: true });
@@ -260,28 +243,28 @@ const createFlowChart = (
       },
     },
     // https://x6.antv.vision/zh/docs/tutorial/basic/minimap
-    // minimap: {
-    //   width: (150 * container.offsetWidth) / container.offsetHeight,
-    //   height: 150,
-    //   minScale: MIN_ZOOM,
-    //   maxScale: MAX_ZOOM,
-    //   enabled: true,
-    //   scalable: false,
-    //   container: miniMapContainer,
-    //   graphOptions: {
-    //     async: true,
-    //     getCellView(cell: Cell) {
-    //       if (cell.isNode()) {
-    //         return MiniMapSimpleNode;
-    //       }
-    //     },
-    //     createCellView(cell: Cell) {
-    //       if (cell.isEdge()) {
-    //         return null;
-    //       }
-    //     },
-    //   },
-    // },
+    minimap: {
+      width: 150,
+      height: 150,
+      minScale: MIN_ZOOM,
+      maxScale: MAX_ZOOM,
+      enabled: true,
+      scalable: false,
+      container: miniMapContainer,
+      graphOptions: {
+        async: true,
+        getCellView(cell: Cell) {
+          if (cell.isNode()) {
+            return MiniMapSimpleNode;
+          }
+        },
+        createCellView(cell: Cell) {
+          if (cell.isEdge()) {
+            return null;
+          }
+        },
+      },
+    },
     // https://x6.antv.vision/zh/docs/tutorial/basic/scroller
     scroller: {
       enabled: true,
