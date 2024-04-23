@@ -1,9 +1,9 @@
 import icon from './icon.svg';
 
 const config = {
-  label: '',
+  label: '节点',
   type: 'Virtual',
-  icon
+  icon,
 };
 
 export default config;

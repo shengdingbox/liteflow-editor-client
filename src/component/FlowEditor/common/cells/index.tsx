@@ -76,11 +76,16 @@ export const View: React.FC<any> = (props) => {
 
 export const NODE_GROUP = {
   key: 'node',
+  name: '节点类',
+  cellTypes: [Virtual],
+};
+
+export const SEQUENCE_GROUP = {
+  key: 'sequence',
   name: '顺序类',
   cellTypes: [Common, When],
 };
 
-// Switch.disabled = true;
 export const BRANCH_GROUP = {
   key: 'branch',
   name: '分支类',

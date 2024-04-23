@@ -5,7 +5,12 @@ import styles from './index.module.less';
 import { Collapse } from 'antd';
 import { Addon, Edge, Graph, Node } from '@antv/x6';
 import classNames from 'classnames';
-import { NODE_GROUP, BRANCH_GROUP, CONTROL_GROUP } from '../../common/cells';
+import {
+  NODE_GROUP,
+  SEQUENCE_GROUP,
+  BRANCH_GROUP,
+  CONTROL_GROUP,
+} from '../../common/cells';
 import { Dnd } from '@antv/x6/lib/addon';
 import { View } from '../../common/cells';
 import { findViewsFromPoint } from '../flowChart/createFlowChart';
@@ -150,6 +155,17 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
                 flowChart.trigger('model:change');
                 break;
               case 'CommonComponent':
+                targetParent.children.splice(targetIndex, 0, {
+                  type: 'THEN',
+                  children: [
+                    {
+                      type: 'CommonComponent',
+                      id: `common${Math.ceil(Math.random() * 100)}`,
+                    },
+                  ],
+                });
+                flowChart.trigger('model:change');
+                break;
               default:
                 targetParent.children.splice(targetIndex, 0, {
                   type: 'CommonComponent',
@@ -166,7 +182,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
 
   // life
   useEffect(() => {
-    setGroups([NODE_GROUP, BRANCH_GROUP, CONTROL_GROUP]);
+    setGroups([NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP]);
   }, []);
 
   return (

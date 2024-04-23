@@ -19,20 +19,18 @@ const Basic: React.FC<IProps> = (props) => {
   const handleOnChange = (value: string = selectedValue) => {
     const mockData = mocks[value] as any;
     const modelJSON = render(mockData);
+    flowChart.startBatch('update');
     flowChart.resetCells(modelJSON);
     forceLayout(flowChart);
+    flowChart.stopBatch('update');
 
     setELString(toString(mockData));
     setSelectedValue(value);
   };
 
   useEffect(() => {
-    const modelJSON = render(mocks[selectedValue]);
-    flowChart.resetCells(modelJSON);
-    forceLayout(flowChart);
-
-    setELString(toString(mocks[selectedValue]));
-  }, [setELString, selectedValue]);
+    handleOnChange('THEN');
+  }, []);
 
   useEffect(() => {
     flowChart.on('model:change', handleOnChange);
