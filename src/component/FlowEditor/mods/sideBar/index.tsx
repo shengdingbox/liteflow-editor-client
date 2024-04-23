@@ -49,43 +49,114 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             const currentEdge: Edge = flowChart.getCellById(
               edgeViews[0].cell.id,
             ) as Edge;
+            let targetNode = currentEdge.getTargetNode();
+            let targetData = targetNode?.getData();
+            let targetModel = targetData.model;
+            let targetParent = targetData.parent;
+            let targetIndex;
+            if (!targetParent) {
+              targetNode = currentEdge.getSourceNode();
+              targetData = targetNode?.getData();
+              targetModel = targetData.model;
+              targetParent = targetData.parent;
+              targetIndex = targetParent.children.indexOf(targetModel) + 1;
+            } else {
+              targetIndex = targetParent.children.indexOf(targetModel);
+            }
             switch (droppingNode.shape) {
               case 'When':
-                let targetNode = currentEdge.getTargetNode();
-                let targetData = targetNode?.getData();
-                let targetModel = targetData.model;
-                let targetParent = targetData.parent;
-                let targetIndex;
-                if (!targetParent) {
-                  targetNode = currentEdge.getSourceNode();
-                  targetData = targetNode?.getData();
-                  targetModel = targetData.model;
-                  targetParent = targetData.parent;
-                  targetIndex = targetParent.children.indexOf(targetModel) + 1;
-                } else {
-                  targetIndex = targetParent.children.indexOf(targetModel);
-                }
                 targetParent.children.splice(targetIndex, 0, {
                   type: 'WHEN',
                   children: [
                     {
                       type: 'CommonComponent',
-                      id: `xxx${Math.ceil(Math.random() * 100)}`,
+                      id: `common${Math.ceil(Math.random() * 100)}`,
                     },
                   ],
                 });
                 flowChart.trigger('model:change');
                 break;
               case 'SwitchComponent':
+                targetParent.children.splice(targetIndex, 0, {
+                  type: 'SWITCH',
+                  condition: {
+                    type: 'SwitchComponent',
+                    id: `x${Math.ceil(Math.random() * 100)}`,
+                  },
+                  children: [
+                    {
+                      type: 'CommonComponent',
+                      id: `common${Math.ceil(Math.random() * 100)}`,
+                    },
+                  ],
+                });
+                flowChart.trigger('model:change');
                 break;
               case 'IfComponent':
+                targetParent.children.splice(targetIndex, 0, {
+                  type: 'IF',
+                  condition: {
+                    type: 'IfComponent',
+                    id: `x${Math.ceil(Math.random() * 100)}`,
+                  },
+                  children: [
+                    {
+                      type: 'CommonComponent',
+                      id: `common${Math.ceil(Math.random() * 100)}`,
+                    },
+                  ],
+                });
+                flowChart.trigger('model:change');
                 break;
               case 'ForComponent':
+                targetParent.children.splice(targetIndex, 0, {
+                  type: 'FOR',
+                  condition: {
+                    type: 'ForComponent',
+                    id: `x${Math.ceil(Math.random() * 100)}`,
+                  },
+                  children: [
+                    {
+                      type: 'THEN',
+                      children: [
+                        {
+                          type: 'CommonComponent',
+                          id: `common${Math.ceil(Math.random() * 100)}`,
+                        },
+                      ],
+                    },
+                  ],
+                });
+                flowChart.trigger('model:change');
                 break;
               case 'WhileComponent':
+                targetParent.children.splice(targetIndex, 0, {
+                  type: 'WHILE',
+                  condition: {
+                    type: 'WhileComponent',
+                    id: `x${Math.ceil(Math.random() * 100)}`,
+                  },
+                  children: [
+                    {
+                      type: 'THEN',
+                      children: [
+                        {
+                          type: 'CommonComponent',
+                          id: `common${Math.ceil(Math.random() * 100)}`,
+                        },
+                      ],
+                    },
+                  ],
+                });
+                flowChart.trigger('model:change');
                 break;
               case 'CommonComponent':
               default:
+                targetParent.children.splice(targetIndex, 0, {
+                  type: 'CommonComponent',
+                  id: `common${Math.ceil(Math.random() * 100)}`,
+                });
+                flowChart.trigger('model:change');
             }
           }
           return false;
