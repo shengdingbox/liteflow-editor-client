@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 
-import styles from '../index.module.less';
+import styles from './index.module.less';
 
 import { Menu } from 'antd';
 import { Graph } from '@antv/x6';
