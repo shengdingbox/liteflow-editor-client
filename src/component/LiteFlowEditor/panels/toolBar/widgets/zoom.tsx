@@ -39,9 +39,13 @@ const Zoom: React.FC<IProps> = (props) => {
   const flowChart = useGraph();
   const [scale, setScale] = useState<number>(flowChart.zoom());
   useEffect(() => {
-    flowChart.on('scale', () => {
+    const handleScale = () => {
       setScale(flowChart.zoom());
-    });
+    };
+    flowChart.on('scale', handleScale);
+    return () => {
+      flowChart.off('scale', handleScale);
+    };
   }, [flowChart]);
   return (
     <div className={styles.zoomContainer}>
