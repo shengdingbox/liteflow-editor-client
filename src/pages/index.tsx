@@ -1,15 +1,15 @@
-import * as React from 'react';
+import { Graph } from '@antv/x6';
 import LiteFlowEditor from '../component/LiteFlowEditor';
 import styles from './index.less';
 
-const onSave = (data: { nodes: any; edges: any }): void => {
-  console.log(data);
+const onReady = (flowGraph: Graph): void => {
+  console.log(flowGraph);
 };
 
 export default function IndexPage() {
   return (
     <div className={styles.container}>
-      <LiteFlowEditor onSave={onSave} />
+      <LiteFlowEditor onReady={onReady} />
     </div>
   );
 }

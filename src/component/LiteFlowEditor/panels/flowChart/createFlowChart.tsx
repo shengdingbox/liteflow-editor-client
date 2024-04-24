@@ -185,7 +185,7 @@ const createFlowChart = (
     resizing: false,
     onEdgeLabelRendered: (args) => {
       const { edge, selectors, label } = args;
-      const content = selectors.foContent;
+      const content = selectors.foContent as HTMLElement;
       if (content) {
         content.style.display = 'flex';
         content.style.alignItems = 'center';
@@ -195,6 +195,7 @@ const createFlowChart = (
             flowChart.trigger('graph:addNodeOnEdge', edge);
           };
           ReactDOM.render(
+            // @ts-ignore
             <Button
               size="small"
               onClick={handleOnClick}
@@ -206,7 +207,7 @@ const createFlowChart = (
           );
         } else {
           content.appendChild(
-            document.createTextNode(label?.attrs?.label.text),
+            document.createTextNode(label?.attrs?.label.text + ''),
           );
         }
       }

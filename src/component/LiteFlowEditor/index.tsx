@@ -91,6 +91,7 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   };
 
   return (
+    // @ts-ignore
     <Provider
       value={{ graph: flowChart, graphWrapper: wrapperRef, model: null }}
     >
