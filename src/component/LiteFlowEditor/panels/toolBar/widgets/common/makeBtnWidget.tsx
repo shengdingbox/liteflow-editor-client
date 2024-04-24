@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { Tooltip } from 'antd';
 import { Graph } from '@antv/x6';
 import styles from '../index.module.less';
+import { useGraph } from '../../../../hooks';
 
 interface IOptions {
   tooltip: string;
@@ -16,8 +17,8 @@ interface IBtnWidgetProps {
 }
 
 const makeBtnWidget = (options: IOptions) => {
-  const Widget: React.FC<IBtnWidgetProps> = (props) => {
-    const { flowChart } = props;
+  const Widget: React.FC<IBtnWidgetProps> = () => {
+    const flowChart = useGraph();
     const { tooltip, getIcon, handler } = options;
     const iconWrapperCls = [styles.btnWidget];
     let { disabled = false, selected = false } = options;

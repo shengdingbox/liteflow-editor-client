@@ -8,7 +8,7 @@ interface IProps {
   flowChart: Graph;
 }
 
-const ToolBar: React.FC<IProps> = (props) => {
+const ToolBar: React.FC<IProps> = () => {
   const flowChart: Graph = useGraph();
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
 
