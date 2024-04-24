@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
-import styles from './index.module.less';
-
 import { Graph } from '@antv/x6';
+import { ZoomOutOutlined, ZoomInOutlined } from '@ant-design/icons';
 import shortcuts from '../../../common/shortcuts';
 import makeBtnWidget from './common/makeBtnWidget';
-import { ZoomOutOutlined, ZoomInOutlined } from '@ant-design/icons';
+import { useGraph } from '../../../hooks';
+import styles from './index.module.less';
 
 interface IProps {
   flowChart: Graph;
@@ -37,7 +36,7 @@ const ZoomIn: React.FC<IProps> = makeBtnWidget({
 });
 
 const Zoom: React.FC<IProps> = (props) => {
-  const { flowChart } = props;
+  const flowChart = useGraph();
   const [scale, setScale] = useState<number>(flowChart.zoom());
   useEffect(() => {
     flowChart.on('scale', () => {

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
-import 'antd/es/modal/style';
-import styles from './index.module.less';
-
 import { Graph } from '@antv/x6';
 import { Button, Modal, Radio, Table, Select, Input } from 'antd';
+import styles from './index.module.less';
 
 interface IProps {
   title?: string;

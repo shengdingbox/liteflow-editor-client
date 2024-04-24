@@ -7,15 +7,11 @@ import { Graph } from '@antv/x6';
  */
 interface IGraphContext {
   model: any;
-  graph: Graph | undefined;
-  graphWrapper: HTMLDivElement | RefObject<HTMLDivElement> | undefined;
+  graph: Graph;
+  graphWrapper: RefObject<HTMLDivElement>;
 }
 
-const defaultValue: IGraphContext = {
-  graph: undefined,
-  graphWrapper: undefined,
-  model: undefined,
-};
+const defaultValue: IGraphContext = {} as any;
 
 export const GraphContext: Context<IGraphContext> = createContext(defaultValue);
 export const Provider = GraphContext.Provider;

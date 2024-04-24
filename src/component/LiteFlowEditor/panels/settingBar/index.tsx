@@ -1,12 +1,8 @@
 import React, { useEffect, useReducer } from 'react';
-
-import 'antd/es/tabs/style';
-import 'antd/es/empty/style';
-import styles from './index.module.less';
-
 import { Graph } from '@antv/x6';
 import { Tabs } from 'antd';
 import Basic from './basic';
+import styles from './index.module.less';
 
 const { TabPane } = Tabs;
 

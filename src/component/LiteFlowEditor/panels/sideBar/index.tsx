@@ -1,7 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-
-import 'antd/es/collapse/style';
-import styles from './index.module.less';
 import { Collapse } from 'antd';
 import { Addon, Edge, Graph, Node } from '@antv/x6';
 import classNames from 'classnames';
@@ -15,6 +12,7 @@ import { Dnd } from '@antv/x6/lib/addon';
 import { View } from '../../cells';
 import { findViewsFromPoint } from '../flowChart/createFlowChart';
 import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
+import styles from './index.module.less';
 
 const { Panel } = Collapse;
 

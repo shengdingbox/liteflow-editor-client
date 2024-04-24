@@ -1,18 +1,15 @@
 import React, { useEffect, useReducer } from 'react';
-
-import 'antd/es/tooltip/style';
-import styles from './index.module.less';
-
 import { Graph } from '@antv/x6';
 import widgets from './widgets';
-import ModifyStatus from './widgets/modifyStatus';
+import { useGraph } from '../../hooks';
+import styles from './index.module.less';
 
 interface IProps {
   flowChart: Graph;
 }
 
 const ToolBar: React.FC<IProps> = (props) => {
-  const { flowChart } = props;
+  const flowChart: Graph = useGraph();
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
 
   useEffect(() => {
@@ -20,7 +17,7 @@ const ToolBar: React.FC<IProps> = (props) => {
     return () => {
       flowChart.off('toolBar:forceUpdate');
     };
-  }, []);
+  }, [flowChart]);
 
   return (
     <div className={styles.liteflowEditorToolBarContainer}>
@@ -31,7 +28,6 @@ const ToolBar: React.FC<IProps> = (props) => {
           })}
         </div>
       ))}
-      <ModifyStatus flowChart={flowChart} />
     </div>
   );
 };
