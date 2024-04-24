@@ -39,6 +39,7 @@ export default {
       pointerEvents: 'none',
     },
   },
+  label: '+',
   defaultLabel: {
     markup: Markup.getForeignObjectMarkup(),
     attrs: {
@@ -51,6 +52,10 @@ export default {
     },
     position: {
       distance: 0.5,
+      options: {
+        keepGradient: true,
+        // ensureLegibility: true,
+      },
     },
   },
 };

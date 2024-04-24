@@ -8,6 +8,19 @@
   .liteflowEditorGraph {
     width: 100%;
     height: 100%;
+
+    :global {
+      .liteflow-edge-add-button {
+        display: none;
+        pointer-events: all !important;
+        margin: 0;
+        border: dashed 1px #feb663;
+        color: #feb663;
+      }
+      .x6-edge:hover .liteflow-edge-add-button {
+        display: block;
+      }
+    }
   }
 
   .liteflowEditorMiniMap {

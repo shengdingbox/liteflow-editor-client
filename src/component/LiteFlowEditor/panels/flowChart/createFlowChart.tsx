@@ -1,4 +1,5 @@
-import shortcuts from '../../common/shortcuts';
+import ReactDOM from 'react-dom';
+import { Button } from 'antd';
 import {
   Cell,
   CellView,
@@ -8,6 +9,7 @@ import {
   Graph,
   Rectangle,
 } from '@antv/x6';
+import shortcuts from '../../common/shortcuts';
 import {
   MIN_ZOOM,
   MAX_ZOOM,
@@ -181,6 +183,34 @@ const createFlowChart = (
     container,
     rotating: false,
     resizing: false,
+    onEdgeLabelRendered: (args) => {
+      const { edge, selectors, label } = args;
+      const content = selectors.foContent;
+      if (content) {
+        content.style.display = 'flex';
+        content.style.alignItems = 'center';
+        content.style.justifyContent = 'center';
+        if (label?.attrs?.label.text === '+') {
+          const handleOnClick = () => {
+            flowChart.trigger('graph:addNodeOnEdge', edge);
+          };
+          ReactDOM.render(
+            <Button
+              size="small"
+              onClick={handleOnClick}
+              className="liteflow-edge-add-button"
+            >
+              +
+            </Button>,
+            content,
+          );
+        } else {
+          content.appendChild(
+            document.createTextNode(label?.attrs?.label.text),
+          );
+        }
+      }
+    },
     // https://x6.antv.vision/zh/docs/tutorial/basic/clipboard
     clipboard: {
       enabled: true,
