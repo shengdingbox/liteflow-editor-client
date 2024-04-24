@@ -3,6 +3,7 @@ import { Graph } from '@antv/x6';
 import createFlowChart from './panels/flowChart/createFlowChart';
 import NodeEditorModal from './panels/flowChart/nodeEditorModal';
 import FlowChartContextMenu from './panels/flowChart/contextMenu';
+import FlowChartContextPad from './panels/flowChart/contextPad';
 import { Provider } from './context/GraphContext';
 import Layout from './panels/layout';
 import SideBar from './panels/sideBar';
@@ -36,6 +37,8 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   const miniMapRef = useRef<HTMLDivElement>(null);
   const [flowChart, setFlowChart] = useState<Graph>();
   const [contextMenuInfo, setContextMenuInfo] =
+    useState<IMenuInfo>(defaultMenuInfo);
+  const [contextPadInfo, setContextPadInfo] =
     useState<IMenuInfo>(defaultMenuInfo);
 
   useEffect(() => {
@@ -74,14 +77,26 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
       flowChart?.unlockScroller();
       setContextMenuInfo({ ...contextMenuInfo, visible: false });
     };
+    const showContextPad = (info: IMenuInfo) => {
+      flowChart?.lockScroller();
+      setContextPadInfo({ ...info, visible: true });
+    };
+    const hideContextPad = () => {
+      flowChart?.unlockScroller();
+      setContextPadInfo({ ...contextPadInfo, visible: false });
+    };
     if (flowChart) {
       flowChart.on('graph:showContextMenu', showHandler);
       flowChart.on('graph:hideContextMenu', hideHandler);
+      flowChart.on('graph:showContextPad', showContextPad);
+      flowChart.on('graph:hideContextPad', hideContextPad);
     }
     return () => {
       if (flowChart) {
         flowChart.off('graph:showContextMenu', showHandler);
         flowChart.off('graph:hideContextMenu', hideHandler);
+        flowChart.off('graph:showContextPad', showContextPad);
+        flowChart.off('graph:hideContextPad', hideContextPad);
       }
     };
   }, [flowChart]);
@@ -107,6 +122,9 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
           {flowChart && <NodeEditorModal flowChart={flowChart} />}
           {flowChart && (
             <FlowChartContextMenu {...contextMenuInfo} flowChart={flowChart} />
+          )}
+          {flowChart && (
+            <FlowChartContextPad {...contextPadInfo} flowChart={flowChart} />
           )}
         </div>
       </Layout>

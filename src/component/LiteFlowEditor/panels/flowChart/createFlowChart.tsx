@@ -165,6 +165,33 @@ const registerEvents = (flowChart: Graph): void => {
       scene: 'node',
     });
   });
+  flowChart.on('graph:addNodeOnEdge', (args: any) => {
+    const {
+      e: { clientX, clientY },
+    } = args;
+    flowChart.cleanSelection();
+    flowChart.trigger('graph:showContextPad', {
+      x: clientX,
+      y: clientY,
+      scene: 'blank',
+    });
+  });
+  flowChart.on('black:mousedown', (args: any) => {
+    const {
+      e: { clientX, clientY },
+    } = args;
+    flowChart.cleanSelection();
+    flowChart.trigger('graph:hideContextPad', {
+      x: clientX,
+      y: clientY,
+      scene: 'blank',
+    });
+    flowChart.trigger('graph:hideContextMenu', {
+      x: clientX,
+      y: clientY,
+      scene: 'blank',
+    });
+  });
 };
 
 const registerShortcuts = (flowChart: Graph): void => {
@@ -191,8 +218,10 @@ const createFlowChart = (
         content.style.alignItems = 'center';
         content.style.justifyContent = 'center';
         if (label?.attrs?.label.text === '+') {
-          const handleOnClick = () => {
-            flowChart.trigger('graph:addNodeOnEdge', edge);
+          const handleOnClick = (e: any) => {
+            setTimeout(() => {
+              flowChart.trigger('graph:addNodeOnEdge', { e, edge });
+            });
           };
           ReactDOM.render(
             // @ts-ignore
