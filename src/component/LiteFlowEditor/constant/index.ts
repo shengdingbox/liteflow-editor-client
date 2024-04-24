@@ -1,9 +1,14 @@
 /** 常量 */
-export const NODE_WIDTH = 30;
-export const NODE_HEIGHT = 30;
+export const NODE_WIDTH = 30; // 节点宽度
+export const NODE_HEIGHT = 30; // 节点高度
 export const MIN_ZOOM = 0.5;
 export const MAX_ZOOM = 1.5;
 export const ZOOM_STEP = 0.1;
+
+export const NODE_TYPE_START = 'START';
+export const NODE_TYPE_END = 'END';
+export const NODE_TYPE_INTERMEDIATE_END = 'INTERMEDIATE_END';
+export const NODE_TYPE_VIRTUAL = 'VIRTUAL';
 
 /** 逻辑组件类型 */
 export enum NodeTypeEnum {

@@ -1,5 +1,12 @@
 import { Cell, Node, Edge } from '@antv/x6';
-import { NodeTypeEnum, ConditionTypeEnum } from '../constant';
+import {
+  NodeTypeEnum,
+  ConditionTypeEnum,
+  NODE_TYPE_START,
+  NODE_TYPE_END,
+  NODE_TYPE_INTERMEDIATE_END,
+  NODE_TYPE_VIRTUAL,
+} from '../constant';
 export { default as toString } from './toString';
 
 interface ParseParameters {
@@ -14,7 +21,7 @@ export default function render(data: Record<string, any>) {
   const cells: Cell[] = [];
   // 1. 首先：添加一个开始节点
   const start: Node = Node.create({
-    shape: 'Start',
+    shape: NODE_TYPE_START,
     view: 'react-shape-view',
     attrs: {
       label: { text: '开始' },
@@ -29,7 +36,7 @@ export default function render(data: Record<string, any>) {
 
   // 3. 最后：添加一个结束节点
   const last: Node = Node.create({
-    shape: 'End',
+    shape: NODE_TYPE_END,
     view: 'react-shape-view',
     attrs: {
       label: { text: '结束' },
@@ -128,7 +135,7 @@ function parseWhen({
     }),
   );
   const end = Node.create({
-    shape: 'IntermediateEnd',
+    shape: NODE_TYPE_INTERMEDIATE_END,
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
@@ -182,7 +189,7 @@ function parseSwitch({
     }),
   );
   const end = Node.create({
-    shape: 'IntermediateEnd',
+    shape: NODE_TYPE_INTERMEDIATE_END,
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
@@ -230,7 +237,7 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
     }),
   );
   const end = Node.create({
-    shape: 'IntermediateEnd',
+    shape: NODE_TYPE_INTERMEDIATE_END,
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
@@ -256,7 +263,7 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
   let falseNode;
   if (!last) {
     falseNode = parse({
-      data: { type: 'Virtual', id: 'v' },
+      data: { type: NODE_TYPE_VIRTUAL, id: 'v' },
       parent: data,
       cells,
       previous: start,
@@ -313,7 +320,7 @@ function parseLoop({
     }),
   );
   const end = Node.create({
-    shape: 'IntermediateEnd',
+    shape: NODE_TYPE_INTERMEDIATE_END,
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },

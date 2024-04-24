@@ -8,7 +8,6 @@ import {
   BRANCH_GROUP,
   CONTROL_GROUP,
 } from '../../cells';
-import { Dnd } from '@antv/x6/lib/addon';
 import { View } from '../../cells';
 import { findViewsFromPoint } from '../flowChart/createFlowChart';
 import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
@@ -34,10 +33,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
       new Addon.Dnd({
         target: flowChart,
         scaled: true,
-        validateNode: (
-          droppingNode: Node,
-          options: Dnd.ValidateNodeOptions,
-        ) => {
+        validateNode: (droppingNode: Node) => {
           const position = droppingNode.getPosition();
           const size = droppingNode.getSize();
           const cellViewsFromPoint = findViewsFromPoint(
