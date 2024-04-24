@@ -1,7 +1,7 @@
 import { Graph } from '@antv/x6';
 import '@antv/x6-react-shape';
 import classNames from 'classnames';
-import * as C from '../constant';
+import { NODE_WIDTH, NODE_HEIGHT } from '../constant';
 import styles from './index.module.less';
 // 开始 & 结束
 import { default as Start } from './start';
@@ -54,8 +54,8 @@ export const View: React.FC<any> = (props) => {
     component(props: any) {
       return <View {...props} icon={icon} />;
     },
-    width: C.NODE_WIDTH,
-    height: C.NODE_HEIGHT,
+    width: NODE_WIDTH,
+    height: NODE_HEIGHT,
     attrs: {
       label: {
         refX: 0.5,

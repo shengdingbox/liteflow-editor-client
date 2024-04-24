@@ -29,11 +29,10 @@ export const forceLayout = (flowChart: Graph, cfg: any = {}): void => {
     ...cfg,
   });
 
-  const model = flowChart.toJSON();
   const { nodes: newNodes } = dagreLayout.layout({
     // @ts-ignore
-    nodes: model.cells.filter((cell) => cell.shape !== 'edge'), // @ts-ignore
-    edges: model.cells.filter((cell) => cell.shape === 'edge'),
+    nodes: flowChart.getNodes().map((node) => node.toJSON()), // @ts-ignore
+    edges: flowChart.getEdges().map((edge) => edge.toJSON()),
   });
   newNodes?.forEach((node: any) => {
     const cell: Node | undefined = flowChart.getCellById(node.id) as

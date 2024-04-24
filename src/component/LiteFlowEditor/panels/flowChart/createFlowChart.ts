@@ -13,10 +13,20 @@ import {
   MAX_ZOOM,
   NodeTypeEnum,
   ConditionTypeEnum,
+  LITEFLOW_EDGE,
+  LITEFLOW_ROUTER,
+  LITEFLOW_ANCHOR,
 } from '../../constant';
 import { forceLayout } from '../../utils/layout';
 import { getSelectedEdges } from '../../utils/flowChartUtils';
 import MiniMapSimpleNode from './miniMapSimpleNode';
+import liteflowEdge from '../../common/edge';
+import liteflowRouter from '../../common/router';
+import liteflowAnchor from '../../common/anchor';
+
+Graph.registerEdge(LITEFLOW_EDGE, liteflowEdge);
+Graph.registerRouter(LITEFLOW_ROUTER, liteflowRouter);
+Graph.registerAnchor(LITEFLOW_ANCHOR, liteflowAnchor);
 
 export function findViewsFromPoint(flowChart: Graph, x: number, y: number) {
   return flowChart
@@ -185,12 +195,12 @@ const createFlowChart = (
       allowEdge: false,
       dangling: true,
       highlight: true,
-      anchor: 'center',
+      anchor: LITEFLOW_ANCHOR, // 'center',
       connectionPoint: 'bbox',
       // connector: {
       //   name: 'jumpover', //两条线交叉时，出现线桥。
       // },
-      router: 'normal',
+      router: 'normal', // LITEFLOW_ROUTER, // 'normal',
       validateEdge: (args) => {
         const { edge } = args;
         return !!(edge?.target as any)?.port;

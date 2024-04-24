@@ -6,6 +6,7 @@ import {
   NODE_TYPE_END,
   NODE_TYPE_INTERMEDIATE_END,
   NODE_TYPE_VIRTUAL,
+  LITEFLOW_EDGE,
 } from '../constant';
 export { default as toString } from './toString';
 
@@ -47,10 +48,9 @@ export default function render(data: Record<string, any>) {
 
   cells.push(
     Edge.create({
-      shape: 'edge',
+      shape: LITEFLOW_EDGE,
       source: next.id,
       target: last.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
     }),
   );
 
@@ -128,10 +128,9 @@ function parseWhen({
   cells.push(start);
   cells.push(
     Edge.create({
-      shape: 'edge',
+      shape: LITEFLOW_EDGE,
       source: previous.id,
       target: start.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
     }),
   );
   const end = Node.create({
@@ -152,10 +151,9 @@ function parseWhen({
     });
     cells.push(
       Edge.create({
-        shape: 'edge',
+        shape: LITEFLOW_EDGE,
         source: next.id,
         target: end.id,
-        attrs: { line: { stroke: '#c1c1c1' } },
       }),
     );
   });
@@ -182,10 +180,9 @@ function parseSwitch({
   cells.push(start);
   cells.push(
     Edge.create({
-      shape: 'edge',
+      shape: LITEFLOW_EDGE,
       source: previous.id,
       target: start.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
     }),
   );
   const end = Node.create({
@@ -206,10 +203,9 @@ function parseSwitch({
     });
     cells.push(
       Edge.create({
-        shape: 'edge',
+        shape: LITEFLOW_EDGE,
         source: next.id,
         target: end.id,
-        attrs: { line: { stroke: '#c1c1c1' } },
       }),
     );
   });
@@ -230,10 +226,9 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
   cells.push(start);
   cells.push(
     Edge.create({
-      shape: 'edge',
+      shape: LITEFLOW_EDGE,
       source: previous.id,
       target: start.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
     }),
   );
   const end = Node.create({
@@ -254,10 +249,9 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
   });
   cells.push(
     Edge.create({
-      shape: 'edge',
+      shape: LITEFLOW_EDGE,
       source: trueNode.id,
       target: end.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
     }),
   );
   let falseNode;
@@ -284,10 +278,9 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
 
   cells.push(
     Edge.create({
-      shape: 'edge',
+      shape: LITEFLOW_EDGE,
       source: falseNode.id,
       target: end.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
     }),
   );
   cells.push(end);
@@ -313,10 +306,9 @@ function parseLoop({
   cells.push(start);
   cells.push(
     Edge.create({
-      shape: 'edge',
+      shape: LITEFLOW_EDGE,
       source: previous.id,
       target: start.id,
-      attrs: { line: { stroke: '#c1c1c1' } },
     }),
   );
   const end = Node.create({
@@ -341,10 +333,9 @@ function parseLoop({
       });
       cells.push(
         Edge.create({
-          shape: 'edge',
+          shape: LITEFLOW_EDGE,
           source: next.id,
           target: end.id,
-          attrs: { line: { stroke: '#c1c1c1' } },
         }),
       );
     });
@@ -359,10 +350,9 @@ function parseLoop({
       });
       cells.push(
         Edge.create({
-          shape: 'edge',
+          shape: LITEFLOW_EDGE,
           source: next.id,
           target: end.id,
-          attrs: { line: { stroke: '#c1c1c1' } },
         }),
       );
     });
@@ -393,10 +383,9 @@ function parseCommon({
   if (previous) {
     cells.push(
       Edge.create({
-        shape: 'edge',
+        shape: LITEFLOW_EDGE,
         source: previous.id,
         target: common.id,
-        attrs: { line: { stroke: '#c1c1c1' } },
         ...(options.edge || {}),
       }),
     );

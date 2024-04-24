@@ -5,14 +5,22 @@ export const MIN_ZOOM = 0.5;
 export const MAX_ZOOM = 1.5;
 export const ZOOM_STEP = 0.1;
 
-export const NODE_TYPE_START = 'START';
-export const NODE_TYPE_END = 'END';
-export const NODE_TYPE_INTERMEDIATE_END = 'INTERMEDIATE_END';
-export const NODE_TYPE_VIRTUAL = 'VIRTUAL';
+export const NODE_TYPE_START = 'LITEFLOW_START';
+export const NODE_TYPE_END = 'LITEFLOW_END';
+export const NODE_TYPE_INTERMEDIATE_END = 'LITEFLOW_INTERMEDIATE_END';
+export const NODE_TYPE_VIRTUAL = 'LITEFLOW_VIRTUAL';
+
+export const LITEFLOW_EDGE = 'LITEFLOW_EDGE';
+export const LITEFLOW_ANCHOR = 'LITEFLOW_ANCHOR';
+export const LITEFLOW_ROUTER = 'LITEFLOW_ROUTER';
+
+export const LINE_COLOR = '#c1c1c1';
 
 /** 逻辑组件类型 */
 export enum NodeTypeEnum {
   COMMON = 'NodeComponent', // common, 普通
+
+  BOOLEAN = 'NodeBooleanComponent', // boolean, 布尔
 
   SWITCH = 'NodeSwitchComponent', // switch, 选择
 
@@ -60,6 +68,8 @@ export enum ConditionTypeEnum {
   TYPE_WHILE = 'WHILE', // while
 
   TYPE_ITERATOR = 'ITERATOR', // iterator
+
+  TYPE_BREAK = 'BREAK', // break
 
   TYPE_CATCH = 'CATCH', // catch
 
