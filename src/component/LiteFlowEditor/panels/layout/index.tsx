@@ -1,9 +1,7 @@
 import React from 'react';
-
-import styles from './index.module.less';
-
 import { Graph } from '@antv/x6';
 import SplitPane from 'react-split-pane-v2';
+import styles from './index.module.less';
 
 const Pane = SplitPane.Pane;
 
