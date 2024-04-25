@@ -31,8 +31,14 @@ export const forceLayout = (flowChart: Graph, cfg: any = {}): void => {
 
   const { nodes: newNodes } = dagreLayout.layout({
     // @ts-ignore
-    nodes: flowChart.getNodes().map((node) => node.toJSON()), // @ts-ignore
-    edges: flowChart.getEdges().map((edge) => edge.toJSON()),
+    nodes: flowChart.getNodes().map((node) => {
+      node.setZIndex(1);
+      return node.toJSON();
+    }), // @ts-ignore
+    edges: flowChart.getEdges().map((edge) => {
+      edge.setZIndex(0);
+      return edge.toJSON();
+    }),
   });
   newNodes?.forEach((node: any) => {
     const cell: Node | undefined = flowChart.getCellById(node.id) as

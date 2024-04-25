@@ -8,7 +8,6 @@ import {
   BRANCH_GROUP,
   CONTROL_GROUP,
 } from '../../cells';
-import { View } from '../../cells';
 import { findViewsFromPoint } from '../flowChart/createFlowChart';
 import styles from './index.module.less';
 
@@ -75,6 +74,15 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
           </Panel>
         ))}
       </Collapse>
+    </div>
+  );
+};
+
+const View: React.FC<any> = (props) => {
+  const { node, icon, ...rest } = props;
+  return (
+    <div className={classNames(styles.liteflowShapeWrapper)} {...rest}>
+      <img className={styles.liteflowShapeSvg} src={icon}></img>
     </div>
   );
 };
