@@ -4,7 +4,7 @@ import createFlowChart from './panels/flowChart/createFlowChart';
 import NodeEditorModal from './panels/flowChart/nodeEditorModal';
 import FlowChartContextMenu from './panels/flowChart/contextMenu';
 import FlowChartContextPad from './panels/flowChart/contextPad';
-import { Provider } from './context/GraphContext';
+import GraphContext from './context/GraphContext';
 import Layout from './panels/layout';
 import SideBar from './panels/sideBar';
 import ToolBar from './panels/toolBar';
@@ -106,8 +106,7 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   };
 
   return (
-    // @ts-ignore
-    <Provider
+    <GraphContext.Provider // @ts-ignore
       value={{ graph: flowChart, graphWrapper: wrapperRef, model: null }}
     >
       <Layout
@@ -128,7 +127,7 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
           )}
         </div>
       </Layout>
-    </Provider>
+    </GraphContext.Provider>
   );
 };
 

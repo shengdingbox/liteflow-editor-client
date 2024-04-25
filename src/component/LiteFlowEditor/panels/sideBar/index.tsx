@@ -10,7 +10,6 @@ import {
 } from '../../cells';
 import { View } from '../../cells';
 import { findViewsFromPoint } from '../flowChart/createFlowChart';
-import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
 import styles from './index.module.less';
 
 const { Panel } = Collapse;
@@ -48,126 +47,10 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             const currentEdge: Edge = flowChart.getCellById(
               edgeViews[0].cell.id,
             ) as Edge;
-            let targetNode = currentEdge.getTargetNode();
-            let targetData = targetNode?.getData();
-            let targetModel = targetData.model;
-            let targetParent = targetData.parent;
-            let targetIndex;
-            if (!targetParent) {
-              targetNode = currentEdge.getSourceNode();
-              targetData = targetNode?.getData();
-              targetModel = targetData.model;
-              targetParent = targetData.parent;
-              targetIndex = targetParent.children.indexOf(targetModel) + 1;
-            } else {
-              targetIndex = targetParent.children.indexOf(targetModel);
-            }
-            switch (droppingNode.shape) {
-              case ConditionTypeEnum.TYPE_WHEN:
-                targetParent.children.splice(targetIndex, 0, {
-                  type: ConditionTypeEnum.TYPE_WHEN,
-                  children: [
-                    {
-                      type: NodeTypeEnum.COMMON,
-                      id: `common${Math.ceil(Math.random() * 100)}`,
-                    },
-                  ],
-                });
-                flowChart.trigger('model:change');
-                break;
-              case NodeTypeEnum.SWITCH:
-                targetParent.children.splice(targetIndex, 0, {
-                  type: ConditionTypeEnum.TYPE_SWITCH,
-                  condition: {
-                    type: NodeTypeEnum.SWITCH,
-                    id: `x${Math.ceil(Math.random() * 100)}`,
-                  },
-                  children: [
-                    {
-                      type: NodeTypeEnum.COMMON,
-                      id: `common${Math.ceil(Math.random() * 100)}`,
-                    },
-                  ],
-                });
-                flowChart.trigger('model:change');
-                break;
-              case NodeTypeEnum.IF:
-                targetParent.children.splice(targetIndex, 0, {
-                  type: ConditionTypeEnum.TYPE_IF,
-                  condition: {
-                    type: NodeTypeEnum.IF,
-                    id: `x${Math.ceil(Math.random() * 100)}`,
-                  },
-                  children: [
-                    {
-                      type: NodeTypeEnum.COMMON,
-                      id: `common${Math.ceil(Math.random() * 100)}`,
-                    },
-                  ],
-                });
-                flowChart.trigger('model:change');
-                break;
-              case NodeTypeEnum.FOR:
-                targetParent.children.splice(targetIndex, 0, {
-                  type: ConditionTypeEnum.TYPE_FOR,
-                  condition: {
-                    type: NodeTypeEnum.FOR,
-                    id: `x${Math.ceil(Math.random() * 100)}`,
-                  },
-                  children: [
-                    {
-                      type: ConditionTypeEnum.TYPE_THEN,
-                      children: [
-                        {
-                          type: NodeTypeEnum.COMMON,
-                          id: `common${Math.ceil(Math.random() * 100)}`,
-                        },
-                      ],
-                    },
-                  ],
-                });
-                flowChart.trigger('model:change');
-                break;
-              case NodeTypeEnum.WHILE:
-                targetParent.children.splice(targetIndex, 0, {
-                  type: ConditionTypeEnum.TYPE_WHILE,
-                  condition: {
-                    type: NodeTypeEnum.WHILE,
-                    id: `x${Math.ceil(Math.random() * 100)}`,
-                  },
-                  children: [
-                    {
-                      type: ConditionTypeEnum.TYPE_THEN,
-                      children: [
-                        {
-                          type: NodeTypeEnum.COMMON,
-                          id: `common${Math.ceil(Math.random() * 100)}`,
-                        },
-                      ],
-                    },
-                  ],
-                });
-                flowChart.trigger('model:change');
-                break;
-              case NodeTypeEnum.COMMON:
-                targetParent.children.splice(targetIndex, 0, {
-                  type: ConditionTypeEnum.TYPE_THEN,
-                  children: [
-                    {
-                      type: NodeTypeEnum.COMMON,
-                      id: `common${Math.ceil(Math.random() * 100)}`,
-                    },
-                  ],
-                });
-                flowChart.trigger('model:change');
-                break;
-              default:
-                targetParent.children.splice(targetIndex, 0, {
-                  type: NodeTypeEnum.COMMON,
-                  id: `common${Math.ceil(Math.random() * 100)}`,
-                });
-                flowChart.trigger('model:change');
-            }
+            flowChart.trigger('graph:addNodeOnEdge', {
+              edge: currentEdge,
+              node: droppingNode,
+            });
           }
           return false;
         },

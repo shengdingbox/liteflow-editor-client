@@ -1,37 +1,28 @@
 import React, { useRef, useCallback } from 'react';
-import { Menu } from 'antd';
-import { Graph } from '@antv/x6';
+import { Input } from 'antd';
+import { Edge, Graph } from '@antv/x6';
 import useClickAway from '../../../hooks/useClickAway';
-import { nodeMenuConfig, edgeMenuConfig } from './menuConfig';
+import {
+  NODE_GROUP,
+  SEQUENCE_GROUP,
+  BRANCH_GROUP,
+  CONTROL_GROUP,
+} from '../../../cells';
 import styles from './index.module.less';
 
 interface IProps {
   x: number;
   y: number;
-  scene: string;
+  edge: Edge;
   visible: boolean;
   flowChart: Graph;
 }
 
-interface IMenuConfig {
-  key: string;
-  title: string;
-  icon?: React.ReactElement;
-  children?: IMenuConfig[];
-  showDividerBehind?: boolean;
-  disabled?: boolean | ((flowChart: Graph) => boolean);
-  handler: (flowChart: Graph) => void;
-}
-
-const menuConfigMap: { [scene: string]: IMenuConfig[] } = {
-  node: nodeMenuConfig,
-  blank: edgeMenuConfig,
-};
+const groups = [NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP];
 
 const FlowChartContextPad: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
-  const { x, y, scene, visible, flowChart } = props;
-  const menuConfig = menuConfigMap[scene];
+  const { x, y, visible, flowChart, edge } = props;
 
   useClickAway(() => onClickAway(), menuRef);
 
@@ -40,15 +31,14 @@ const FlowChartContextPad: React.FC<IProps> = (props) => {
     [flowChart],
   );
   const onClickMenu = useCallback(
-    ({ key }) => {
-      const handlerMap = Helper.makeMenuHandlerMap(menuConfig);
-      const handler = handlerMap[key];
-      if (handler) {
-        onClickAway();
-        handler(flowChart);
-      }
+    (cellType) => {
+      flowChart.trigger('graph:addNodeOnEdge', {
+        edge,
+        node: { shape: cellType.type },
+      });
+      onClickAway();
     },
-    [flowChart, menuConfig],
+    [flowChart, edge],
   );
 
   return !visible ? null : (
@@ -57,65 +47,49 @@ const FlowChartContextPad: React.FC<IProps> = (props) => {
       className={styles.liteflowEditorContextPad}
       style={{ left: x, top: y }}
     >
-      <Menu mode={'vertical'} selectable={false} onClick={onClickMenu}>
-        {Helper.makeMenuContent(flowChart, menuConfig)}
-      </Menu>
+      <div className={styles.liteflowEditorContextPadHeader}>
+        <h3 className={styles.liteflowEditorContextPadTitle}>插入节点</h3>
+      </div>
+      <div className={styles.liteflowEditorContextPadBody}>
+        <div className={styles.liteflowEditorContextPadSearch}>
+          <Input.Search placeholder="" />
+        </div>
+        <div className={styles.liteflowEditorContextPadResults}>
+          {groups.map((group) => (
+            <div
+              key={group.key}
+              className={styles.liteflowEditorContextPadGroup}
+            >
+              <div className={styles.liteflowEditorContextPadGroupName}>
+                {group.name}
+              </div>
+              <div className={styles.liteflowEditorContextPadGroupItems}>
+                {group.cellTypes.map((cellType, index) => (
+                  <div
+                    key={index}
+                    className={styles.liteflowEditorContextPadGroupItem}
+                    onClick={() => {
+                      onClickMenu(cellType);
+                    }}
+                  >
+                    <img
+                      className={styles.liteflowEditorContextPadGroupItemIcon}
+                      src={cellType.icon}
+                    />
+                    <div
+                      className={styles.liteflowEditorContextPadGroupItemLabel}
+                    >
+                      {cellType.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
-};
-
-const Helper = {
-  makeMenuHandlerMap(config: IMenuConfig[]) {
-    const queue = config.slice(0);
-    const handlerMap: { [key: string]: (flowChart: Graph) => void } = {};
-    while (queue.length > 0) {
-      const { key, handler, children } = queue.pop() as IMenuConfig;
-      if (children && children.length > 0) {
-        queue.push(...children);
-      } else {
-        handlerMap[key] = handler;
-      }
-    }
-    return handlerMap;
-  },
-  makeMenuContent(flowChart: Graph, menuConfig: IMenuConfig[]) {
-    const loop = (config: IMenuConfig[]) => {
-      return config.map((item) => {
-        let content = null;
-        let {
-          key,
-          title,
-          icon,
-          children,
-          disabled = false,
-          showDividerBehind,
-        } = item;
-        if (typeof disabled === 'function') {
-          disabled = disabled(flowChart);
-        }
-        if (children && children.length > 0) {
-          content = (
-            <Menu.SubMenu
-              key={key}
-              icon={icon}
-              title={title}
-              disabled={disabled}
-            >
-              {loop(children)}
-            </Menu.SubMenu>
-          );
-        } else {
-          content = (
-            <Menu.Item key={key} icon={icon} disabled={disabled}>
-              {title}
-            </Menu.Item>
-          );
-        }
-        return [content, showDividerBehind && <Menu.Divider />];
-      });
-    };
-    return loop(menuConfig);
-  },
 };
 
 export default FlowChartContextPad;

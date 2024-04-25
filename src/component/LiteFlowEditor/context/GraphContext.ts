@@ -14,7 +14,5 @@ interface IGraphContext {
 const defaultValue: IGraphContext = {} as any;
 
 export const GraphContext: Context<IGraphContext> = createContext(defaultValue);
-export const Provider = GraphContext.Provider;
-export const Consumer = GraphContext.Consumer;
 
 export default GraphContext;
