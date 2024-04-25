@@ -1,11 +1,9 @@
 import React, { useRef, useCallback } from 'react';
-
-import styles from './index.module.less';
-
 import { Menu } from 'antd';
 import { Graph } from '@antv/x6';
 import useClickAway from '../../../hooks/useClickAway';
-import { nodeMenuConfig, blankMenuConfig } from './menuConfig';
+import { nodeMenuConfig, edgeMenuConfig } from './menuConfig';
+import styles from './index.module.less';
 
 interface IProps {
   x: number;
@@ -27,10 +25,10 @@ interface IMenuConfig {
 
 const menuConfigMap: { [scene: string]: IMenuConfig[] } = {
   node: nodeMenuConfig,
-  blank: blankMenuConfig,
+  blank: edgeMenuConfig,
 };
 
-const FlowChartContextMenu: React.FC<IProps> = (props) => {
+const FlowChartContextPad: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
   const { x, y, scene, visible, flowChart } = props;
   const menuConfig = menuConfigMap[scene];
@@ -120,4 +118,4 @@ const Helper = {
   },
 };
 
-export default FlowChartContextMenu;
+export default FlowChartContextPad;

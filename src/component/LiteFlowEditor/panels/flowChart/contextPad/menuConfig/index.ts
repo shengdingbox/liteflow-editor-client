@@ -1,4 +1,4 @@
+import edgeMenuConfig from './edge';
 import nodeMenuConfig from './node';
-import blankMenuConfig from './blank';
 
-export { nodeMenuConfig, blankMenuConfig };
+export { edgeMenuConfig, nodeMenuConfig };

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Graph } from '@antv/x6';
 import shortcuts from '../../../../common/shortcuts';
 import { SnippetsOutlined } from '@ant-design/icons';

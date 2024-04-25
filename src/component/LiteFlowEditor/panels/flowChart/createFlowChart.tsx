@@ -9,6 +9,7 @@ import {
   Graph,
   Rectangle,
 } from '@antv/x6';
+import { debounce } from 'lodash';
 import shortcuts from '../../common/shortcuts';
 import {
   MIN_ZOOM,
@@ -176,22 +177,6 @@ const registerEvents = (flowChart: Graph): void => {
       scene: 'blank',
     });
   });
-  flowChart.on('black:mousedown', (args: any) => {
-    const {
-      e: { clientX, clientY },
-    } = args;
-    flowChart.cleanSelection();
-    flowChart.trigger('graph:hideContextPad', {
-      x: clientX,
-      y: clientY,
-      scene: 'blank',
-    });
-    flowChart.trigger('graph:hideContextMenu', {
-      x: clientX,
-      y: clientY,
-      scene: 'blank',
-    });
-  });
 };
 
 const registerShortcuts = (flowChart: Graph): void => {
@@ -218,11 +203,9 @@ const createFlowChart = (
         content.style.alignItems = 'center';
         content.style.justifyContent = 'center';
         if (label?.attrs?.label.text === '+') {
-          const handleOnClick = (e: any) => {
-            setTimeout(() => {
-              flowChart.trigger('graph:addNodeOnEdge', { e, edge });
-            });
-          };
+          const handleOnClick = debounce((e: any) => {
+            flowChart.trigger('graph:addNodeOnEdge', { e, edge });
+          }, 100);
           ReactDOM.render(
             // @ts-ignore
             <Button
