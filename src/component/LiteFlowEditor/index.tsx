@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Graph } from '@antv/x6';
+import { Graph, Edge } from '@antv/x6';
 import createFlowChart from './panels/flowChart/createFlowChart';
 import NodeEditorModal from './panels/flowChart/nodeEditorModal';
 import FlowChartContextMenu from './panels/flowChart/contextMenu';
@@ -23,10 +23,24 @@ interface IMenuInfo {
   visible: boolean;
 }
 
-const defaultMenuInfo = {
+const defaultMenuInfo: IMenuInfo = {
   x: 0,
   y: 0,
   scene: 'blank',
+  visible: false,
+};
+
+interface IPadInfo {
+  x: number;
+  y: number;
+  edge: Edge;
+  visible: boolean;
+}
+
+const defaultPadInfo: IPadInfo = {
+  x: 0,
+  y: 0,
+  edge: Edge.create({}),
   visible: false,
 };
 
@@ -39,7 +53,7 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   const [contextMenuInfo, setContextMenuInfo] =
     useState<IMenuInfo>(defaultMenuInfo);
   const [contextPadInfo, setContextPadInfo] =
-    useState<IMenuInfo>(defaultMenuInfo);
+    useState<IPadInfo>(defaultPadInfo);
 
   useEffect(() => {
     if (graphRef.current && miniMapRef.current) {
@@ -77,7 +91,7 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
       flowChart?.unlockScroller();
       setContextMenuInfo({ ...contextMenuInfo, visible: false });
     };
-    const showContextPad = (info: IMenuInfo) => {
+    const showContextPad = (info: IPadInfo) => {
       flowChart?.lockScroller();
       setContextPadInfo({ ...info, visible: true });
     };
