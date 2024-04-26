@@ -22,10 +22,12 @@ const Basic: React.FC<IProps> = (props) => {
   const handleOnChange = (value: string = selectedValue) => {
     const mockData = mocks[value] as any;
     const modelJSON = render(mockData);
+    flowChart.scroller.disableAutoResize();
     flowChart.startBatch('update');
     flowChart.resetCells(modelJSON);
     forceLayout(flowChart);
     flowChart.stopBatch('update');
+    flowChart.scroller.enableAutoResize();
 
     setELString(toString(mockData));
     setSelectedValue(value);
