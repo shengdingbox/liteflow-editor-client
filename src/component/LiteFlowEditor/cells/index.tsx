@@ -1,9 +1,7 @@
 import { Graph } from '@antv/x6';
 import '@antv/x6-react-shape';
 import classNames from 'classnames';
-import { debounce } from 'lodash';
 import { NODE_WIDTH, NODE_HEIGHT } from '../constant';
-import styles from './index.module.less';
 // 开始 & 结束
 import { default as Start } from './start';
 import { default as End } from './end';
@@ -20,41 +18,8 @@ import { default as While } from './while';
 // 其他辅助节点
 import { default as Virtual } from './virtual';
 
-const AddNodeButtons: React.FC<any> = (props) => {
-  const { node } = props;
-  const onPrepend = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph.cleanSelection();
-    node.model?.graph.trigger('graph:showContextPad', {
-      x: clientX,
-      y: clientY,
-      edge: (node.model?.getIncomingEdges(node) || [])[0],
-    });
-  }, 100);
-  const onAppend = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph.cleanSelection();
-    node.model?.graph.trigger('graph:showContextPad', {
-      x: clientX,
-      y: clientY,
-      edge: (node.model?.getOutgoingEdges(node) || [])[0],
-    });
-  }, 100);
-  return (
-    <div className={classNames(styles.liteflowAddNodeButtons)}>
-      <div
-        className={classNames(styles.liteflowAddNodePrepend)}
-        onClick={onPrepend}
-      >
-        <div className={classNames(styles.liteflowAddNodePrependIcon)}></div>
-      </div>
-      <div
-        className={classNames(styles.liteflowAddNodeAppend)}
-        onClick={onAppend}
-      >
-        <div className={classNames(styles.liteflowAddNodeAppendIcon)}></div>
-      </div>
-    </div>
-  );
-};
+import AddNodeButtons from '../components/AddNodeButtons';
+import styles from './index.module.less';
 
 export const View: React.FC<any> = (props) => {
   const { icon, node } = props;
