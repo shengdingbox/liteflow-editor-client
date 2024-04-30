@@ -20,7 +20,7 @@ import {
   LITEFLOW_ROUTER,
   LITEFLOW_ANCHOR,
 } from '../../constant';
-import { forceLayout } from '../../utils/layout';
+import { forceLayout } from '../../common/layout';
 import { getSelectedEdges } from '../../utils/flowChartUtils';
 import MiniMapSimpleNode from './miniMapSimpleNode';
 import liteflowEdge from '../../common/edge';

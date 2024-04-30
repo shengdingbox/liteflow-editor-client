@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Graph } from '@antv/x6';
 import { Select } from 'antd';
-import { forceLayout } from '../../../utils/layout';
+import { forceLayout } from '../../../common/layout';
 import mocks from '../../../mock';
 import render, { toString } from '../../../model';
 import styles from './index.module.less';
