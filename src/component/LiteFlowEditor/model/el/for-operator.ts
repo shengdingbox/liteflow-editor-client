@@ -36,7 +36,6 @@ export default class ForOperator implements ELNode {
     const { condition, children, parent } = this;
     const start = Node.create({
       shape: condition.type,
-      view: 'react-shape-view',
       attrs: {
         label: { text: condition.id },
       },
@@ -52,7 +51,6 @@ export default class ForOperator implements ELNode {
     );
     const end = Node.create({
       shape: NODE_TYPE_INTERMEDIATE_END,
-      view: 'react-shape-view',
       attrs: {
         label: { text: '' },
       },

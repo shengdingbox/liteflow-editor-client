@@ -25,7 +25,6 @@ export default class Chain implements ELNode {
     // 1. 首先：添加一个开始节点
     const start: Node = Node.create({
       shape: NODE_TYPE_START,
-      view: 'react-shape-view',
       attrs: {
         label: { text: '开始' },
       },
@@ -43,7 +42,6 @@ export default class Chain implements ELNode {
     // 3. 最后：添加一个结束节点
     const last: Node = Node.create({
       shape: NODE_TYPE_END,
-      view: 'react-shape-view',
       attrs: {
         label: { text: '结束' },
       },

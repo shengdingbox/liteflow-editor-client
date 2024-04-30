@@ -29,7 +29,6 @@ export default class WhenOperator implements ELNode {
     const { children, parent } = this;
     const start = Node.create({
       shape: ConditionTypeEnum.WHEN,
-      view: 'react-shape-view',
       attrs: {
         label: { text: '' },
       },
@@ -45,7 +44,6 @@ export default class WhenOperator implements ELNode {
     );
     const end = Node.create({
       shape: NODE_TYPE_INTERMEDIATE_END,
-      view: 'react-shape-view',
       attrs: {
         label: { text: '' },
       },

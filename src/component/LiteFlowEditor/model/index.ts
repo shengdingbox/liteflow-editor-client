@@ -23,7 +23,6 @@ export default function render(data: Record<string, any>) {
   // 1. 首先：添加一个开始节点
   const start: Node = Node.create({
     shape: NODE_TYPE_START,
-    view: 'react-shape-view',
     attrs: {
       label: { text: '开始' },
     },
@@ -38,7 +37,6 @@ export default function render(data: Record<string, any>) {
   // 3. 最后：添加一个结束节点
   const last: Node = Node.create({
     shape: NODE_TYPE_END,
-    view: 'react-shape-view',
     attrs: {
       label: { text: '结束' },
     },
@@ -119,7 +117,6 @@ function parseWhen({
   const { children } = data;
   const start = Node.create({
     shape: ConditionTypeEnum.WHEN,
-    view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
@@ -135,7 +132,6 @@ function parseWhen({
   );
   const end = Node.create({
     shape: NODE_TYPE_INTERMEDIATE_END,
-    view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
@@ -171,7 +167,6 @@ function parseSwitch({
   const { condition, children } = data;
   const start = Node.create({
     shape: condition.type,
-    view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
@@ -187,7 +182,6 @@ function parseSwitch({
   );
   const end = Node.create({
     shape: NODE_TYPE_INTERMEDIATE_END,
-    view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
@@ -217,7 +211,6 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
   const { condition, children = [] } = data;
   const start = Node.create({
     shape: condition.type,
-    view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
@@ -233,7 +226,6 @@ function parseIf({ data, parent, cells, previous, options }: ParseParameters) {
   );
   const end = Node.create({
     shape: NODE_TYPE_INTERMEDIATE_END,
-    view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
@@ -297,7 +289,6 @@ function parseLoop({
   const { condition, children } = data;
   const start = Node.create({
     shape: condition.type,
-    view: 'react-shape-view',
     attrs: {
       label: { text: condition.id },
     },
@@ -313,7 +304,6 @@ function parseLoop({
   );
   const end = Node.create({
     shape: NODE_TYPE_INTERMEDIATE_END,
-    view: 'react-shape-view',
     attrs: {
       label: { text: '' },
     },
@@ -368,7 +358,6 @@ function parseCommon({
   const { id, type } = data;
   const common = Node.create({
     shape: type,
-    view: 'react-shape-view',
     attrs: {
       label: { text: id },
     },

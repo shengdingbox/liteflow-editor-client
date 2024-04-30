@@ -24,7 +24,6 @@ export default class NodeOperator implements ELNode {
     const { id, type, parent } = this;
     const node = Node.create({
       shape: type,
-      view: 'react-shape-view',
       attrs: {
         label: { text: id },
       },
