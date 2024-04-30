@@ -1,4 +1,3 @@
-export { default as BaseOperator } from './base';
 // 1. 顺序类
 export { default as ThenOperator } from './then-operator';
 export { default as WhenOperator } from './when-operator';

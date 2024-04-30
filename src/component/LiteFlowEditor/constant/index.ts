@@ -51,6 +51,8 @@ export enum NodeTypeEnum {
 
 /** 逻辑编排类型 */
 export enum ConditionTypeEnum {
+  CHAIN = 'CHAIN', // chain，编排的根节点
+
   THEN = 'THEN', // then，串行编排
 
   WHEN = 'WHEN', // when，并行编排
