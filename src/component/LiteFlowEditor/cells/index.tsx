@@ -1,6 +1,5 @@
 import { Graph } from '@antv/x6';
 import '@antv/x6-react-shape';
-import classNames from 'classnames';
 import { NODE_WIDTH, NODE_HEIGHT } from '../constant';
 // 开始 & 结束
 import { default as Start } from './start';
@@ -18,18 +17,7 @@ import { default as While } from './while';
 // 其他辅助节点
 import { default as Virtual } from './virtual';
 
-import AddNodeButtons from '../components/AddNodeButtons';
-import styles from './index.module.less';
-
-export const View: React.FC<any> = (props) => {
-  const { icon, node } = props;
-  return (
-    <div className={classNames(styles.liteflowShapeWrapper)}>
-      <img className={styles.liteflowShapeSvg} src={icon}></img>
-      <AddNodeButtons node={node} />
-    </div>
-  );
-};
+import NodeView from '../components/NodeView';
 
 [
   Start,
@@ -49,7 +37,7 @@ export const View: React.FC<any> = (props) => {
     // primer: 'circle',
     inherit: 'react-shape',
     component(node: any) {
-      return <View node={node} icon={icon} />;
+      return <NodeView node={node} icon={icon} />;
     },
     width: NODE_WIDTH,
     height: NODE_HEIGHT,

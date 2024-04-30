@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { debounce } from 'lodash';
-import styles from './index.less';
+import styles from './index.module.less';
 
 const AddNodeButtons: React.FC<any> = (props) => {
   const { node } = props;
