@@ -4,24 +4,28 @@ import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
   NODE_TYPE_INTERMEDIATE_END,
+  NodeTypeEnum,
 } from '../../constant';
+import NodeOperator from './node-operator';
 
 export default class WhileOperator extends ELNode {
   type = ConditionTypeEnum.WHILE;
   parent: ELNode;
-  condition: ELNode;
+  condition: ELNode = new NodeOperator(this, NodeTypeEnum.VIRTUAL, '');
   children: ELNode[] = [];
   properties?: Properties;
 
   constructor(
     parent: ELNode,
-    condition: ELNode,
+    condition?: ELNode,
     children?: ELNode[],
     properties?: Properties,
   ) {
     super();
     this.parent = parent;
-    this.condition = condition;
+    if (condition) {
+      this.condition = condition;
+    }
     if (children) {
       this.children = children;
     }
