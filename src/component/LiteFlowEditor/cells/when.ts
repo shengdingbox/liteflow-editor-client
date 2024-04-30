@@ -1,7 +1,7 @@
-import { ConditionTypeEnum } from '../../constant';
-import icon from './icon.svg';
+import { ConditionTypeEnum } from '../constant';
+import icon from '../assets/when-icon.svg';
 
-const config = {
+const config: LiteFlowNode = {
   label: '并行(When)',
   type: ConditionTypeEnum.WHEN,
   icon,

@@ -9,7 +9,7 @@ declare module '*.svg' {
   export default url;
 }
 
-declare interface FlowNode {
+declare interface LiteFlowNode {
   type: string;
   label: string;
   icon: string;
