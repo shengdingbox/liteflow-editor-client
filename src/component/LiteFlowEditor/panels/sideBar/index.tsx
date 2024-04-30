@@ -8,7 +8,7 @@ import {
   BRANCH_GROUP,
   CONTROL_GROUP,
 } from '../../cells';
-import { findViewsFromPoint } from '../flowGraph/createFlowChart';
+import { findViewsFromPoint } from '../../common/events';
 import styles from './index.module.less';
 
 const { Panel } = Collapse;
@@ -16,7 +16,7 @@ const { Panel } = Collapse;
 interface IGroupItem {
   key: string;
   name: string;
-  cellTypes: FlowNode[];
+  cellTypes: LiteFlowNode[];
 }
 
 interface ISideBarProps {
@@ -89,7 +89,7 @@ const View: React.FC<any> = (props) => {
 
 interface IPanelContentProps {
   dnd: Addon.Dnd;
-  cellTypes: FlowNode[];
+  cellTypes: LiteFlowNode[];
 }
 
 const PanelContent: React.FC<IPanelContentProps> = (props) => {
