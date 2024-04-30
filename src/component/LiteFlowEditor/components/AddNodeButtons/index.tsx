@@ -5,7 +5,6 @@ import styles from './index.module.less';
 const AddNodeButtons: React.FC<any> = (props) => {
   const { node } = props;
   const onPrepend = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph.cleanSelection();
     node.model?.graph.trigger('graph:showContextPad', {
       x: clientX,
       y: clientY,
@@ -13,7 +12,6 @@ const AddNodeButtons: React.FC<any> = (props) => {
     });
   }, 100);
   const onAppend = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph.cleanSelection();
     node.model?.graph.trigger('graph:showContextPad', {
       x: clientX,
       y: clientY,

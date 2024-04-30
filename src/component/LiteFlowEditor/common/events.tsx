@@ -1,6 +1,5 @@
-import { CellView, Dom, Edge, EdgeView, Graph, Rectangle } from '@antv/x6';
+import { Dom, Graph, Rectangle } from '@antv/x6';
 import { NodeTypeEnum, ConditionTypeEnum } from '../constant';
-import { forceLayout } from './layout';
 import { getSelectedEdges } from '../utils/flowChartUtils';
 
 export function findViewsFromPoint(flowGraph: Graph, x: number, y: number) {
@@ -58,7 +57,6 @@ const registerEvents = (flowGraph: Graph): void => {
         type: NodeTypeEnum.COMMON,
         id: `xxx${Math.ceil(Math.random() * 100)}`,
       });
-      flowGraph.cleanSelection();
       flowGraph.trigger('model:change');
     }
   });
@@ -94,7 +92,6 @@ const registerEvents = (flowGraph: Graph): void => {
       e: { clientX, clientY },
       edge,
     } = args;
-    flowGraph.cleanSelection();
     flowGraph.trigger('graph:showContextPad', {
       x: clientX,
       y: clientY,
