@@ -68,17 +68,17 @@ export function parse({
 
   switch (data.type) {
     // 1、编排类：顺序、分支、循环
-    case ConditionTypeEnum.TYPE_THEN:
+    case ConditionTypeEnum.THEN:
       return parseThen({ data, parent, cells, previous, options });
-    case ConditionTypeEnum.TYPE_WHEN:
+    case ConditionTypeEnum.WHEN:
       return parseWhen({ data, parent, cells, previous, options });
-    case ConditionTypeEnum.TYPE_SWITCH:
+    case ConditionTypeEnum.SWITCH:
       return parseSwitch({ data, parent, cells, previous, options });
-    case ConditionTypeEnum.TYPE_IF:
+    case ConditionTypeEnum.IF:
       return parseIf({ data, parent, cells, previous, options });
-    case ConditionTypeEnum.TYPE_FOR:
-    case ConditionTypeEnum.TYPE_WHILE:
-    case ConditionTypeEnum.TYPE_ITERATOR:
+    case ConditionTypeEnum.FOR:
+    case ConditionTypeEnum.WHILE:
+    case ConditionTypeEnum.ITERATOR:
       return parseLoop({ data, parent, cells, previous, options });
 
     // 2、组件类：顺序、分支、循环
@@ -118,7 +118,7 @@ function parseWhen({
 }: ParseParameters) {
   const { children } = data;
   const start = Node.create({
-    shape: ConditionTypeEnum.TYPE_WHEN,
+    shape: ConditionTypeEnum.WHEN,
     view: 'react-shape-view',
     attrs: {
       label: { text: '' },
@@ -319,10 +319,7 @@ function parseLoop({
     },
   });
   end.setData({ model: data, parent }, { overwrite: true });
-  if (
-    children.length === 1 &&
-    children[0].type === ConditionTypeEnum.TYPE_THEN
-  ) {
+  if (children.length === 1 && children[0].type === ConditionTypeEnum.THEN) {
     children[0].children.forEach((child: Record<string, any>) => {
       const next = parse({
         data: child,

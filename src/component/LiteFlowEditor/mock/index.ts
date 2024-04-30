@@ -2,7 +2,7 @@ import { ConditionTypeEnum, NodeTypeEnum } from '../constant';
 export default {
   // 串行编排(THEN)
   THEN: {
-    type: ConditionTypeEnum.TYPE_THEN,
+    type: ConditionTypeEnum.THEN,
     children: [
       { type: NodeTypeEnum.COMMON, id: 'a' },
       { type: NodeTypeEnum.COMMON, id: 'b' },
@@ -12,11 +12,11 @@ export default {
   },
   // 并行编排(WHEN)
   WHEN: {
-    type: ConditionTypeEnum.TYPE_THEN,
+    type: ConditionTypeEnum.THEN,
     children: [
       { type: NodeTypeEnum.COMMON, id: 'a' },
       {
-        type: ConditionTypeEnum.TYPE_WHEN,
+        type: ConditionTypeEnum.WHEN,
         children: [
           { type: NodeTypeEnum.COMMON, id: 'b' },
           { type: NodeTypeEnum.COMMON, id: 'c' },
@@ -28,7 +28,7 @@ export default {
   },
   // 选择编排(SWITCH)
   SWITCH: {
-    type: ConditionTypeEnum.TYPE_SWITCH,
+    type: ConditionTypeEnum.SWITCH,
     condition: { type: NodeTypeEnum.SWITCH, id: 'x' },
     children: [
       { type: NodeTypeEnum.COMMON, id: 'a' },
@@ -39,17 +39,17 @@ export default {
   },
   // 条件编排(IF)
   IF: {
-    type: ConditionTypeEnum.TYPE_IF,
+    type: ConditionTypeEnum.IF,
     condition: { type: NodeTypeEnum.IF, id: 'x' },
     children: [{ type: NodeTypeEnum.COMMON, id: 'a' }],
   },
   // FOR循环
   FOR: {
-    type: ConditionTypeEnum.TYPE_FOR,
+    type: ConditionTypeEnum.FOR,
     condition: { type: NodeTypeEnum.FOR, id: 'x' },
     children: [
       {
-        type: ConditionTypeEnum.TYPE_THEN,
+        type: ConditionTypeEnum.THEN,
         children: [
           { type: NodeTypeEnum.COMMON, id: 'a' },
           { type: NodeTypeEnum.COMMON, id: 'b' },
@@ -59,11 +59,11 @@ export default {
   },
   // WHILE循环
   WHILE: {
-    type: ConditionTypeEnum.TYPE_WHILE,
+    type: ConditionTypeEnum.WHILE,
     condition: { type: NodeTypeEnum.WHILE, id: 'x' },
     children: [
       {
-        type: ConditionTypeEnum.TYPE_THEN,
+        type: ConditionTypeEnum.THEN,
         children: [
           { type: NodeTypeEnum.COMMON, id: 'a' },
           { type: NodeTypeEnum.COMMON, id: 'b' },
@@ -73,11 +73,11 @@ export default {
   },
   // ITERATOR循环
   ITERATOR: {
-    type: ConditionTypeEnum.TYPE_ITERATOR,
+    type: ConditionTypeEnum.ITERATOR,
     condition: { type: NodeTypeEnum.ITERATOR, id: 'x' },
     children: [
       {
-        type: ConditionTypeEnum.TYPE_THEN,
+        type: ConditionTypeEnum.THEN,
         children: [
           { type: NodeTypeEnum.COMMON, id: 'a' },
           { type: NodeTypeEnum.COMMON, id: 'b' },

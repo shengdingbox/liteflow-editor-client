@@ -15,7 +15,7 @@ const Basic: React.FC<IProps> = (props) => {
   const { flowChart } = props;
 
   const [selectedValue, setSelectedValue] = useState<string>(
-    ConditionTypeEnum.TYPE_THEN,
+    ConditionTypeEnum.THEN,
   );
   const [elString, setELString] = useState<string>('');
 
@@ -34,7 +34,7 @@ const Basic: React.FC<IProps> = (props) => {
   };
 
   useEffect(() => {
-    handleOnChange(ConditionTypeEnum.TYPE_THEN);
+    handleOnChange(ConditionTypeEnum.THEN);
   }, []);
 
   useEffect(() => {
@@ -54,8 +54,8 @@ const Basic: React.FC<IProps> = (props) => {
           {
             label: '顺序类',
             options: [
-              { label: '串行编排(THEN)', value: ConditionTypeEnum.TYPE_THEN },
-              { label: '并行编排(WHEN)', value: ConditionTypeEnum.TYPE_WHEN },
+              { label: '串行编排(THEN)', value: ConditionTypeEnum.THEN },
+              { label: '并行编排(WHEN)', value: ConditionTypeEnum.WHEN },
             ],
           },
           {
@@ -63,16 +63,16 @@ const Basic: React.FC<IProps> = (props) => {
             options: [
               {
                 label: '选择编排(SWITCH)',
-                value: ConditionTypeEnum.TYPE_SWITCH,
+                value: ConditionTypeEnum.SWITCH,
               },
-              { label: '条件编排(IF)', value: ConditionTypeEnum.TYPE_IF },
+              { label: '条件编排(IF)', value: ConditionTypeEnum.IF },
             ],
           },
           {
             label: '循环类',
             options: [
-              { label: 'FOR循环', value: ConditionTypeEnum.TYPE_FOR },
-              { label: 'WHILE循环', value: ConditionTypeEnum.TYPE_WHILE },
+              { label: 'FOR循环', value: ConditionTypeEnum.FOR },
+              { label: 'WHILE循环', value: ConditionTypeEnum.WHILE },
             ],
           },
         ]}

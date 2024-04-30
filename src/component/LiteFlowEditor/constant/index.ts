@@ -51,31 +51,33 @@ export enum NodeTypeEnum {
 
 /** 逻辑编排类型 */
 export enum ConditionTypeEnum {
-  TYPE_THEN = 'THEN', // then
+  THEN = 'THEN', // then，串行编排
 
-  TYPE_WHEN = 'WHEN', // when
+  WHEN = 'WHEN', // when，并行编排
 
-  TYPE_SWITCH = 'SWITCH', // switch
+  SWITCH = 'SWITCH', // switch，选择编排
 
-  TYPE_IF = 'IF', // if
+  IF = 'IF', // if，条件编排
 
-  TYPE_PRE = 'PRE', // pre
+  PRE = 'PRE', // pre
 
-  TYPE_FINALLY = 'FINALLY', // finally
+  FINALLY = 'FINALLY', // finally
 
-  TYPE_FOR = 'FOR', // for
+  FOR = 'FOR', // for，循环编排
 
-  TYPE_WHILE = 'WHILE', // while
+  WHILE = 'WHILE', // while，循环编排
 
-  TYPE_ITERATOR = 'ITERATOR', // iterator
+  ITERATOR = 'ITERATOR', // iterator
 
-  TYPE_BREAK = 'BREAK', // break
+  BREAK = 'BREAK', // break
 
-  TYPE_CATCH = 'CATCH', // catch
+  CATCH = 'CATCH', // catch
 
-  TYPE_AND_OR_OPT = 'AND_OR_OPT', // and_or_opt
+  AND = 'AND', // and，与
 
-  TYPE_NOT_OPT = 'NOT_OPT', // not_opt
+  OR = 'OR', // or，或
 
-  TYPE_ABSTRACT = 'ABSTRACT', // abstract
+  NOT = 'NOT', // not，非
+
+  ABSTRACT = 'ABSTRACT', // abstract
 }

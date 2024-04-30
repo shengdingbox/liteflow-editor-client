@@ -129,7 +129,7 @@ const registerEvents = (flowChart: Graph): void => {
   });
   flowChart.on('node:click', (args) => {
     const targetNode = args.node;
-    if (targetNode.shape === ConditionTypeEnum.TYPE_WHEN) {
+    if (targetNode.shape === ConditionTypeEnum.WHEN) {
       const targetNodeData = targetNode.getData().model;
       targetNodeData.children.push({
         type: NodeTypeEnum.COMMON,
@@ -195,9 +195,9 @@ const registerEvents = (flowChart: Graph): void => {
       targetIndex = targetParent.children.indexOf(targetModel);
     }
     switch (droppingNode.shape) {
-      case ConditionTypeEnum.TYPE_WHEN:
+      case ConditionTypeEnum.WHEN:
         targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.TYPE_WHEN,
+          type: ConditionTypeEnum.WHEN,
           children: [
             {
               type: NodeTypeEnum.COMMON,
@@ -209,7 +209,7 @@ const registerEvents = (flowChart: Graph): void => {
         break;
       case NodeTypeEnum.SWITCH:
         targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.TYPE_SWITCH,
+          type: ConditionTypeEnum.SWITCH,
           condition: {
             type: NodeTypeEnum.SWITCH,
             id: `x${Math.ceil(Math.random() * 100)}`,
@@ -225,7 +225,7 @@ const registerEvents = (flowChart: Graph): void => {
         break;
       case NodeTypeEnum.IF:
         targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.TYPE_IF,
+          type: ConditionTypeEnum.IF,
           condition: {
             type: NodeTypeEnum.IF,
             id: `x${Math.ceil(Math.random() * 100)}`,
@@ -241,14 +241,14 @@ const registerEvents = (flowChart: Graph): void => {
         break;
       case NodeTypeEnum.FOR:
         targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.TYPE_FOR,
+          type: ConditionTypeEnum.FOR,
           condition: {
             type: NodeTypeEnum.FOR,
             id: `x${Math.ceil(Math.random() * 100)}`,
           },
           children: [
             {
-              type: ConditionTypeEnum.TYPE_THEN,
+              type: ConditionTypeEnum.THEN,
               children: [
                 {
                   type: NodeTypeEnum.COMMON,
@@ -262,14 +262,14 @@ const registerEvents = (flowChart: Graph): void => {
         break;
       case NodeTypeEnum.WHILE:
         targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.TYPE_WHILE,
+          type: ConditionTypeEnum.WHILE,
           condition: {
             type: NodeTypeEnum.WHILE,
             id: `x${Math.ceil(Math.random() * 100)}`,
           },
           children: [
             {
-              type: ConditionTypeEnum.TYPE_THEN,
+              type: ConditionTypeEnum.THEN,
               children: [
                 {
                   type: NodeTypeEnum.COMMON,
@@ -283,7 +283,7 @@ const registerEvents = (flowChart: Graph): void => {
         break;
       case NodeTypeEnum.COMMON:
         targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.TYPE_THEN,
+          type: ConditionTypeEnum.THEN,
           children: [
             {
               type: NodeTypeEnum.COMMON,

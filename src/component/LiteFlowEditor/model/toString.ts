@@ -9,17 +9,17 @@ export default function toString(data: Record<string, any>) {
 function parse(data: Record<string, any>): string {
   switch (data.type) {
     // 1、编排类：顺序、分支、循环
-    case ConditionTypeEnum.TYPE_THEN:
+    case ConditionTypeEnum.THEN:
       return parseThen(data);
-    case ConditionTypeEnum.TYPE_WHEN:
+    case ConditionTypeEnum.WHEN:
       return parseWhen(data);
-    case ConditionTypeEnum.TYPE_SWITCH:
+    case ConditionTypeEnum.SWITCH:
       return parseSwitch(data);
-    case ConditionTypeEnum.TYPE_IF:
+    case ConditionTypeEnum.IF:
       return parseIf(data);
-    case ConditionTypeEnum.TYPE_FOR:
-    case ConditionTypeEnum.TYPE_WHILE:
-    case ConditionTypeEnum.TYPE_ITERATOR:
+    case ConditionTypeEnum.FOR:
+    case ConditionTypeEnum.WHILE:
+    case ConditionTypeEnum.ITERATOR:
       return parseLoop(data);
 
     // 2、组件类：顺序、分支、循环
