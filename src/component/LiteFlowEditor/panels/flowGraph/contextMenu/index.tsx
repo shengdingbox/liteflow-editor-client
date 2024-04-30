@@ -12,7 +12,7 @@ interface IProps {
   y: number;
   scene: string;
   visible: boolean;
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 interface IMenuConfig {
@@ -21,8 +21,8 @@ interface IMenuConfig {
   icon?: React.ReactElement;
   children?: IMenuConfig[];
   showDividerBehind?: boolean;
-  disabled?: boolean | ((flowChart: Graph) => boolean);
-  handler: (flowChart: Graph) => void;
+  disabled?: boolean | ((flowGraph: Graph) => boolean);
+  handler: (flowGraph: Graph) => void;
 }
 
 const menuConfigMap: { [scene: string]: IMenuConfig[] } = {
@@ -32,14 +32,14 @@ const menuConfigMap: { [scene: string]: IMenuConfig[] } = {
 
 const FlowChartContextMenu: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
-  const { x, y, scene, visible, flowChart } = props;
+  const { x, y, scene, visible, flowGraph } = props;
   const menuConfig = menuConfigMap[scene];
 
   useClickAway(() => onClickAway(), menuRef);
 
   const onClickAway = useCallback(
-    () => flowChart.trigger('graph:hideContextMenu'),
-    [flowChart],
+    () => flowGraph.trigger('graph:hideContextMenu'),
+    [flowGraph],
   );
   const onClickMenu = useCallback(
     ({ key }) => {
@@ -47,10 +47,10 @@ const FlowChartContextMenu: React.FC<IProps> = (props) => {
       const handler = handlerMap[key];
       if (handler) {
         onClickAway();
-        handler(flowChart);
+        handler(flowGraph);
       }
     },
-    [flowChart, menuConfig],
+    [flowGraph, menuConfig],
   );
 
   return !visible ? null : (
@@ -60,7 +60,7 @@ const FlowChartContextMenu: React.FC<IProps> = (props) => {
       style={{ left: x, top: y }}
     >
       <Menu mode={'vertical'} selectable={false} onClick={onClickMenu}>
-        {Helper.makeMenuContent(flowChart, menuConfig)}
+        {Helper.makeMenuContent(flowGraph, menuConfig)}
       </Menu>
     </div>
   );
@@ -69,7 +69,7 @@ const FlowChartContextMenu: React.FC<IProps> = (props) => {
 const Helper = {
   makeMenuHandlerMap(config: IMenuConfig[]) {
     const queue = config.slice(0);
-    const handlerMap: { [key: string]: (flowChart: Graph) => void } = {};
+    const handlerMap: { [key: string]: (flowGraph: Graph) => void } = {};
     while (queue.length > 0) {
       const { key, handler, children } = queue.pop() as IMenuConfig;
       if (children && children.length > 0) {
@@ -80,7 +80,7 @@ const Helper = {
     }
     return handlerMap;
   },
-  makeMenuContent(flowChart: Graph, menuConfig: IMenuConfig[]) {
+  makeMenuContent(flowGraph: Graph, menuConfig: IMenuConfig[]) {
     const loop = (config: IMenuConfig[]) => {
       return config.map((item) => {
         let content = null;
@@ -93,7 +93,7 @@ const Helper = {
           showDividerBehind,
         } = item;
         if (typeof disabled === 'function') {
-          disabled = disabled(flowChart);
+          disabled = disabled(flowGraph);
         }
         if (children && children.length > 0) {
           content = (

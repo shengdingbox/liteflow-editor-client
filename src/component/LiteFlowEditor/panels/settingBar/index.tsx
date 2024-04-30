@@ -7,17 +7,17 @@ import styles from './index.module.less';
 const { TabPane } = Tabs;
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const SettingBar: React.FC<IProps> = (props) => {
-  const { flowChart } = props;
+  const { flowGraph } = props;
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
 
   useEffect(() => {
-    flowChart.on('settingBar:forceUpdate', forceUpdate);
+    flowGraph.on('settingBar:forceUpdate', forceUpdate);
     return () => {
-      flowChart.off('settingBar:forceUpdate');
+      flowGraph.off('settingBar:forceUpdate');
     };
   }, []);
 
@@ -34,7 +34,7 @@ const SettingBar: React.FC<IProps> = (props) => {
         }}
       >
         <TabPane tab={'测试'} key={'basic'}>
-          <Basic flowChart={flowChart} />
+          <Basic flowGraph={flowGraph} />
         </TabPane>
       </Tabs>
     </div>

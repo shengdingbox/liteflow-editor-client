@@ -12,7 +12,7 @@ import View from './view';
 import Layout from './layout';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const tools: React.FC<IProps>[][] = [

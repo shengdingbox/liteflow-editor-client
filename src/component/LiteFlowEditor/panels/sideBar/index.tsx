@@ -8,7 +8,7 @@ import {
   BRANCH_GROUP,
   CONTROL_GROUP,
 } from '../../cells';
-import { findViewsFromPoint } from '../flowChart/createFlowChart';
+import { findViewsFromPoint } from '../flowGraph/createFlowChart';
 import styles from './index.module.less';
 
 const { Panel } = Collapse;
@@ -20,22 +20,22 @@ interface IGroupItem {
 }
 
 interface ISideBarProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const SideBar: React.FC<ISideBarProps> = (props) => {
-  const { flowChart } = props;
+  const { flowGraph } = props;
   const [groups, setGroups] = useState<IGroupItem[]>([]);
   const dnd = useMemo(
     () =>
       new Addon.Dnd({
-        target: flowChart,
+        target: flowGraph,
         scaled: true,
         validateNode: (droppingNode: Node) => {
           const position = droppingNode.getPosition();
           const size = droppingNode.getSize();
           const cellViewsFromPoint = findViewsFromPoint(
-            flowChart,
+            flowGraph,
             position.x + size.width / 2,
             position.y + size.height / 2,
           );
@@ -43,10 +43,10 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) ||
             [];
           if (edgeViews && edgeViews.length) {
-            const currentEdge: Edge = flowChart.getCellById(
+            const currentEdge: Edge = flowGraph.getCellById(
               edgeViews[0].cell.id,
             ) as Edge;
-            flowChart.trigger('graph:addNodeOnEdge', {
+            flowGraph.trigger('graph:addNodeOnEdge', {
               edge: currentEdge,
               node: droppingNode,
             });
@@ -54,7 +54,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
           return false;
         },
       }),
-    [flowChart],
+    [flowGraph],
   );
 
   // life

@@ -15,7 +15,7 @@ const blankMenuConfig = [
     key: 'paste',
     title: '粘贴',
     icon: <SnippetsOutlined />,
-    disabled: (flowChart: Graph) => flowChart.isClipboardEmpty(),
+    disabled: (flowGraph: Graph) => flowGraph.isClipboardEmpty(),
     handler: shortcuts.paste.handler,
   },
 ];

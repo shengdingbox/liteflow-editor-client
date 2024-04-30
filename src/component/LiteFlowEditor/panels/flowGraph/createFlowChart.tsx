@@ -31,14 +31,14 @@ Graph.registerEdge(LITEFLOW_EDGE, liteflowEdge);
 Graph.registerRouter(LITEFLOW_ROUTER, liteflowRouter);
 Graph.registerAnchor(LITEFLOW_ANCHOR, liteflowAnchor);
 
-export function findViewsFromPoint(flowChart: Graph, x: number, y: number) {
-  return flowChart
+export function findViewsFromPoint(flowGraph: Graph, x: number, y: number) {
+  return flowGraph
     .getCells()
-    .map((cell) => flowChart.findViewByCell(cell))
+    .map((cell) => flowGraph.findViewByCell(cell))
     .filter((view) => {
       if (view != null) {
         let bBox = Dom.getBBox(view.container as any, {
-          target: flowChart.view.stage,
+          target: flowGraph.view.stage,
         });
         if (bBox.height < 16) {
           bBox = Rectangle.create({
@@ -54,33 +54,33 @@ export function findViewsFromPoint(flowChart: Graph, x: number, y: number) {
     }) as any[];
 }
 
-const registerEvents = (flowChart: Graph): void => {
+const registerEvents = (flowGraph: Graph): void => {
   // 当前拖动的节点、自动连接到边
   function autoLinkEdge(edge: Edge | null, args: any) {
     if (edge) {
-      flowChart.startBatch('update');
+      flowGraph.startBatch('update');
       const oldTarget = edge.getTargetNode() || undefined;
       edge.setTarget(args.node);
-      flowChart.addEdge({
+      flowGraph.addEdge({
         source: args.node,
         target: oldTarget,
       });
-      forceLayout(flowChart);
-      flowChart.stopBatch('update');
+      forceLayout(flowGraph);
+      flowGraph.stopBatch('update');
     }
   }
   let lastEdge: Edge | null;
-  flowChart.on('node:added', (args) => {
+  flowGraph.on('node:added', (args) => {
     autoLinkEdge(lastEdge, args);
-    flowChart.cleanSelection();
-    flowChart.select(args.cell);
+    flowGraph.cleanSelection();
+    flowGraph.select(args.cell);
   });
-  flowChart.on('node:moving', (args: any) => {
-    flowChart.getEdges().forEach((edge: Edge) => {
-      const edgeView = flowChart.findViewByCell(edge) as EdgeView;
+  flowGraph.on('node:moving', (args: any) => {
+    flowGraph.getEdges().forEach((edge: Edge) => {
+      const edgeView = flowGraph.findViewByCell(edge) as EdgeView;
       edgeView?.unhighlight();
     });
-    const cellViews = findViewsFromPoint(flowChart, args.x, args.y);
+    const cellViews = findViewsFromPoint(flowGraph, args.x, args.y);
     const edgeViews = cellViews.filter((cellView: CellView) =>
       cellView.isEdgeView(),
     );
@@ -88,46 +88,46 @@ const registerEvents = (flowChart: Graph): void => {
       edgeView.highlight();
     });
   });
-  flowChart.on('node:moved', (args: any) => {
-    flowChart.getEdges().forEach((edge: Edge) => {
-      const edgeView = flowChart.findViewByCell(edge) as EdgeView;
+  flowGraph.on('node:moved', (args: any) => {
+    flowGraph.getEdges().forEach((edge: Edge) => {
+      const edgeView = flowGraph.findViewByCell(edge) as EdgeView;
       edgeView?.unhighlight();
     });
-    const cellViews = findViewsFromPoint(flowChart, args.x, args.y);
+    const cellViews = findViewsFromPoint(flowGraph, args.x, args.y);
     const edgeViews = cellViews.filter((cellView: CellView) =>
       cellView.isEdgeView(),
     );
     if (edgeViews?.length) {
-      const lastEdge = flowChart.getCellById(edgeViews[0].cell.id) as Edge;
+      const lastEdge = flowGraph.getCellById(edgeViews[0].cell.id) as Edge;
       autoLinkEdge(lastEdge, args);
     }
   });
-  flowChart.on('selection:changed', () => {
-    flowChart.trigger('toolBar:forceUpdate');
-    flowChart.trigger('settingBar:forceUpdate');
+  flowGraph.on('selection:changed', () => {
+    flowGraph.trigger('toolBar:forceUpdate');
+    flowGraph.trigger('settingBar:forceUpdate');
   });
-  flowChart.on('edge:selected', (args) => {
+  flowGraph.on('edge:selected', (args) => {
     args.edge.attr('line/stroke', '#feb663', { ignore: true });
   });
-  flowChart.on('edge:unselected', (args) => {
+  flowGraph.on('edge:unselected', (args) => {
     args.edge.attr('line/stroke', '#c1c1c1', { ignore: true });
   });
-  flowChart.on('edge:mouseover', (args) => {
+  flowGraph.on('edge:mouseover', (args) => {
     lastEdge = args.edge;
     args.edge.attr('line/stroke', '#feb663', { ignore: true });
   });
-  flowChart.on('edge:mouseleave', (args) => {
+  flowGraph.on('edge:mouseleave', (args) => {
     lastEdge = null;
     const { edge } = args;
-    const selectedEdges = getSelectedEdges(flowChart);
+    const selectedEdges = getSelectedEdges(flowGraph);
     if (selectedEdges[0] !== edge) {
       args.edge.attr('line/stroke', '#c1c1c1', { ignore: true });
     }
   });
-  flowChart.on('node:dblclick', () => {
-    flowChart.trigger('graph:editNode');
+  flowGraph.on('node:dblclick', () => {
+    flowGraph.trigger('graph:editNode');
   });
-  flowChart.on('node:click', (args) => {
+  flowGraph.on('node:click', (args) => {
     const targetNode = args.node;
     if (targetNode.shape === ConditionTypeEnum.WHEN) {
       const targetNodeData = targetNode.getData().model;
@@ -135,50 +135,50 @@ const registerEvents = (flowChart: Graph): void => {
         type: NodeTypeEnum.COMMON,
         id: `xxx${Math.ceil(Math.random() * 100)}`,
       });
-      flowChart.cleanSelection();
-      flowChart.trigger('model:change');
+      flowGraph.cleanSelection();
+      flowGraph.trigger('model:change');
     }
   });
-  flowChart.on('blank:contextmenu', (args) => {
+  flowGraph.on('blank:contextmenu', (args) => {
     const {
       e: { clientX, clientY },
     } = args;
-    flowChart.cleanSelection();
-    flowChart.trigger('graph:showContextMenu', {
+    flowGraph.cleanSelection();
+    flowGraph.trigger('graph:showContextMenu', {
       x: clientX,
       y: clientY,
       scene: 'blank',
     });
   });
-  flowChart.on('node:contextmenu', (args) => {
+  flowGraph.on('node:contextmenu', (args) => {
     const {
       e: { clientX, clientY },
       node,
     } = args;
     // NOTE: if the clicked node is not in the selected nodes, then clear selection
-    if (!flowChart.getSelectedCells().includes(node)) {
-      flowChart.cleanSelection();
-      flowChart.select(node);
+    if (!flowGraph.getSelectedCells().includes(node)) {
+      flowGraph.cleanSelection();
+      flowGraph.select(node);
     }
-    flowChart.trigger('graph:showContextMenu', {
+    flowGraph.trigger('graph:showContextMenu', {
       x: clientX,
       y: clientY,
       scene: 'node',
     });
   });
-  flowChart.on('button:click', (args: any) => {
+  flowGraph.on('button:click', (args: any) => {
     const {
       e: { clientX, clientY },
       edge,
     } = args;
-    flowChart.cleanSelection();
-    flowChart.trigger('graph:showContextPad', {
+    flowGraph.cleanSelection();
+    flowGraph.trigger('graph:showContextPad', {
       x: clientX,
       y: clientY,
       edge,
     });
   });
-  flowChart.on('graph:addNodeOnEdge', (args: any) => {
+  flowGraph.on('graph:addNodeOnEdge', (args: any) => {
     const { edge: currentEdge, node: droppingNode } = args;
     let targetNode = currentEdge.getTargetNode();
     let targetData = targetNode?.getData();
@@ -205,7 +205,7 @@ const registerEvents = (flowChart: Graph): void => {
             },
           ],
         });
-        flowChart.trigger('model:change');
+        flowGraph.trigger('model:change');
         break;
       case NodeTypeEnum.SWITCH:
         targetParent.children.splice(targetIndex, 0, {
@@ -221,7 +221,7 @@ const registerEvents = (flowChart: Graph): void => {
             },
           ],
         });
-        flowChart.trigger('model:change');
+        flowGraph.trigger('model:change');
         break;
       case NodeTypeEnum.IF:
         targetParent.children.splice(targetIndex, 0, {
@@ -237,7 +237,7 @@ const registerEvents = (flowChart: Graph): void => {
             },
           ],
         });
-        flowChart.trigger('model:change');
+        flowGraph.trigger('model:change');
         break;
       case NodeTypeEnum.FOR:
         targetParent.children.splice(targetIndex, 0, {
@@ -258,7 +258,7 @@ const registerEvents = (flowChart: Graph): void => {
             },
           ],
         });
-        flowChart.trigger('model:change');
+        flowGraph.trigger('model:change');
         break;
       case NodeTypeEnum.WHILE:
         targetParent.children.splice(targetIndex, 0, {
@@ -279,7 +279,7 @@ const registerEvents = (flowChart: Graph): void => {
             },
           ],
         });
-        flowChart.trigger('model:change');
+        flowGraph.trigger('model:change');
         break;
       case NodeTypeEnum.COMMON:
         targetParent.children.splice(targetIndex, 0, {
@@ -291,22 +291,22 @@ const registerEvents = (flowChart: Graph): void => {
             },
           ],
         });
-        flowChart.trigger('model:change');
+        flowGraph.trigger('model:change');
         break;
       default:
         targetParent.children.splice(targetIndex, 0, {
           type: NodeTypeEnum.COMMON,
           id: `common${Math.ceil(Math.random() * 100)}`,
         });
-        flowChart.trigger('model:change');
+        flowGraph.trigger('model:change');
     }
   });
 };
 
-const registerShortcuts = (flowChart: Graph): void => {
+const registerShortcuts = (flowGraph: Graph): void => {
   Object.values(shortcuts).forEach((shortcut) => {
     const { keys, handler } = shortcut;
-    flowChart.bindKey(keys, () => handler(flowChart));
+    flowGraph.bindKey(keys, () => handler(flowGraph));
   });
 };
 
@@ -314,7 +314,7 @@ const createFlowChart = (
   container: HTMLDivElement,
   miniMapContainer: HTMLDivElement,
 ): Graph => {
-  const flowChart = new Graph({
+  const flowGraph = new Graph({
     autoResize: true,
     container,
     rotating: false,
@@ -328,7 +328,7 @@ const createFlowChart = (
         content.style.justifyContent = 'center';
         if (label?.attrs?.label.text === '+') {
           const handleOnClick = debounce((e: any) => {
-            flowChart.trigger('button:click', { e, edge });
+            flowGraph.trigger('button:click', { e, edge });
           }, 100);
           ReactDOM.render(
             // @ts-ignore
@@ -481,9 +481,9 @@ const createFlowChart = (
       edgeLabelMovable: true,
     },
   });
-  registerEvents(flowChart);
-  registerShortcuts(flowChart);
-  return flowChart;
+  registerEvents(flowGraph);
+  registerShortcuts(flowGraph);
+  return flowGraph;
 };
 
 export default createFlowChart;

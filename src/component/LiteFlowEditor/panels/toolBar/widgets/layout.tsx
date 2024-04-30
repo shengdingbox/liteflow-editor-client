@@ -6,20 +6,20 @@ import makeBtnWidget from './common/makeBtnWidget';
 import { forceLayout } from '../../../common/layout';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const Edit: React.FC<IProps> = makeBtnWidget({
   tooltip: '自动布局',
-  handler(flowChart: Graph) {
-    flowChart.startBatch('layout');
-    forceLayout(flowChart);
-    flowChart.stopBatch('layout');
+  handler(flowGraph: Graph) {
+    flowGraph.startBatch('layout');
+    forceLayout(flowGraph);
+    flowGraph.stopBatch('layout');
   },
   getIcon() {
     return <LayoutOutlined />;
   },
-  disabled(flowChart: Graph) {
+  disabled(flowGraph: Graph) {
     return false;
   },
 });

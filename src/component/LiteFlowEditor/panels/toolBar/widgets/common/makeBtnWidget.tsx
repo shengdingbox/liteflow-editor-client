@@ -6,39 +6,39 @@ import { useGraph } from '../../../../hooks';
 
 interface IOptions {
   tooltip: string;
-  getIcon: (flowChart: Graph) => ReactElement;
-  handler: (flowChart: Graph) => void;
-  disabled?: (flowChart: Graph) => boolean;
-  selected?: (flowChart: Graph) => boolean;
+  getIcon: (flowGraph: Graph) => ReactElement;
+  handler: (flowGraph: Graph) => void;
+  disabled?: (flowGraph: Graph) => boolean;
+  selected?: (flowGraph: Graph) => boolean;
 }
 
 interface IBtnWidgetProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const makeBtnWidget = (options: IOptions) => {
   const Widget: React.FC<IBtnWidgetProps> = () => {
-    const flowChart = useGraph();
+    const flowGraph = useGraph();
     const { tooltip, getIcon, handler } = options;
     const iconWrapperCls = [styles.btnWidget];
     let { disabled = false, selected = false } = options;
     if (typeof disabled === 'function') {
-      disabled = disabled(flowChart);
+      disabled = disabled(flowGraph);
       disabled && iconWrapperCls.push(styles.disabled);
     }
     if (typeof selected === 'function') {
-      selected = selected(flowChart);
+      selected = selected(flowGraph);
       selected && iconWrapperCls.push(styles.selected);
     }
     const onClick = (): void => {
       if (disabled) return;
-      handler(flowChart);
-      flowChart.trigger('toolBar:forceUpdate');
+      handler(flowGraph);
+      flowGraph.trigger('toolBar:forceUpdate');
     };
     return (
       <Tooltip title={tooltip}>
         <div className={iconWrapperCls.join(' ')} onClick={onClick}>
-          {getIcon(flowChart)}
+          {getIcon(flowGraph)}
         </div>
       </Tooltip>
     );

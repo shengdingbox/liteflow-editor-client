@@ -8,7 +8,7 @@ const ranksep: number = 20;
 const nodesep: number = 20;
 const controlPoints: DagreLayoutOptions['controlPoints'] = false;
 
-export const forceLayout = (flowChart: Graph, cfg: any = {}): void => {
+export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
   const dagreLayout: DagreLayout = new DagreLayout({
     begin: [40, 40],
     type: 'dagre',
@@ -31,17 +31,17 @@ export const forceLayout = (flowChart: Graph, cfg: any = {}): void => {
 
   const { nodes: newNodes } = dagreLayout.layout({
     // @ts-ignore
-    nodes: flowChart.getNodes().map((node) => {
+    nodes: flowGraph.getNodes().map((node) => {
       node.setZIndex(1);
       return node.toJSON();
     }), // @ts-ignore
-    edges: flowChart.getEdges().map((edge) => {
+    edges: flowGraph.getEdges().map((edge) => {
       edge.setZIndex(0);
       return edge.toJSON();
     }),
   });
   newNodes?.forEach((node: any) => {
-    const cell: Node | undefined = flowChart.getCellById(node.id) as
+    const cell: Node | undefined = flowGraph.getCellById(node.id) as
       | Node
       | undefined;
     if (cell) {

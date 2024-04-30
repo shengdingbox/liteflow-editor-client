@@ -6,54 +6,54 @@ import { getSelectedNodes } from '../utils/flowChartUtils';
 
 interface Shortcut {
   keys: string | string[];
-  handler: (flowChart: Graph) => void;
+  handler: (flowGraph: Graph) => void;
 }
 
 const shortcuts: { [key: string]: Shortcut } = {
   save: {
     keys: 'meta + s',
-    handler(flowChart: Graph) {
+    handler(flowGraph: Graph) {
       console.log('save');
-      console.log(flowChart.toJSON());
+      console.log(flowGraph.toJSON());
       return false;
     },
   },
   undo: {
     keys: 'meta + z',
-    handler(flowChart: Graph) {
-      flowChart.undo();
+    handler(flowGraph: Graph) {
+      flowGraph.undo();
       return false;
     },
   },
   redo: {
     keys: 'meta + shift + z',
-    handler(flowChart: Graph) {
-      flowChart.redo();
+    handler(flowGraph: Graph) {
+      flowGraph.redo();
       return false;
     },
   },
   zoomIn: {
     keys: 'meta + shift + +',
-    handler(flowChart: Graph) {
-      const nextZoom = (flowChart.zoom() + ZOOM_STEP).toPrecision(2);
-      flowChart.zoomTo(Number(nextZoom), { maxScale: MAX_ZOOM });
+    handler(flowGraph: Graph) {
+      const nextZoom = (flowGraph.zoom() + ZOOM_STEP).toPrecision(2);
+      flowGraph.zoomTo(Number(nextZoom), { maxScale: MAX_ZOOM });
       return false;
     },
   },
   zoomOut: {
     keys: 'meta + shift + -',
-    handler(flowChart: Graph) {
-      const nextZoom = (flowChart.zoom() - ZOOM_STEP).toPrecision(2);
-      flowChart.zoomTo(Number(nextZoom), { minScale: MIN_ZOOM });
+    handler(flowGraph: Graph) {
+      const nextZoom = (flowGraph.zoom() - ZOOM_STEP).toPrecision(2);
+      flowGraph.zoomTo(Number(nextZoom), { minScale: MIN_ZOOM });
       return false;
     },
   },
   copy: {
     keys: 'meta + c',
-    handler(flowChart: Graph) {
-      const cells = flowChart.getSelectedCells();
+    handler(flowGraph: Graph) {
+      const cells = flowGraph.getSelectedCells();
       if (cells.length > 0) {
-        flowChart.copy(cells);
+        flowGraph.copy(cells);
         message.success('复制成功');
       }
       return false;
@@ -61,19 +61,19 @@ const shortcuts: { [key: string]: Shortcut } = {
   },
   paste: {
     keys: 'meta + v',
-    handler(flowChart: Graph) {
-      if (!flowChart.isClipboardEmpty()) {
-        const cells = flowChart.paste({ offset: 32 });
-        flowChart.cleanSelection();
-        flowChart.select(cells);
+    handler(flowGraph: Graph) {
+      if (!flowGraph.isClipboardEmpty()) {
+        const cells = flowGraph.paste({ offset: 32 });
+        flowGraph.cleanSelection();
+        flowGraph.select(cells);
       }
       return false;
     },
   },
   delete: {
     keys: ['backspace', 'del'],
-    handler(flowChart: Graph) {
-      const toDelCells = flowChart.getSelectedCells();
+    handler(flowGraph: Graph) {
+      const toDelCells = flowGraph.getSelectedCells();
       const onEdgeDel = (edge: Edge) => {
         const srcNode = edge.getSourceNode() as Node;
         const isSrcNodeInDelCells = !!toDelCells.find((c) => c === srcNode);
@@ -97,25 +97,25 @@ const shortcuts: { [key: string]: Shortcut } = {
         if (cell.isEdge()) {
           onEdgeDel(cell);
         } else {
-          flowChart.getConnectedEdges(cell).forEach(onEdgeDel);
+          flowGraph.getConnectedEdges(cell).forEach(onEdgeDel);
         }
       });
-      flowChart.removeCells(flowChart.getSelectedCells());
-      flowChart.trigger('toolBar:forceUpdate');
+      flowGraph.removeCells(flowGraph.getSelectedCells());
+      flowGraph.trigger('toolBar:forceUpdate');
       return false;
     },
   },
   selectAll: {
     keys: 'meta + a',
-    handler(flowChart: Graph) {
-      flowChart.select(flowChart.getCells());
+    handler(flowGraph: Graph) {
+      flowGraph.select(flowGraph.getCells());
       return false;
     },
   },
   bold: {
     keys: 'meta + b',
-    handler(flowChart: Graph) {
-      const cells = flowChart.getSelectedCells();
+    handler(flowGraph: Graph) {
+      const cells = flowGraph.getSelectedCells();
       if (cells.length > 0) {
         const isAlreadyBold =
           safeGet(cells, '0.attrs.label.fontWeight', 'normal') === 'bold';
@@ -124,15 +124,15 @@ const shortcuts: { [key: string]: Shortcut } = {
             label: { fontWeight: isAlreadyBold ? 'normal' : 'bold' },
           });
         });
-        flowChart.trigger('toolBar:forceUpdate');
+        flowGraph.trigger('toolBar:forceUpdate');
       }
       return false;
     },
   },
   italic: {
     keys: 'meta + i',
-    handler(flowChart: Graph) {
-      const cells = flowChart.getSelectedCells();
+    handler(flowGraph: Graph) {
+      const cells = flowGraph.getSelectedCells();
       if (cells.length > 0) {
         const isAlreadyItalic =
           safeGet(cells, '0.attrs.label.fontStyle', 'normal') === 'italic';
@@ -141,15 +141,15 @@ const shortcuts: { [key: string]: Shortcut } = {
             label: { fontStyle: isAlreadyItalic ? 'normal' : 'italic' },
           });
         });
-        flowChart.trigger('toolBar:forceUpdate');
+        flowGraph.trigger('toolBar:forceUpdate');
       }
       return false;
     },
   },
   underline: {
     keys: 'meta + u',
-    handler(flowChart: Graph) {
-      const cells = flowChart.getSelectedCells();
+    handler(flowGraph: Graph) {
+      const cells = flowGraph.getSelectedCells();
       if (cells.length > 0) {
         const isAlreadyUnderline =
           safeGet(cells, '0.attrs.label.textDecoration', 'none') ===
@@ -161,21 +161,21 @@ const shortcuts: { [key: string]: Shortcut } = {
             },
           });
         });
-        flowChart.trigger('toolBar:forceUpdate');
+        flowGraph.trigger('toolBar:forceUpdate');
       }
       return false;
     },
   },
   bringToTop: {
     keys: 'meta + ]',
-    handler(flowChart: Graph) {
-      getSelectedNodes(flowChart).forEach((node) => node.toFront());
+    handler(flowGraph: Graph) {
+      getSelectedNodes(flowGraph).forEach((node) => node.toFront());
     },
   },
   bringToBack: {
     keys: 'meta + [',
-    handler(flowChart: Graph) {
-      getSelectedNodes(flowChart).forEach((node) => node.toBack());
+    handler(flowGraph: Graph) {
+      getSelectedNodes(flowGraph).forEach((node) => node.toBack());
     },
   },
 };

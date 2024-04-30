@@ -6,40 +6,40 @@ import styles from '../index.module.less';
 
 interface IOptions {
   tooltip: string;
-  getIcon: (flowChart: Graph) => ReactElement;
-  getOverlay: (flowChart: Graph, onChange: (data: any) => void) => ReactElement;
-  handler: (flowChart: Graph, data: any) => void;
-  disabled?: (flowChart: Graph) => boolean;
+  getIcon: (flowGraph: Graph) => ReactElement;
+  getOverlay: (flowGraph: Graph, onChange: (data: any) => void) => ReactElement;
+  handler: (flowGraph: Graph, data: any) => void;
+  disabled?: (flowGraph: Graph) => boolean;
 }
 
 interface IDropdownWidgetProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const makeDropdownWidget = (options: IOptions) => {
   const Widget: React.FC<IDropdownWidgetProps> = (props) => {
-    const { flowChart } = props;
+    const { flowGraph } = props;
     const { tooltip, getIcon, getOverlay, handler } = options;
     const iconWrapperCls = [styles.btnWidget];
     let { disabled = false } = options;
     if (typeof disabled === 'function') {
-      disabled = disabled(flowChart);
+      disabled = disabled(flowGraph);
       disabled && iconWrapperCls.push(styles.disabled);
     }
     const onChange = (data: any): void => {
       if (disabled) return;
-      handler(flowChart, data);
-      flowChart.trigger('toolBar:forceUpdate');
+      handler(flowGraph, data);
+      flowGraph.trigger('toolBar:forceUpdate');
     };
     return (
       <Tooltip title={tooltip}>
         <Dropdown
           disabled={disabled}
-          overlay={getOverlay(flowChart, onChange)}
+          overlay={getOverlay(flowGraph, onChange)}
           trigger={['click']}
         >
           <div className={iconWrapperCls.join(' ')}>
-            {getIcon(flowChart)} <CaretDownOutlined className={styles.caret} />
+            {getIcon(flowGraph)} <CaretDownOutlined className={styles.caret} />
           </div>
         </Dropdown>
       </Tooltip>

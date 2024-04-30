@@ -6,24 +6,24 @@ import styles from './index.module.less';
 const Pane = SplitPane.Pane;
 
 interface ISubComponentProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 interface IProps {
-  flowChart: Graph | undefined;
+  flowGraph: Graph | undefined;
   SideBar: React.FC<ISubComponentProps>;
   ToolBar: React.FC<ISubComponentProps>;
   SettingBar: React.FC<ISubComponentProps>;
 }
 
 const Layout: React.FC<IProps> = (props) => {
-  const { flowChart, SideBar, ToolBar, SettingBar } = props;
+  const { flowGraph, SideBar, ToolBar, SettingBar } = props;
 
   let sideBar, toolBar, settingBar;
-  if (flowChart) {
-    sideBar = <SideBar flowChart={flowChart} />;
-    toolBar = <ToolBar flowChart={flowChart} />;
-    settingBar = <SettingBar flowChart={flowChart} />;
+  if (flowGraph) {
+    sideBar = <SideBar flowGraph={flowGraph} />;
+    toolBar = <ToolBar flowGraph={flowGraph} />;
+    settingBar = <SettingBar flowGraph={flowGraph} />;
   }
 
   return (

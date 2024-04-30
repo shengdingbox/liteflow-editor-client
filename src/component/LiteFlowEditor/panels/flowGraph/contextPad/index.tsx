@@ -15,30 +15,30 @@ interface IProps {
   y: number;
   edge: Edge;
   visible: boolean;
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const groups = [NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP];
 
 const FlowChartContextPad: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
-  const { x, y, visible, flowChart, edge } = props;
+  const { x, y, visible, flowGraph, edge } = props;
 
   useClickAway(() => onClickAway(), menuRef);
 
   const onClickAway = useCallback(
-    () => flowChart.trigger('graph:hideContextPad'),
-    [flowChart],
+    () => flowGraph.trigger('graph:hideContextPad'),
+    [flowGraph],
   );
   const onClickMenu = useCallback(
     (cellType) => {
-      flowChart.trigger('graph:addNodeOnEdge', {
+      flowGraph.trigger('graph:addNodeOnEdge', {
         edge,
         node: { shape: cellType.type },
       });
       onClickAway();
     },
-    [flowChart, edge],
+    [flowGraph, edge],
   );
 
   return !visible ? null : (

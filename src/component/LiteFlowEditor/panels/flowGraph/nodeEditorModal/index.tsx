@@ -5,25 +5,25 @@ import styles from './index.module.less';
 
 interface IProps {
   title?: string;
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const NodeEditModal: React.FC<IProps> = (props) => {
-  const { title = '编辑节点', flowChart } = props;
+  const { title = '编辑节点', flowGraph } = props;
   const [label, setLabel] = useState<string>('');
   const [visible, setVisible] = useState<boolean>(false);
 
   // life
   useEffect(() => {
     const handler = () => setVisible(true);
-    flowChart.on('graph:editNode', handler);
+    flowGraph.on('graph:editNode', handler);
     return () => {
-      flowChart.off('graph:editNode', handler);
+      flowGraph.off('graph:editNode', handler);
     };
   }, []);
   useEffect(() => {
     if (visible) {
-      const cell = flowChart.getSelectedCells()[0];
+      const cell = flowGraph.getSelectedCells()[0];
       const { label } = cell.getData() || {};
       setLabel(label);
     } else {

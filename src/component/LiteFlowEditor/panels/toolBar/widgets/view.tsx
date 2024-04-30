@@ -7,12 +7,12 @@ import JsonView from 'react-json-view';
 import makeBtnWidget from './common/makeBtnWidget';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const View: React.FC<IProps> = makeBtnWidget({
   tooltip: '查看DSL',
-  handler(flowChart: Graph) {
+  handler(flowGraph: Graph) {
     Modal.info({
       title: '查看DSL',
       width: 1000,
@@ -25,16 +25,16 @@ const View: React.FC<IProps> = makeBtnWidget({
           enableClipboard={true}
           displayDataTypes={false}
           displayObjectSize={false}
-          src={flowChart.toJSON()}
+          src={flowGraph.toJSON()}
         />
       ),
     });
-    console.log(JSON.stringify(flowChart.toJSON(), null, 2));
+    console.log(JSON.stringify(flowGraph.toJSON(), null, 2));
   },
   getIcon() {
     return <EyeOutlined />;
   },
-  disabled(flowChart: Graph) {
+  disabled(flowGraph: Graph) {
     return false;
   },
 });

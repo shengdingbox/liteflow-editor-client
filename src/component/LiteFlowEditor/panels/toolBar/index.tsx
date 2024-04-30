@@ -5,26 +5,26 @@ import { useGraph } from '../../hooks';
 import styles from './index.module.less';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const ToolBar: React.FC<IProps> = () => {
-  const flowChart: Graph = useGraph();
+  const flowGraph: Graph = useGraph();
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
 
   useEffect(() => {
-    flowChart.on('toolBar:forceUpdate', forceUpdate);
+    flowGraph.on('toolBar:forceUpdate', forceUpdate);
     return () => {
-      flowChart.off('toolBar:forceUpdate');
+      flowGraph.off('toolBar:forceUpdate');
     };
-  }, [flowChart]);
+  }, [flowGraph]);
 
   return (
     <div className={styles.liteflowEditorToolBarContainer}>
       {widgets.map((group, index) => (
         <div key={index} className={styles.liteflowEditorToolBarGroup}>
           {group.map((ToolItem, index) => {
-            return <ToolItem key={index} flowChart={flowChart} />;
+            return <ToolItem key={index} flowGraph={flowGraph} />;
           })}
         </div>
       ))}

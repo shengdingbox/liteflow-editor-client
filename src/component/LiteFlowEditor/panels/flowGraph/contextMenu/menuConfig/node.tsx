@@ -23,11 +23,11 @@ const nodeMenuConfig = [
     key: 'editNode',
     title: '编辑节点',
     icon: <EditOutlined />,
-    disabled(flowChart: Graph) {
-      return getSelectedNodes(flowChart).length !== 1;
+    disabled(flowGraph: Graph) {
+      return getSelectedNodes(flowGraph).length !== 1;
     },
-    handler(flowChart: Graph) {
-      flowChart.trigger('graph:editNode');
+    handler(flowGraph: Graph) {
+      flowGraph.trigger('graph:editNode');
     },
   },
 ];

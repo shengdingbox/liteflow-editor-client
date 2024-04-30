@@ -5,7 +5,7 @@ import makeBtnWidget from './common/makeBtnWidget';
 import { GatewayOutlined } from '@ant-design/icons';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const ToggleSelection: React.FC<IProps> = makeBtnWidget({
@@ -13,18 +13,18 @@ const ToggleSelection: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <GatewayOutlined />;
   },
-  handler(flowChart: Graph) {
-    const needEnableRubberBand: boolean = !flowChart.isRubberbandEnabled();
+  handler(flowGraph: Graph) {
+    const needEnableRubberBand: boolean = !flowGraph.isRubberbandEnabled();
     if (needEnableRubberBand) {
-      flowChart.disablePanning();
-      flowChart.enableRubberband();
+      flowGraph.disablePanning();
+      flowGraph.enableRubberband();
     } else {
-      flowChart.enablePanning();
-      flowChart.disableRubberband();
+      flowGraph.enablePanning();
+      flowGraph.disableRubberband();
     }
   },
-  selected(flowChart: Graph) {
-    return flowChart.isRubberbandEnabled();
+  selected(flowGraph: Graph) {
+    return flowGraph.isRubberbandEnabled();
   },
 });
 

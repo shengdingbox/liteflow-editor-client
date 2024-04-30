@@ -8,11 +8,11 @@ import styles from './index.module.less';
 import { ConditionTypeEnum } from '../../../constant';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const Basic: React.FC<IProps> = (props) => {
-  const { flowChart } = props;
+  const { flowGraph } = props;
 
   const [selectedValue, setSelectedValue] = useState<string>(
     ConditionTypeEnum.THEN,
@@ -23,12 +23,12 @@ const Basic: React.FC<IProps> = (props) => {
     const mockData = mocks[value] as any;
     const model = builder(mockData);
     const modelJSON = model.toCells() as Cell[];
-    flowChart.scroller.disableAutoResize();
-    flowChart.startBatch('update');
-    flowChart.resetCells(modelJSON);
-    forceLayout(flowChart);
-    flowChart.stopBatch('update');
-    flowChart.scroller.enableAutoResize();
+    flowGraph.scroller.disableAutoResize();
+    flowGraph.startBatch('update');
+    flowGraph.resetCells(modelJSON);
+    forceLayout(flowGraph);
+    flowGraph.stopBatch('update');
+    flowGraph.scroller.enableAutoResize();
 
     setELString(model.toEL());
     setSelectedValue(value);
@@ -39,11 +39,11 @@ const Basic: React.FC<IProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    flowChart.on('model:change', handleOnChange);
+    flowGraph.on('model:change', handleOnChange);
     return () => {
-      flowChart.off('model:change', handleOnChange);
+      flowGraph.off('model:change', handleOnChange);
     };
-  }, [flowChart, handleOnChange]);
+  }, [flowGraph, handleOnChange]);
 
   return (
     <div className={styles.liteflowEditorBasicContainer}>

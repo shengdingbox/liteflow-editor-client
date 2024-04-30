@@ -5,7 +5,7 @@ import makeBtnWidget from './common/makeBtnWidget';
 import { FullscreenExitOutlined } from '@ant-design/icons';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const FitWindow: React.FC<IProps> = makeBtnWidget({
@@ -13,8 +13,8 @@ const FitWindow: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <FullscreenExitOutlined />;
   },
-  handler(flowChart: Graph) {
-    flowChart.zoomToFit({ minScale: 0.5, maxScale: 1 });
+  handler(flowGraph: Graph) {
+    flowGraph.zoomToFit({ minScale: 0.5, maxScale: 1 });
   },
 });
 

@@ -8,7 +8,7 @@ import { useGraph } from '../../../hooks';
 import styles from './index.module.less';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const ZoomOut: React.FC<IProps> = makeBtnWidget({
@@ -17,8 +17,8 @@ const ZoomOut: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <ZoomOutOutlined />;
   },
-  disabled(flowChart: Graph) {
-    return flowChart.zoom() <= MIN_ZOOM;
+  disabled(flowGraph: Graph) {
+    return flowGraph.zoom() <= MIN_ZOOM;
   },
 });
 
@@ -28,23 +28,23 @@ const ZoomIn: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <ZoomInOutlined />;
   },
-  disabled(flowChart: Graph) {
-    return flowChart.zoom() >= MAX_ZOOM;
+  disabled(flowGraph: Graph) {
+    return flowGraph.zoom() >= MAX_ZOOM;
   },
 });
 
 const Zoom: React.FC<IProps> = (props) => {
-  const flowChart = useGraph();
-  const [scale, setScale] = useState<number>(flowChart.zoom());
+  const flowGraph = useGraph();
+  const [scale, setScale] = useState<number>(flowGraph.zoom());
   useEffect(() => {
     const handleScale = () => {
-      setScale(flowChart.zoom());
+      setScale(flowGraph.zoom());
     };
-    flowChart.on('scale', handleScale);
+    flowGraph.on('scale', handleScale);
     return () => {
-      flowChart.off('scale', handleScale);
+      flowGraph.off('scale', handleScale);
     };
-  }, [flowChart]);
+  }, [flowGraph]);
   return (
     <div className={styles.zoomContainer}>
       <ZoomOut {...props} />

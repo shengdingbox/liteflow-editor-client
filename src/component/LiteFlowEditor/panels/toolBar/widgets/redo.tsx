@@ -6,7 +6,7 @@ import shortcuts from '../../../common/shortcuts';
 import makeBtnWidget from './common/makeBtnWidget';
 
 interface IProps {
-  flowChart: Graph;
+  flowGraph: Graph;
 }
 
 const Save: React.FC<IProps> = makeBtnWidget({
@@ -15,8 +15,8 @@ const Save: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <RedoOutlined />;
   },
-  disabled(flowChart: Graph) {
-    return !flowChart.canRedo();
+  disabled(flowGraph: Graph) {
+    return !flowGraph.canRedo();
   },
 });
 
