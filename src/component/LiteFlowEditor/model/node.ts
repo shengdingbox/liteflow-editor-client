@@ -14,24 +14,36 @@ import { ConditionTypeEnum, NodeTypeEnum } from '../constant';
     ],
   }
  */
-export default interface ELNode {
+export default abstract class ELNode {
   // 节点类型：可以是编排类型，也可以是组件类型
-  type: ConditionTypeEnum | NodeTypeEnum;
+  public abstract type: ConditionTypeEnum | NodeTypeEnum;
   // 当前节点的子节点：编排类型有子节点，组件类型没有子节点
-  children?: ELNode[];
+  public children?: ELNode[];
   // 当前节点的父节点
-  parent?: ELNode;
+  public parent?: ELNode;
   // 判断类节点类型：主要用于SWITCH/IF/FOR/WHILE等类型
-  condition?: ELNode;
+  public condition?: ELNode;
   // 组件节点的id
-  id?: string;
+  public id?: string;
   // 编排节点的属性：可以设置id/tag等等
-  properties?: Properties;
+  public properties?: Properties;
+
+  /**
+   * 添加子节点
+   * @param child 子节点
+   */
+  public appendChild(child: ELNode) {
+    if (this.children) {
+      this.children?.push(child);
+    } else {
+      this.children = [child];
+    }
+  }
 
   /**
    * 转换为X6的图数据格式
    */
-  toCells(
+  public abstract toCells(
     previous?: Node,
     cells?: Cell[],
     options?: Record<string, any>,
@@ -39,7 +51,7 @@ export default interface ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  toEL(): string;
+  public abstract toEL(): string;
 }
 
 /**

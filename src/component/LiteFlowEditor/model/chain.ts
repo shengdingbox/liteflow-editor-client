@@ -10,11 +10,15 @@ import {
 /**
  * EL表达式的根节点。
  */
-export default class Chain implements ELNode {
+export default class Chain extends ELNode {
   type = ConditionTypeEnum.CHAIN;
   children: ELNode[] = [];
-  constructor(children: ELNode[]) {
-    this.children = children;
+
+  constructor(children?: ELNode[]) {
+    super();
+    if (children) {
+      this.children = children;
+    }
   }
 
   /**

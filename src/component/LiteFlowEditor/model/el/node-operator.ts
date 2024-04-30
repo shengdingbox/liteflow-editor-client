@@ -2,12 +2,13 @@ import { Cell, Node, Edge } from '@antv/x6';
 import ELNode from '../node';
 import { LITEFLOW_EDGE, NodeTypeEnum } from '../../constant';
 
-export default class NodeOperator implements ELNode {
+export default class NodeOperator extends ELNode {
   type: NodeTypeEnum;
   parent: ELNode;
   id: string;
 
   constructor(parent: ELNode, type: NodeTypeEnum, id: string) {
+    super();
     this.parent = parent;
     this.type = type;
     this.id = id;

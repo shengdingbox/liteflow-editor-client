@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Graph } from '@antv/x6';
+import { Graph, Cell } from '@antv/x6';
 import { Select } from 'antd';
 import { forceLayout } from '../../../common/layout';
 import mocks from '../../../mock';
-import render, { toString } from '../../../model';
+import builder from '../../../model/builder';
 import styles from './index.module.less';
 import { ConditionTypeEnum } from '../../../constant';
 
@@ -21,7 +21,8 @@ const Basic: React.FC<IProps> = (props) => {
 
   const handleOnChange = (value: string = selectedValue) => {
     const mockData = mocks[value] as any;
-    const modelJSON = render(mockData);
+    const model = builder(mockData);
+    const modelJSON = model.toCells() as Cell[];
     flowChart.scroller.disableAutoResize();
     flowChart.startBatch('update');
     flowChart.resetCells(modelJSON);
@@ -29,7 +30,7 @@ const Basic: React.FC<IProps> = (props) => {
     flowChart.stopBatch('update');
     flowChart.scroller.enableAutoResize();
 
-    setELString(toString(mockData));
+    setELString(model.toEL());
     setSelectedValue(value);
   };
 

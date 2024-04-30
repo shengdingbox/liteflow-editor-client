@@ -6,22 +6,25 @@ import {
   NODE_TYPE_INTERMEDIATE_END,
 } from '../../constant';
 
-export default class WhileOperator implements ELNode {
+export default class WhileOperator extends ELNode {
   type = ConditionTypeEnum.WHILE;
   parent: ELNode;
   condition: ELNode;
-  children: ELNode[];
+  children: ELNode[] = [];
   properties?: Properties;
 
   constructor(
     parent: ELNode,
     condition: ELNode,
-    children: ELNode[],
+    children?: ELNode[],
     properties?: Properties,
   ) {
+    super();
     this.parent = parent;
     this.condition = condition;
-    this.children = children;
+    if (children) {
+      this.children = children;
+    }
     this.properties = properties;
   }
 

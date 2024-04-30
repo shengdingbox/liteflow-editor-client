@@ -4,25 +4,28 @@ import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
   NODE_TYPE_INTERMEDIATE_END,
-  NODE_TYPE_VIRTUAL,
+  NodeTypeEnum,
 } from '../../constant';
 
-export default class IfOperator implements ELNode {
+export default class IfOperator extends ELNode {
   type = ConditionTypeEnum.IF;
   parent: ELNode;
   condition: ELNode;
-  children: ELNode[];
+  children: ELNode[] = [];
   properties?: Properties;
 
   constructor(
     parent: ELNode,
     condition: ELNode,
-    children: ELNode[],
+    children?: ELNode[],
     properties?: Properties,
   ) {
+    super();
     this.parent = parent;
     this.condition = condition;
-    this.children = children;
+    if (children) {
+      this.children = children;
+    }
     this.properties = properties;
   }
 
@@ -71,12 +74,13 @@ export default class IfOperator implements ELNode {
     let falseNode;
     if (!last) {
       falseNode = Node.create({
-        shape: NODE_TYPE_VIRTUAL,
+        shape: NodeTypeEnum.VIRTUAL,
         view: 'react-shape-view',
         attrs: {
           label: { text: '' },
         },
       });
+      cells.push(falseNode);
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,

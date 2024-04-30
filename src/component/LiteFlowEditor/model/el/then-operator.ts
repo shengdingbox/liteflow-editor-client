@@ -2,15 +2,18 @@ import { Cell, Node } from '@antv/x6';
 import ELNode, { Properties } from '../node';
 import { ConditionTypeEnum } from '../../constant';
 
-export default class ThenOperator implements ELNode {
+export default class ThenOperator extends ELNode {
   type = ConditionTypeEnum.THEN;
   parent: ELNode;
-  children: ELNode[];
+  children: ELNode[] = [];
   properties?: Properties;
 
-  constructor(parent: ELNode, children: ELNode[], properties?: Properties) {
+  constructor(parent: ELNode, children?: ELNode[], properties?: Properties) {
+    super();
     this.parent = parent;
-    this.children = children;
+    if (children) {
+      this.children = children;
+    }
     this.properties = properties;
   }
 

@@ -6,15 +6,18 @@ import {
   NODE_TYPE_INTERMEDIATE_END,
 } from '../../constant';
 
-export default class WhenOperator implements ELNode {
+export default class WhenOperator extends ELNode {
   type = ConditionTypeEnum.WHEN;
   parent: ELNode;
-  children: ELNode[];
+  children: ELNode[] = [];
   properties?: Properties;
 
-  constructor(parent: ELNode, children: ELNode[], properties?: Properties) {
+  constructor(parent: ELNode, children?: ELNode[], properties?: Properties) {
+    super();
     this.parent = parent;
-    this.children = children;
+    if (children) {
+      this.children = children;
+    }
     this.properties = properties;
   }
 
