@@ -1,5 +1,5 @@
 import { Graph } from '@antv/x6';
-import LiteFlowEditor from '../component/LiteFlowEditor';
+import LiteFlowEditor from '../component/ProFlowEditor';
 import styles from './index.less';
 
 const onReady = (flowGraph: Graph): void => {
