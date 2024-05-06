@@ -19,93 +19,88 @@ function nodeToCells(
   node: LiteNodeData,
   cells: Array<Record<string, any>>,
   preNodeId?: string,
+  preEdgeLabel?: string,
 ): string {
   const comp = NodeCompStore[node.type];
   const curNode = createNode(node);
   cells.push(curNode);
   if (preNodeId) {
-    const edge = createEdge(preNodeId, curNode.id);
-    cells.push(edge);
+    cells.push(createEdge(preNodeId, curNode.id, preEdgeLabel));
   }
-  preNodeId = curNode.id;
-  if (comp.childrenType === 'then' || comp.childrenType === 'include') {
+
+  // children
+  if (comp.childrenType === 'then') {
+    preNodeId = curNode.id;
     node.children?.forEach((n) => {
       preNodeId = nodeToCells(n, cells, preNodeId);
     });
+    return preNodeId;
+  } else if (comp.childrenType === 'include') {
+    preNodeId = curNode.id;
+    node.children?.forEach((n) => {
+      preNodeId = nodeToCells(n, cells, preNodeId);
+    });
+    cells.push(createEdge(preNodeId, curNode.id));
+    return curNode.id;
   } else if (comp.childrenType === 'multiple') {
-    if (comp.multipleType === 'when') {
+    const virtualNode = createVirtualNode('LITEFLOW_INTERMEDIATE_END');
+    cells.push(virtualNode);
+    if (comp.multipleType === 'when' || comp.multipleType === 'switch') {
+      node.multiple?.forEach((line) => {
+        preNodeId = curNode.id;
+        line.children.forEach((n) => {
+          preNodeId = nodeToCells(n, cells, preNodeId);
+        });
+        cells.push(createEdge(preNodeId, virtualNode.id));
+      });
+      return virtualNode.id;
     } else if (comp.multipleType === 'if') {
-    } else if (comp.multipleType === 'switch') {
+      node.multiple?.forEach((line) => {
+        preNodeId = curNode.id;
+        line.children.forEach((n, i) => {
+          const label = i === 0 ? line.name : '';
+          preNodeId = nodeToCells(n, cells, preNodeId, label);
+        });
+        cells.push(createEdge(preNodeId, virtualNode.id));
+      });
+      return virtualNode.id;
     }
   }
   return curNode.id;
 }
 
 export function toGraphJson(node: LiteNodeData): any {
-  console.log('===node', node);
-  const comp = NodeCompStore[node.type];
-  console.log('===comp.childrenType', comp.childrenType);
-  // children
-  if (comp.childrenType === 'then') {
-    if (node.children) {
-      return getThenChildrenCells(node.children);
-    }
-  } else if (comp.childrenType === 'include') {
-    if (node.children) {
-      return getThenChildrenCells(node.children);
-    }
-  } else if (comp.childrenType === 'multiple') {
-    console.log('====multiple');
-    const cells: any[] = [];
-    if (node.multiple) {
-      node.multiple.forEach((line) => {
-        if (line.children) {
-          cells.push(...getChildrenCells(line.children));
-        }
-      });
-    }
-    return cells;
-  }
-  return [];
+  const cells: Array<Record<string, any>> = [];
+  const lastNodeId = nodeToCells(node, cells);
+  const endNode = createVirtualNode('LITEFLOW_END');
+  cells.push(endNode);
+  cells.push(createEdge(lastNodeId, endNode.id));
+
+  console.log('===cells', cells);
+  return cells;
 }
 
-function createNode(node: LiteNodeData) {
-  if (node.type === 'common') {
-    return {
-      view: 'react-shape-view',
-      attrs: { label: { text: node.props?.node } },
-      shape: 'NodeComponent',
-      id: generateNewId(),
-      data: null,
-      zIndex: 1,
-    };
-  } else if (node.type === 'when') {
-    return {
-      view: 'react-shape-view',
-      attrs: {
-        body: { refCx: '50%', refCy: '50%', refR: '50%' },
-        label: { text: '' },
-      },
-      shape: 'WHEN',
-      primer: 'circle',
-      id: generateNewId(),
-      data: null,
-      zIndex: 1,
-    };
-  } else {
-    return {
-      view: 'react-shape-view',
-      attrs: {
-        body: { refCx: '50%', refCy: '50%', refR: '50%' },
-        label: { text: '' },
-      },
-      shape: 'WHEN',
-      primer: 'circle',
-      id: generateNewId(),
-      data: null,
-      zIndex: 1,
-    };
-  }
+function createNode(node: NodeData) {
+  const comp = NodeCompStore[node.type];
+  return {
+    view: 'react-shape-view',
+    attrs: { label: { text: node.props?.node } },
+    shape: comp.shape,
+    id: generateNewId(),
+    data: null,
+    zIndex: 1,
+  };
+}
+
+function createVirtualNode(shape: string) {
+  return {
+    view: 'react-shape-view',
+    attrs: { label: { text: '' } },
+    shape,
+    id: generateNewId(),
+    data: null,
+    zIndex: 1,
+  };
 }
 
 function createEdge(from: string, to: string, label?: string) {
@@ -116,6 +111,11 @@ function createEdge(from: string, to: string, label?: string) {
     source: { cell: from },
     target: { cell: to },
     zIndex: 0,
+    router: 'orth',
+    connector: {
+      name: 'rounded',
+      args: {},
+    },
   };
 }
 

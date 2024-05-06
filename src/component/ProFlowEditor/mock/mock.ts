@@ -1,7 +1,7 @@
 import { LiteNodeData } from '../constant/Comp';
 
 export const ThenDemo: LiteNodeData = {
-  type: 'then',
+  type: 'root',
   children: [
     { type: 'common', props: { node: 'a' } },
     { type: 'common', props: { node: 'b' } },
@@ -10,7 +10,7 @@ export const ThenDemo: LiteNodeData = {
 };
 
 export const WhenDemo: LiteNodeData = {
-  type: 'then',
+  type: 'root',
   children: [
     { type: 'common', props: { node: 'a' } },
     {
@@ -35,7 +35,7 @@ export const WhenDemo: LiteNodeData = {
 };
 
 export const SwitchDemo: LiteNodeData = {
-  type: 'then',
+  type: 'root',
   children: [
     {
       type: 'switch',
@@ -59,7 +59,7 @@ export const SwitchDemo: LiteNodeData = {
 };
 
 export const IfDemo: LiteNodeData = {
-  type: 'then',
+  type: 'root',
   children: [
     {
       type: 'if',
@@ -82,7 +82,7 @@ export const IfDemo: LiteNodeData = {
 };
 
 export const ForDemo: LiteNodeData = {
-  type: 'then',
+  type: 'root',
   children: [
     {
       type: 'for',
@@ -96,7 +96,7 @@ export const ForDemo: LiteNodeData = {
 };
 
 export const WhileDemo: LiteNodeData = {
-  type: 'then',
+  type: 'root',
   children: [
     {
       type: 'while',

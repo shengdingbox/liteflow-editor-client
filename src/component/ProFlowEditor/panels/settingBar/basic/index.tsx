@@ -17,7 +17,6 @@ const Basic: React.FC<IProps> = (props) => {
   const { flowGraph } = props;
 
   const [selectedValue, setSelectedValue] = useState<string>(
-    // 'cust',
     ConditionTypeEnum.THEN,
   );
   const [elString, setELString] = useState<string>('');
@@ -29,40 +28,31 @@ const Basic: React.FC<IProps> = (props) => {
 
   const handleOnChange = (value: string = selectedValue) => {
     let modelJSON: Cell[];
-    if (value === 'cust') {
-      modelJSON = getCustCells();
-      setELString('CUST');
+    const mockData = newMocks[value];
+    modelJSON = toGraphJson(mockData);
 
-      flowGraph.scroller.disableAutoResize();
-      flowGraph.startBatch('update');
-      flowGraph.fromJSON(modelJSON);
-      forceLayout(flowGraph);
-      flowGraph.stopBatch('update');
-    } else if (value === 'THEN' || value === 'WHEN' || value === 'WHILE') {
-      const mockData = newMocks[value];
-      modelJSON = toGraphJson(mockData);
+    setELString('toGraphJson');
 
-      setELString('toGraphJson');
+    flowGraph.scroller.disableAutoResize();
+    flowGraph.startBatch('update');
+    flowGraph.fromJSON(modelJSON);
+    forceLayout(flowGraph);
+    flowGraph.stopBatch('update');
 
-      flowGraph.scroller.disableAutoResize();
-      flowGraph.startBatch('update');
-      flowGraph.fromJSON(modelJSON);
-      forceLayout(flowGraph);
-      flowGraph.stopBatch('update');
-    } else {
-      const mockData = mocks[value] as any;
-      const model = builder(mockData);
-      modelJSON = model.toCells() as Cell[];
-      console.log('=====modeJSON 2', modelJSON);
+    // else {
+    //   const mockData = mocks[value] as any;
+    //   const model = builder(mockData);
+    //   modelJSON = model.toCells() as Cell[];
+    //   console.log('=====modeJSON 2', modelJSON);
 
-      setELString(model.toEL());
+    //   setELString(model.toEL());
 
-      flowGraph.scroller.disableAutoResize();
-      flowGraph.startBatch('update');
-      flowGraph.resetCells(modelJSON);
-      forceLayout(flowGraph);
-      flowGraph.stopBatch('update');
-    }
+    //   flowGraph.scroller.disableAutoResize();
+    //   flowGraph.startBatch('update');
+    //   flowGraph.resetCells(modelJSON);
+    //   forceLayout(flowGraph);
+    //   flowGraph.stopBatch('update');
+    // }
 
     const json = flowGraph.toJSON();
     console.log('===== before auto resize', json);
@@ -98,7 +88,6 @@ const Basic: React.FC<IProps> = (props) => {
         style={{ width: 200 }}
         onChange={handleOnChange}
         options={[
-          { label: '自定义', value: 'cust' },
           {
             label: '顺序类',
             options: [
