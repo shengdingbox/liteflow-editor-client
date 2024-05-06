@@ -2,12 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Collapse } from 'antd';
 import { Addon, Edge, Graph, Node } from '@antv/x6';
 import classNames from 'classnames';
-import {
-  NODE_GROUP,
-  SEQUENCE_GROUP,
-  BRANCH_GROUP,
-  CONTROL_GROUP,
-} from '../../cells';
+import { Virtual, Common, When, Switch, If, For, While } from '../../cells';
 import { findViewsFromPoint } from '../../common/events';
 import styles from './index.module.less';
 
@@ -18,6 +13,30 @@ interface IGroupItem {
   name: string;
   cellTypes: LiteFlowNode[];
 }
+
+const NODE_GROUP: IGroupItem = {
+  key: 'node',
+  name: '节点类',
+  cellTypes: [Virtual],
+};
+
+const SEQUENCE_GROUP: IGroupItem = {
+  key: 'sequence',
+  name: '顺序类',
+  cellTypes: [Common, When],
+};
+
+const BRANCH_GROUP: IGroupItem = {
+  key: 'branch',
+  name: '分支类',
+  cellTypes: [Switch, If],
+};
+
+const CONTROL_GROUP: IGroupItem = {
+  key: 'control',
+  name: '循环类',
+  cellTypes: [For, While],
+};
 
 interface ISideBarProps {
   flowGraph: Graph;

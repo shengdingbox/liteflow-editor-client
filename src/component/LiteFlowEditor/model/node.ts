@@ -2,7 +2,7 @@ import { Cell, Node } from '@antv/x6';
 import { ConditionTypeEnum, NodeTypeEnum } from '../constant';
 
 /**
- * EL表达式的JSON表示：数据结构本质上是一个树形结构。
+ * EL表达式的模型表示：数据结构本质上是一个树形结构。
  * 例如一个串行编排(THEN)：
   {
     type: ConditionTypeEnum.THEN,
@@ -21,7 +21,7 @@ export default abstract class ELNode {
   public children?: ELNode[];
   // 当前节点的父节点
   public parent?: ELNode;
-  // 判断类节点类型：主要用于SWITCH/IF/FOR/WHILE等类型
+  // 判断类节点类型：主要用于SWITCH/IF/FOR/WHILE等编排类型
   public condition?: ELNode;
   // 组件节点的id
   public id?: string;

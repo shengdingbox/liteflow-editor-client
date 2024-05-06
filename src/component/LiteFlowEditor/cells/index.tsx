@@ -1,6 +1,7 @@
 import { Graph } from '@antv/x6';
 import '@antv/x6-react-shape';
 import { NODE_WIDTH, NODE_HEIGHT } from '../constant';
+/** AntV X6自定义节点 */
 // 开始 & 结束
 import { default as Start } from './start';
 import { default as End } from './end';
@@ -11,14 +12,16 @@ import { default as IntermediateEnd } from './intermediate-end';
 // 分支：选择、条件
 import { default as Switch } from './switch';
 import { default as If } from './if';
-// 循环
+// 循环：For、While
 import { default as For } from './for';
 import { default as While } from './while';
-// 其他辅助节点
+// 其他辅助节点：虚节点
 import { default as Virtual } from './virtual';
 
+// AntV X6自定义节点的视图：使用React组件
 import NodeView from '../components/NodeView';
 
+/** 注册自定义节点到AntV X6 */
 [
   Start,
   End,
@@ -63,26 +66,15 @@ import NodeView from '../components/NodeView';
   });
 });
 
-export const NODE_GROUP = {
-  key: 'node',
-  name: '节点类',
-  cellTypes: [Virtual],
-};
-
-export const SEQUENCE_GROUP = {
-  key: 'sequence',
-  name: '顺序类',
-  cellTypes: [Common, When],
-};
-
-export const BRANCH_GROUP = {
-  key: 'branch',
-  name: '分支类',
-  cellTypes: [Switch, If],
-};
-
-export const CONTROL_GROUP = {
-  key: 'control',
-  name: '循环类',
-  cellTypes: [For, While],
+export {
+  Start,
+  End,
+  Common,
+  When,
+  IntermediateEnd,
+  Switch,
+  If,
+  For,
+  While,
+  Virtual,
 };
