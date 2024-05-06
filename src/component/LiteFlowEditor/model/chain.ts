@@ -53,15 +53,25 @@ export default class Chain extends ELNode {
     last.setData({ model: this, parent: undefined }, { overwrite: true });
     cells.push(last);
 
-    nextCells.forEach((next) => {
+    if (nextCells.length) {
+      nextCells.forEach((next) => {
+        cells.push(
+          Edge.create({
+            shape: LITEFLOW_EDGE,
+            source: next.id,
+            target: last.id,
+          }),
+        );
+      });
+    } else {
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
-          source: next.id,
+          source: start.id,
           target: last.id,
         }),
       );
-    });
+    }
 
     return cells;
   }

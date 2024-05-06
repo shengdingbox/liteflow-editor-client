@@ -110,7 +110,7 @@ const registerEvents = (flowGraph: Graph): void => {
       targetNode = currentEdge.getTargetNode();
       targetData = targetNode?.getData();
       targetModel = targetData.model;
-      targetParent = targetModel.parent;
+      targetParent = targetModel.parent || targetModel;
       targetIndex = targetParent.children.indexOf(targetModel);
     } else {
       targetIndex = targetParent.children.indexOf(targetModel) + 1;

@@ -6,7 +6,7 @@ import styles from './index.module.less';
 
 const AddNodeButtons: React.FC<any> = (props) => {
   const { node } = props;
-  const { model } = node.getData();
+  const { model } = node.getData() || {};
   const addNodeOnEdge = ({ clientX, clientY, targetEdges }: any) => {
     if (targetEdges.length) {
       node.model?.graph.trigger('graph:showContextPad', {
@@ -33,7 +33,7 @@ const AddNodeButtons: React.FC<any> = (props) => {
   }, 100);
   const onDelete = debounce(() => {
     Modal.confirm({
-      title: `确认要删除节点${model.id && `“${model.id}”`}？`,
+      title: `确认要删除节点${(model.id && `“${model.id}”`) || ''}？`,
       content: '点击确认按钮进行删除，点击取消按钮返回',
       onOk() {
         if (model.remove()) {

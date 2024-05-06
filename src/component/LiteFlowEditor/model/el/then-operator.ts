@@ -29,6 +29,18 @@ export default class ThenOperator extends ELNode {
   }
 
   /**
+   * 删除指定的子节点
+   * @param child 子节点
+   */
+  public removeChild(child: ELNode): boolean {
+    if (this.children && this.children.length > 1) {
+      return super.removeChild(child);
+    } else {
+      return this.remove();
+    }
+  }
+
+  /**
    * 转换为X6的图数据格式
    */
   public toCells(
