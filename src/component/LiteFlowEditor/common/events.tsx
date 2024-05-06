@@ -101,19 +101,19 @@ const registerEvents = (flowGraph: Graph): void => {
   });
   flowGraph.on('graph:addNodeOnEdge', (args: any) => {
     const { edge: currentEdge, node: droppingNode } = args;
-    let targetNode = currentEdge.getTargetNode();
+    let targetNode = currentEdge.getSourceNode();
     let targetData = targetNode?.getData();
     let targetModel = targetData.model;
-    let targetParent = targetData.parent;
+    let targetParent = targetModel.parent;
     let targetIndex;
     if (!targetParent) {
-      targetNode = currentEdge.getSourceNode();
+      targetNode = currentEdge.getTargetNode();
       targetData = targetNode?.getData();
       targetModel = targetData.model;
-      targetParent = targetData.parent;
-      targetIndex = targetParent.children.indexOf(targetModel) + 1;
-    } else {
+      targetParent = targetModel.parent;
       targetIndex = targetParent.children.indexOf(targetModel);
+    } else {
+      targetIndex = targetParent.children.indexOf(targetModel) + 1;
     }
     const newELNode = ELBuilder.createELNode(droppingNode.shape, targetParent);
     targetParent.children.splice(targetIndex, 0, newELNode);

@@ -11,7 +11,7 @@ import NodeOperator from './node-operator';
 export default class IfOperator extends ELNode {
   type = ConditionTypeEnum.IF;
   parent: ELNode;
-  condition: ELNode = new NodeOperator(this, NodeTypeEnum.VIRTUAL, '');
+  condition: ELNode = new NodeOperator(this, NodeTypeEnum.IF, 'x');
   children: ELNode[] = [];
   properties?: Properties;
 

@@ -11,7 +11,7 @@ import NodeOperator from './node-operator';
 export default class WhileOperator extends ELNode {
   type = ConditionTypeEnum.WHILE;
   parent: ELNode;
-  condition: ELNode = new NodeOperator(this, NodeTypeEnum.VIRTUAL, '');
+  condition: ELNode = new NodeOperator(this, NodeTypeEnum.WHILE, 'x');
   children: ELNode[] = [];
   properties?: Properties;
 

@@ -11,7 +11,7 @@ import NodeOperator from './node-operator';
 export default class ForOperator extends ELNode {
   type = ConditionTypeEnum.FOR;
   parent: ELNode;
-  condition: ELNode = new NodeOperator(this, NodeTypeEnum.VIRTUAL, '');
+  condition: ELNode = new NodeOperator(this, NodeTypeEnum.FOR, 'x');
   children: ELNode[] = [];
   properties?: Properties;
 
