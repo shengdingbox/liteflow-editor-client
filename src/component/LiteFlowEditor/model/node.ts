@@ -41,6 +41,31 @@ export default abstract class ELNode {
   }
 
   /**
+   * 删除指定的子节点
+   * @param child 子节点
+   */
+  public removeChild(child: ELNode): boolean {
+    if (this.children) {
+      const index = this.children.indexOf(child);
+      if (index !== -1) {
+        this.children.splice(index, 1);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 删除当前节点
+   */
+  public remove(): boolean {
+    if (this.parent) {
+      return this.parent.removeChild(this);
+    }
+    return false;
+  }
+
+  /**
    * 转换为X6的图数据格式
    */
   public abstract toCells(

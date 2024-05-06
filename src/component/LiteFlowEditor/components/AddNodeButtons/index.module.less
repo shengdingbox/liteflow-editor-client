@@ -42,12 +42,27 @@
       filter: opacity(1);
     }
   }
+  .liteflowDeleteNode {
+    position: absolute;
+    top: -8px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    vertical-align: middle;
+    background-color: #fff;
+    border-radius: 6px;
+    color: #f54a45;
+  }
   .liteflowAddNodePrepend,
-  .liteflowAddNodeAppend {
+  .liteflowAddNodeAppend,
+  .liteflowDeleteNode {
     display: none;
   }
-  &:hover .liteflowAddNodePrepend,
-  &:hover .liteflowAddNodeAppend {
-    display: block;
+  &:hover {
+    .liteflowAddNodePrepend,
+    .liteflowAddNodeAppend,
+    .liteflowDeleteNode {
+      display: block;
+    }
   }
 }
