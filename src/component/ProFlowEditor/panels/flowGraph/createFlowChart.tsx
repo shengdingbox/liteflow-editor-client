@@ -79,7 +79,8 @@ const createFlowChart = (
       allowEdge: false,
       dangling: true,
       highlight: true,
-      anchor: LITEFLOW_ANCHOR, // 'center',
+      // anchor: LITEFLOW_ANCHOR, // 'center',
+      anchor: 'center',
       connectionPoint: 'bbox',
       // connector: {
       //   name: 'jumpover', //两条线交叉时，出现线桥。
@@ -193,10 +194,11 @@ const createFlowChart = (
     //   },
     //   frontOnly: false,
     // },
-    interacting: {
-      nodeMovable: false,
-      edgeLabelMovable: false,
-    },
+    // interacting: {
+    //   nodeMovable: true,
+    //   edgeLabelMovable: true,
+    // },
+    interacting: true,
   });
   registerEvents(flowGraph);
   registerShortcuts(flowGraph);

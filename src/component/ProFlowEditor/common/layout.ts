@@ -1,8 +1,9 @@
-import { Graph, Node } from '@antv/x6';
-import { DagreLayout, DagreLayoutOptions } from '@antv/layout';
+import { Edge, Graph, Node } from '@antv/x6';
+import { DagreLayout, GridLayout, DagreLayoutOptions } from '@antv/layout';
 
 const rankdir: DagreLayoutOptions['rankdir'] = 'LR';
 const align: DagreLayoutOptions['align'] = undefined;
+// const align: DagreLayoutOptions['align'] = 'L';
 const nodeSize: number = 30;
 const ranksep: number = 20;
 const nodesep: number = 20;
@@ -37,6 +38,7 @@ export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
     }), // @ts-ignore
     edges: flowGraph.getEdges().map((edge) => {
       edge.setZIndex(0);
+      console.log('===old', edge.toJSON());
       return edge.toJSON();
     }),
   });
