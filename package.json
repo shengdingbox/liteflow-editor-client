@@ -22,12 +22,10 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.0.6",
-    "@ant-design/pro-layout": "^6.5.0",
     "@antv/layout": "^0.1.31",
     "@antv/x6": "^1.7.12",
     "@antv/x6-react-shape": "^1.6.0",
     "antd": "^4.5.3",
-    "form-render": "^1.13.14",
     "react": "17.x",
     "react-dom": "17.x",
     "react-json-view": "^1.19.1",
