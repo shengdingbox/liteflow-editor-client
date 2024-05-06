@@ -63,17 +63,28 @@ export default class WhenOperator extends ELNode {
       },
     });
     end.setData({ model: this, parent }, { overwrite: true });
-    children.forEach((child) => {
-      const next = child.toCells(start, cells, options) as Node;
+    cells.push(end);
+    if (children.length) {
+      children.forEach((child) => {
+        const next = child.toCells(start, cells, options) as Node;
+        cells.push(
+          Edge.create({
+            shape: LITEFLOW_EDGE,
+            source: next.id,
+            target: end.id,
+          }),
+        );
+      });
+    } else {
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
-          source: next.id,
+          source: start.id,
           target: end.id,
         }),
       );
-    });
-    cells.push(end);
+    }
+
     return end;
   }
   /**

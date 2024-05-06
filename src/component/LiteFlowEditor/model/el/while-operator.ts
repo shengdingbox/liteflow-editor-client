@@ -73,6 +73,7 @@ export default class WhileOperator extends ELNode {
       },
     });
     end.setData({ model: this, parent }, { overwrite: true });
+    cells.push(end);
     if (children.length === 1 && children[0].type === ConditionTypeEnum.THEN) {
       children[0].children?.forEach((child) => {
         const next = child.toCells(start, cells, options) as Node;
@@ -84,7 +85,7 @@ export default class WhileOperator extends ELNode {
           }),
         );
       });
-    } else {
+    } else if (children.length) {
       children.forEach((child) => {
         const next = child.toCells(start, cells, options) as Node;
         cells.push(
@@ -95,8 +96,15 @@ export default class WhileOperator extends ELNode {
           }),
         );
       });
+    } else {
+      cells.push(
+        Edge.create({
+          shape: LITEFLOW_EDGE,
+          source: start.id,
+          target: end.id,
+        }),
+      );
     }
-    cells.push(end);
     return end;
   }
   /**

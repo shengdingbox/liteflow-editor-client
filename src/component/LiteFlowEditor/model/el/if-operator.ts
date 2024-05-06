@@ -73,6 +73,7 @@ export default class IfOperator extends ELNode {
       },
     });
     end.setData({ model: this, parent }, { overwrite: true });
+    cells.push(end);
     const [first, last] = children;
     const trueNode = first.toCells(start, cells, {
       edge: { label: 'true' },
@@ -107,7 +108,6 @@ export default class IfOperator extends ELNode {
         edge: { label: 'false' },
       }) as Node;
     }
-
     cells.push(
       Edge.create({
         shape: LITEFLOW_EDGE,
@@ -115,7 +115,6 @@ export default class IfOperator extends ELNode {
         target: end.id,
       }),
     );
-    cells.push(end);
     return end;
   }
   /**
