@@ -16,6 +16,36 @@ interface ParseParameters {
   parent: ELNode;
 }
 
+export class ELBuilder {
+  public static build(data: Record<string, any>) {
+    return builder(data);
+  }
+  public static createELNode(
+    type: ConditionTypeEnum | NodeTypeEnum,
+    parent: ELNode,
+  ): ELNode {
+    switch (type) {
+      // 1. 编排类型
+      case NodeTypeEnum.COMMON:
+        return ThenOperator.create(parent);
+      case ConditionTypeEnum.WHEN:
+        return WhenOperator.create(parent);
+      case NodeTypeEnum.SWITCH:
+        return SwitchOperator.create(parent);
+      case NodeTypeEnum.IF:
+        return IfOperator.create(parent);
+      case NodeTypeEnum.FOR:
+        return ForOperator.create(parent);
+      case NodeTypeEnum.WHILE:
+        return WhileOperator.create(parent);
+      // 2. 节点类型
+      default:
+        // return NodeOperator.create(parent, type as NodeTypeEnum);
+        return NodeOperator.create(parent, NodeTypeEnum.COMMON);
+    }
+  }
+}
+
 export default function builder(data: Record<string, any>): ELNode {
   const chain: Chain = new Chain();
   let next: ELNode | undefined = parse({ parent: chain, data });

@@ -33,6 +33,16 @@ export default class SwitchOperator extends ELNode {
   }
 
   /**
+   * 创建新的节点
+   * @param parent 父节点
+   */
+  public static create(parent: ELNode): ELNode {
+    const newNode = new SwitchOperator(parent);
+    newNode.children = [NodeOperator.create(newNode)];
+    return newNode;
+  }
+
+  /**
    * 转换为X6的图数据格式
    */
   public toCells(

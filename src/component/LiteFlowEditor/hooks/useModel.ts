@@ -1,7 +1,9 @@
-import { useContext } from 'react';
-import { GraphContext } from '../context/GraphContext';
+let model: any;
+
+export const setModel = (_newModel: any) => {
+  model = _newModel;
+};
 
 export const useModel = () => {
-  const { model } = useContext(GraphContext);
   return model;
 };

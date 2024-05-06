@@ -1,6 +1,7 @@
 import { Cell, Node } from '@antv/x6';
 import ELNode, { Properties } from '../node';
-import { ConditionTypeEnum } from '../../constant';
+import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
+import NodeOperator from './node-operator';
 
 export default class ThenOperator extends ELNode {
   type = ConditionTypeEnum.THEN;
@@ -15,6 +16,16 @@ export default class ThenOperator extends ELNode {
       this.children = children;
     }
     this.properties = properties;
+  }
+
+  /**
+   * 创建新的节点
+   * @param parent 父节点
+   */
+  public static create(parent: ELNode): ELNode {
+    const newNode = new ThenOperator(parent, []);
+    newNode.children = [NodeOperator.create(newNode)];
+    return newNode;
   }
 
   /**

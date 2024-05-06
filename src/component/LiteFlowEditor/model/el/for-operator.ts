@@ -33,6 +33,16 @@ export default class ForOperator extends ELNode {
   }
 
   /**
+   * 创建新的节点
+   * @param parent 父节点
+   */
+  public static create(parent: ELNode, type?: NodeTypeEnum): ELNode {
+    const newNode = new ForOperator(parent);
+    newNode.children = [NodeOperator.create(newNode)];
+    return newNode;
+  }
+
+  /**
    * 转换为X6的图数据格式
    */
   public toCells(

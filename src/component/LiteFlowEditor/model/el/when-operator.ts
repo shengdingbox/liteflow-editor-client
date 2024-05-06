@@ -5,6 +5,7 @@ import {
   LITEFLOW_EDGE,
   NODE_TYPE_INTERMEDIATE_END,
 } from '../../constant';
+import NodeOperator from './node-operator';
 
 export default class WhenOperator extends ELNode {
   type = ConditionTypeEnum.WHEN;
@@ -19,6 +20,16 @@ export default class WhenOperator extends ELNode {
       this.children = children;
     }
     this.properties = properties;
+  }
+
+  /**
+   * 创建新的节点
+   * @param parent 父节点
+   */
+  public static create(parent: ELNode): ELNode {
+    const newNode = new WhenOperator(parent, []);
+    newNode.children = [NodeOperator.create(newNode)];
+    return newNode;
   }
 
   /**

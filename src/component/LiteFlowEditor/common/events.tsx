@@ -1,6 +1,7 @@
 import { Dom, Graph, Rectangle } from '@antv/x6';
 import { NodeTypeEnum, ConditionTypeEnum } from '../constant';
 import { getSelectedEdges } from '../utils/flowChartUtils';
+import { ELBuilder } from '../model/builder';
 
 export function findViewsFromPoint(flowGraph: Graph, x: number, y: number) {
   return flowGraph
@@ -114,112 +115,9 @@ const registerEvents = (flowGraph: Graph): void => {
     } else {
       targetIndex = targetParent.children.indexOf(targetModel);
     }
-    switch (droppingNode.shape) {
-      case ConditionTypeEnum.WHEN:
-        targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.WHEN,
-          children: [
-            {
-              type: NodeTypeEnum.COMMON,
-              id: `common${Math.ceil(Math.random() * 100)}`,
-            },
-          ],
-        });
-        flowGraph.trigger('model:change');
-        break;
-      case NodeTypeEnum.SWITCH:
-        targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.SWITCH,
-          condition: {
-            type: NodeTypeEnum.SWITCH,
-            id: `x${Math.ceil(Math.random() * 100)}`,
-          },
-          children: [
-            {
-              type: NodeTypeEnum.COMMON,
-              id: `common${Math.ceil(Math.random() * 100)}`,
-            },
-          ],
-        });
-        flowGraph.trigger('model:change');
-        break;
-      case NodeTypeEnum.IF:
-        targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.IF,
-          condition: {
-            type: NodeTypeEnum.IF,
-            id: `x${Math.ceil(Math.random() * 100)}`,
-          },
-          children: [
-            {
-              type: NodeTypeEnum.COMMON,
-              id: `common${Math.ceil(Math.random() * 100)}`,
-            },
-          ],
-        });
-        flowGraph.trigger('model:change');
-        break;
-      case NodeTypeEnum.FOR:
-        targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.FOR,
-          condition: {
-            type: NodeTypeEnum.FOR,
-            id: `x${Math.ceil(Math.random() * 100)}`,
-          },
-          children: [
-            {
-              type: ConditionTypeEnum.THEN,
-              children: [
-                {
-                  type: NodeTypeEnum.COMMON,
-                  id: `common${Math.ceil(Math.random() * 100)}`,
-                },
-              ],
-            },
-          ],
-        });
-        flowGraph.trigger('model:change');
-        break;
-      case NodeTypeEnum.WHILE:
-        targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.WHILE,
-          condition: {
-            type: NodeTypeEnum.WHILE,
-            id: `x${Math.ceil(Math.random() * 100)}`,
-          },
-          children: [
-            {
-              type: ConditionTypeEnum.THEN,
-              children: [
-                {
-                  type: NodeTypeEnum.COMMON,
-                  id: `common${Math.ceil(Math.random() * 100)}`,
-                },
-              ],
-            },
-          ],
-        });
-        flowGraph.trigger('model:change');
-        break;
-      case NodeTypeEnum.COMMON:
-        targetParent.children.splice(targetIndex, 0, {
-          type: ConditionTypeEnum.THEN,
-          children: [
-            {
-              type: NodeTypeEnum.COMMON,
-              id: `common${Math.ceil(Math.random() * 100)}`,
-            },
-          ],
-        });
-        flowGraph.trigger('model:change');
-        break;
-      default:
-        targetParent.children.splice(targetIndex, 0, {
-          type: NodeTypeEnum.COMMON,
-          id: `common${Math.ceil(Math.random() * 100)}`,
-        });
-        flowGraph.trigger('model:change');
-    }
+    const newELNode = ELBuilder.createELNode(droppingNode.shape, targetParent);
+    targetParent.children.splice(targetIndex, 0, newELNode);
+    flowGraph.trigger('model:change');
   });
 };
 

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Graph, Edge } from '@antv/x6';
+import { Graph, Edge, Cell } from '@antv/x6';
 import createFlowChart from './panels/flowGraph/createFlowChart';
 import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
 import FlowChartContextMenu from './panels/flowGraph/contextMenu';
@@ -11,6 +11,8 @@ import ToolBar from './panels/toolBar';
 import SettingBar from './panels/settingBar';
 import styles from './index.module.less';
 import '@antv/x6/dist/x6.css';
+import { forceLayout } from './common/layout';
+import { useModel } from './hooks';
 
 interface IProps {
   onReady?: (graph: Graph) => void;
@@ -59,7 +61,6 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
     if (graphRef.current && miniMapRef.current) {
       const flowGraph = createFlowChart(graphRef.current, miniMapRef.current);
       onReady?.(flowGraph);
-      fetchData(flowGraph);
       setFlowChart(flowGraph);
     }
   }, []);
@@ -99,11 +100,24 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
       flowGraph?.unlockScroller();
       setContextPadInfo({ ...contextPadInfo, visible: false });
     };
+    const handleModelChange = () => {
+      if (flowGraph) {
+        const model = useModel();
+        const modelJSON = model.toCells() as Cell[];
+        flowGraph.scroller.disableAutoResize();
+        flowGraph.startBatch('update');
+        flowGraph.resetCells(modelJSON);
+        forceLayout(flowGraph);
+        flowGraph.stopBatch('update');
+        flowGraph.scroller.enableAutoResize();
+      }
+    };
     if (flowGraph) {
       flowGraph.on('graph:showContextMenu', showHandler);
       flowGraph.on('graph:hideContextMenu', hideHandler);
       flowGraph.on('graph:showContextPad', showContextPad);
       flowGraph.on('graph:hideContextPad', hideContextPad);
+      flowGraph.on('model:change', handleModelChange);
     }
     return () => {
       if (flowGraph) {
@@ -111,13 +125,10 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
         flowGraph.off('graph:hideContextMenu', hideHandler);
         flowGraph.off('graph:showContextPad', showContextPad);
         flowGraph.off('graph:hideContextPad', hideContextPad);
+        flowGraph.off('model:change', handleModelChange);
       }
     };
   }, [flowGraph]);
-
-  const fetchData = (flowGraph: Graph) => {
-    flowGraph.fromJSON({ cells: [] });
-  };
 
   return (
     // @ts-ignore

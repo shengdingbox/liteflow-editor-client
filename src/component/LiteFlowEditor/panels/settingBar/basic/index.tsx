@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Graph, Cell } from '@antv/x6';
+import { Cell, Graph } from '@antv/x6';
 import { Select } from 'antd';
-import { forceLayout } from '../../../common/layout';
 import mocks from '../../../mock';
-import builder from '../../../model/builder';
-import styles from './index.module.less';
+import { ELBuilder } from '../../../model/builder';
 import { ConditionTypeEnum } from '../../../constant';
+import { setModel, useModel } from '../../../hooks/useModel';
+import { forceLayout } from '../../../common/layout';
+import styles from './index.module.less';
 
 interface IProps {
   flowGraph: Graph;
@@ -21,7 +22,20 @@ const Basic: React.FC<IProps> = (props) => {
 
   const handleOnChange = (value: string = selectedValue) => {
     const mockData = mocks[value] as any;
-    const model = builder(mockData);
+    const model = ELBuilder.build(mockData);
+    setModel(model);
+    flowGraph.trigger('model:change');
+    setELString(model.toEL());
+    setSelectedValue(value);
+  };
+
+  useEffect(() => {
+    const mockData = mocks.THEN as any;
+    const model = ELBuilder.build(mockData);
+    setModel(model);
+    flowGraph.trigger('model:change');
+    setELString(model.toEL());
+
     const modelJSON = model.toCells() as Cell[];
     flowGraph.scroller.disableAutoResize();
     flowGraph.startBatch('update');
@@ -29,21 +43,18 @@ const Basic: React.FC<IProps> = (props) => {
     forceLayout(flowGraph);
     flowGraph.stopBatch('update');
     flowGraph.scroller.enableAutoResize();
-
-    setELString(model.toEL());
-    setSelectedValue(value);
-  };
+  }, [flowGraph, setELString]);
 
   useEffect(() => {
-    handleOnChange(ConditionTypeEnum.THEN);
-  }, []);
-
-  useEffect(() => {
-    flowGraph.on('model:change', handleOnChange);
-    return () => {
-      flowGraph.off('model:change', handleOnChange);
+    const handleModelChange = () => {
+      const model = useModel();
+      setELString(model.toEL());
     };
-  }, [flowGraph, handleOnChange]);
+    flowGraph.on('model:change', handleModelChange);
+    return () => {
+      flowGraph.off('model:change', handleModelChange);
+    };
+  }, [flowGraph, setELString]);
 
   return (
     <div className={styles.liteflowEditorBasicContainer}>
