@@ -2,30 +2,13 @@ import ReactDOM from 'react-dom';
 import { Button } from 'antd';
 import { Cell, Graph } from '@antv/x6';
 import { debounce } from 'lodash';
-import shortcuts from '../../common/shortcuts';
-import registerEvents from '../../common/events';
-import {
-  MIN_ZOOM,
-  MAX_ZOOM,
-  LITEFLOW_EDGE,
-  LITEFLOW_ROUTER,
-  LITEFLOW_ANCHOR,
-} from '../../constant';
+import { MIN_ZOOM, MAX_ZOOM } from '../../constant';
 import MiniMapSimpleNode from './miniMapSimpleNode';
-import liteflowEdge from '../../common/edge';
-import liteflowRouter from '../../common/router';
-import liteflowAnchor from '../../common/anchor';
-
-Graph.registerEdge(LITEFLOW_EDGE, liteflowEdge);
-Graph.registerRouter(LITEFLOW_ROUTER, liteflowRouter);
-Graph.registerAnchor(LITEFLOW_ANCHOR, liteflowAnchor);
-
-const registerShortcuts = (flowGraph: Graph): void => {
-  Object.values(shortcuts).forEach((shortcut) => {
-    const { keys, handler } = shortcut;
-    flowGraph.bindKey(keys, () => handler(flowGraph));
-  });
-};
+import {
+  LITEFLOW_ANCHOR,
+  registerEvents,
+  registerShortcuts,
+} from '../../common';
 
 const createFlowChart = (
   container: HTMLDivElement,

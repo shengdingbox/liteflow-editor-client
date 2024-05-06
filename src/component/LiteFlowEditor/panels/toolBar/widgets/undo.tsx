@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Graph } from '@antv/x6';
 import { UndoOutlined } from '@ant-design/icons';
-import shortcuts from '../../../common/shortcuts';
+import { shortcuts } from '../../../common/shortcuts';
 import makeBtnWidget from './common/makeBtnWidget';
 
 interface IProps {

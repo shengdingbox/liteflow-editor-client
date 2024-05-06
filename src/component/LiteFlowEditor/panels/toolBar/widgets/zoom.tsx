@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Graph } from '@antv/x6';
 import { ZoomOutOutlined, ZoomInOutlined } from '@ant-design/icons';
 import { MAX_ZOOM, MIN_ZOOM } from '../../../constant';
-import shortcuts from '../../../common/shortcuts';
+import { shortcuts } from '../../../common/shortcuts';
 import makeBtnWidget from './common/makeBtnWidget';
 import { useGraph } from '../../../hooks';
 import styles from './index.module.less';

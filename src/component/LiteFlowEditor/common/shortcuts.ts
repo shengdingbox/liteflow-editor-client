@@ -9,7 +9,7 @@ interface Shortcut {
   handler: (flowGraph: Graph) => void;
 }
 
-const shortcuts: { [key: string]: Shortcut } = {
+export const shortcuts: { [key: string]: Shortcut } = {
   save: {
     keys: 'meta + s',
     handler(flowGraph: Graph) {
@@ -180,4 +180,11 @@ const shortcuts: { [key: string]: Shortcut } = {
   },
 };
 
-export default shortcuts;
+const registerShortcuts = (flowGraph: Graph): void => {
+  Object.values(shortcuts).forEach((shortcut) => {
+    const { keys, handler } = shortcut;
+    flowGraph.bindKey(keys, () => handler(flowGraph));
+  });
+};
+
+export default registerShortcuts;
