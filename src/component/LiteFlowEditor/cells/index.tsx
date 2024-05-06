@@ -78,3 +78,33 @@ export {
   While,
   Virtual,
 };
+
+export interface IGroupItem {
+  key: string;
+  name: string;
+  cellTypes: LiteFlowNode[];
+}
+
+export const NODE_GROUP: IGroupItem = {
+  key: 'node',
+  name: '节点类',
+  cellTypes: [Virtual],
+};
+
+export const SEQUENCE_GROUP: IGroupItem = {
+  key: 'sequence',
+  name: '顺序类',
+  cellTypes: [Common, When],
+};
+
+export const BRANCH_GROUP: IGroupItem = {
+  key: 'branch',
+  name: '分支类',
+  cellTypes: [Switch, If],
+};
+
+export const CONTROL_GROUP: IGroupItem = {
+  key: 'control',
+  name: '循环类',
+  cellTypes: [For, While],
+};
