@@ -3,9 +3,11 @@ import { Graph, Cell } from '@antv/x6';
 import { Select } from 'antd';
 import { forceLayout } from '../../../common/layout';
 import mocks from '../../../mock';
+import newMocks from '../../../mock/mock';
 import builder from '../../../model/builder';
 import styles from './index.module.less';
 import { ConditionTypeEnum } from '../../../constant';
+import { toGraphJson } from '@/component/ProFlowEditor/model/model';
 
 interface IProps {
   flowGraph: Graph;
@@ -15,8 +17,8 @@ const Basic: React.FC<IProps> = (props) => {
   const { flowGraph } = props;
 
   const [selectedValue, setSelectedValue] = useState<string>(
-    'cust',
-    // ConditionTypeEnum.WHEN,
+    // 'cust',
+    ConditionTypeEnum.THEN,
   );
   const [elString, setELString] = useState<string>('');
 
@@ -30,6 +32,17 @@ const Basic: React.FC<IProps> = (props) => {
     if (value === 'cust') {
       modelJSON = getCustCells();
       setELString('CUST');
+
+      flowGraph.scroller.disableAutoResize();
+      flowGraph.startBatch('update');
+      flowGraph.fromJSON(modelJSON);
+      forceLayout(flowGraph);
+      flowGraph.stopBatch('update');
+    } else if (value === 'THEN' || value === 'WHEN' || value === 'WHILE') {
+      const mockData = newMocks[value];
+      modelJSON = toGraphJson(mockData);
+
+      setELString('toGraphJson');
 
       flowGraph.scroller.disableAutoResize();
       flowGraph.startBatch('update');
