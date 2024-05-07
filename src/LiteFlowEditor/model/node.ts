@@ -107,7 +107,7 @@ export default abstract class ELNode {
 
   /**
    * 在当前节点的前面、插入新节点
-   * @param child 新节点
+   * @param newNode 新节点
    * @returns
    */
   public prepend(newNode: ELNode): boolean {
@@ -170,4 +170,92 @@ export interface Properties {
   id?: string;
   tag?: string;
   [key: string]: any;
+}
+
+export class ELStartNode extends ELNode {
+  public type = NodeTypeEnum.VIRTUAL;
+  public proxy: ELNode;
+  public parent?: ELNode;
+
+  constructor(proxy: ELNode) {
+    super();
+    this.proxy = proxy;
+    this.parent = proxy.parent;
+  }
+
+  /**
+   * 在开始节点的前面、插入新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public prepend(newNode: ELNode): boolean {
+    return this.proxy.prepend(newNode);
+  }
+
+  /**
+   * 在开始节点的后面、插入新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public append(newNode: ELNode): boolean {
+    return this.proxy.prependChild(newNode);
+  }
+
+  /**
+   * 删除开始节点
+   */
+  public remove(): boolean {
+    return this.proxy.remove();
+  }
+
+  public toCells(): Node<Node.Properties> {
+    throw new Error('Method not implemented.');
+  }
+  public toEL(): string {
+    throw new Error('Method not implemented.');
+  }
+}
+
+export class ELEndNode extends ELNode {
+  public type = NodeTypeEnum.VIRTUAL;
+  public proxy: ELNode;
+  public parent?: ELNode;
+
+  constructor(proxy: ELNode) {
+    super();
+    this.proxy = proxy;
+    this.parent = proxy.parent;
+  }
+
+  /**
+   * 在结束节点的前面、插入新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public prepend(newNode: ELNode): boolean {
+    return this.proxy.appendChild(newNode);
+  }
+
+  /**
+   * 在结束节点的后面、插入新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public append(newNode: ELNode): boolean {
+    return this.proxy.append(newNode);
+  }
+
+  /**
+   * 删除结束节点
+   */
+  public remove(): boolean {
+    return this.proxy.remove();
+  }
+
+  public toCells(): Node<Node.Properties> {
+    throw new Error('Method not implemented.');
+  }
+  public toEL(): string {
+    throw new Error('Method not implemented.');
+  }
 }

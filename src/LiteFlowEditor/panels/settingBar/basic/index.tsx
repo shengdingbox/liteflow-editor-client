@@ -16,7 +16,7 @@ const Basic: React.FC<IProps> = (props) => {
   const { flowGraph } = props;
 
   const [selectedValue, setSelectedValue] = useState<string>(
-    ConditionTypeEnum.THEN,
+    ConditionTypeEnum.WHEN,
   );
   const [elString, setELString] = useState<string>('');
 
@@ -30,7 +30,7 @@ const Basic: React.FC<IProps> = (props) => {
   };
 
   useEffect(() => {
-    const mockData = mocks.THEN as any;
+    const mockData = mocks[selectedValue] as any;
     const model = ELBuilder.build(mockData);
     setModel(model);
     flowGraph.trigger('model:change');
