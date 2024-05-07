@@ -4,7 +4,7 @@ import { Modal } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import styles from './index.module.less';
 
-const AddNodeButtons: React.FC<any> = (props) => {
+const NodeToolBar: React.FC<any> = (props) => {
   const { node } = props;
   const { model } = node.getData() || {};
   const addNodeOnEdge = ({ clientX, clientY, targetEdges }: any) => {
@@ -43,7 +43,7 @@ const AddNodeButtons: React.FC<any> = (props) => {
     });
   }, 100);
   return (
-    <div className={classNames(styles.liteflowAddNodeButtons)}>
+    <div className={classNames(styles.liteflowNodeToolBar)}>
       <div
         className={classNames(styles.liteflowAddNodePrepend)}
         onClick={onPrepend}
@@ -63,4 +63,4 @@ const AddNodeButtons: React.FC<any> = (props) => {
   );
 };
 
-export default AddNodeButtons;
+export default NodeToolBar;
