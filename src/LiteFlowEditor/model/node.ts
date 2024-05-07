@@ -34,6 +34,7 @@ export default abstract class ELNode {
    * @param index 指定位置
    */
   public appendChild(newNode: ELNode, index?: number | ELNode): boolean {
+    newNode.parent = this;
     if (this.children) {
       // 尝试在父节点中添加新节点
       if (typeof index === 'number') {
@@ -46,6 +47,9 @@ export default abstract class ELNode {
         if (_index !== -1) {
           this.children.splice(_index + 1, 0, newNode);
           return true;
+        } else if (this.condition === index) {
+          // 3. 如果是在condition之后追加
+          return this.appendChild(newNode, 0);
         } else {
           this.children.push(newNode);
           return true;
@@ -65,6 +69,7 @@ export default abstract class ELNode {
    * @param index 指定位置
    */
   public prependChild(newNode: ELNode, index?: number | ELNode): boolean {
+    newNode.parent = this;
     if (this.children) {
       // 尝试在父节点中添加新节点
       if (typeof index === 'number') {
@@ -77,6 +82,9 @@ export default abstract class ELNode {
         if (_index !== -1) {
           this.children.splice(_index, 0, newNode);
           return true;
+        } else if (this.condition === index) {
+          // 3. 如果是在condition之前追加
+          return this.prepend(newNode);
         } else {
           this.children.splice(0, 0, newNode);
           return true;
@@ -113,7 +121,6 @@ export default abstract class ELNode {
   public prepend(newNode: ELNode): boolean {
     if (this.parent) {
       if (this.parent.prependChild(newNode, this)) {
-        newNode.parent = this.parent;
         return true;
       }
     } else {
@@ -130,7 +137,6 @@ export default abstract class ELNode {
   public append(newNode: ELNode): boolean {
     if (this.parent) {
       if (this.parent.appendChild(newNode, this)) {
-        newNode.parent = this.parent;
         return true;
       }
     } else {

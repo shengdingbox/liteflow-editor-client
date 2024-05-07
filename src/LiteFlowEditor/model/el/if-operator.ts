@@ -1,5 +1,5 @@
 import { Cell, Node, Edge } from '@antv/x6';
-import ELNode, { Properties, ELStartNode, ELEndNode } from '../node';
+import ELNode, { Properties, ELEndNode } from '../node';
 import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
@@ -50,14 +50,14 @@ export default class IfOperator extends ELNode {
     cells: Cell[],
     options?: Record<string, any>,
   ): Node {
-    const { condition, children = [], parent } = this;
+    const { condition, children = [] } = this;
     const start = Node.create({
       shape: condition.type,
       attrs: {
         label: { text: condition.id },
       },
     });
-    start.setData({ model: new ELStartNode(this) }, { overwrite: true });
+    start.setData({ model: condition }, { overwrite: true });
     cells.push(start);
     cells.push(
       Edge.create({

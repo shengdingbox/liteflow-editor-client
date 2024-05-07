@@ -16,7 +16,7 @@ const Basic: React.FC<IProps> = (props) => {
   const { flowGraph } = props;
 
   const [selectedValue, setSelectedValue] = useState<string>(
-    ConditionTypeEnum.WHEN,
+    ConditionTypeEnum.SWITCH,
   );
   const [elString, setELString] = useState<string>('');
 
