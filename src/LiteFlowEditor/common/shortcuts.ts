@@ -1,6 +1,6 @@
 import { safeGet } from '../utils';
-import { message } from 'antd';
-import { Cell, Edge, Graph, Node } from '@antv/x6';
+import { message, Modal } from 'antd';
+import { Graph } from '@antv/x6';
 import { MIN_ZOOM, MAX_ZOOM, ZOOM_STEP } from '../constant';
 import { getSelectedNodes } from '../utils/flowChartUtils';
 
@@ -73,35 +73,22 @@ export const shortcuts: { [key: string]: Shortcut } = {
   delete: {
     keys: ['backspace', 'del'],
     handler(flowGraph: Graph) {
-      const toDelCells = flowGraph.getSelectedCells();
-      const onEdgeDel = (edge: Edge) => {
-        const srcNode = edge.getSourceNode() as Node;
-        const isSrcNodeInDelCells = !!toDelCells.find((c) => c === srcNode);
-        if (
-          srcNode &&
-          srcNode.shape === 'flow-branch' &&
-          !isSrcNodeInDelCells
-        ) {
-          const portId = edge.getSourcePortId();
-          if (portId === 'right' || portId === 'bottom') {
-            const edgeLabel = safeGet(
-              edge.getLabelAt(0),
-              'attrs.label.text',
-              '',
-            );
-            srcNode.setPortProp(portId, 'attrs/text/text', edgeLabel);
-          }
-        }
-      };
-      toDelCells.forEach((cell: Cell) => {
-        if (cell.isEdge()) {
-          onEdgeDel(cell);
-        } else {
-          flowGraph.getConnectedEdges(cell).forEach(onEdgeDel);
-        }
-      });
-      flowGraph.removeCells(flowGraph.getSelectedCells());
-      flowGraph.trigger('toolBar:forceUpdate');
+      const toDelCells = flowGraph
+        .getSelectedCells()
+        .filter((cell) => cell.isNode());
+      if (toDelCells.length) {
+        Modal.confirm({
+          title: `确认要删除选中的节点？`,
+          content: '点击确认按钮进行删除，点击取消按钮返回',
+          onOk() {
+            toDelCells.forEach((node) => {
+              const { model } = node.getData() || {};
+              model?.remove?.();
+            });
+            flowGraph.trigger('model:change');
+          },
+        });
+      }
       return false;
     },
   },

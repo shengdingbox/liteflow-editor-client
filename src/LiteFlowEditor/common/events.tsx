@@ -62,15 +62,16 @@ const registerEvents = (flowGraph: Graph): void => {
     }
   });
   flowGraph.on('blank:contextmenu', (args) => {
-    const {
-      e: { clientX, clientY },
-    } = args;
+    // const {
+    //   e: { clientX, clientY },
+    // } = args;
+    // flowGraph.cleanSelection();
+    // flowGraph.trigger('graph:showContextMenu', {
+    //   x: clientX,
+    //   y: clientY,
+    //   scene: 'blank',
+    // });
     flowGraph.cleanSelection();
-    flowGraph.trigger('graph:showContextMenu', {
-      x: clientX,
-      y: clientY,
-      scene: 'blank',
-    });
   });
   flowGraph.on('node:contextmenu', (args) => {
     const {

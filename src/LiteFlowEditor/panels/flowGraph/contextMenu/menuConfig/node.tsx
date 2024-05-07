@@ -8,12 +8,6 @@ import { getSelectedNodes } from '../../../../utils/flowChartUtils';
 
 const nodeMenuConfig = [
   {
-    key: 'copy',
-    title: '复制',
-    icon: <CopyOutlined />,
-    handler: shortcuts.copy.handler,
-  },
-  {
     key: 'delete',
     title: '删除',
     icon: <DeleteOutlined />,
