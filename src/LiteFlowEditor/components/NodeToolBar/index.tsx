@@ -6,7 +6,8 @@ import styles from './index.module.less';
 
 const NodeToolBar: React.FC<any> = (props) => {
   const { node } = props;
-  const { model } = node.getData() || {};
+  const { model, toolbar = { append: true, delete: true, prepend: true } } =
+    node.getData() || {};
   const onPrepend = debounce(({ clientX, clientY }: any) => {
     node.model?.graph.trigger('graph:showContextPad', {
       x: clientX,
@@ -38,21 +39,30 @@ const NodeToolBar: React.FC<any> = (props) => {
   }, 100);
   return (
     <div className={classNames(styles.liteflowNodeToolBar)}>
-      <div
-        className={classNames(styles.liteflowAddNodePrepend)}
-        onClick={onPrepend}
-      >
-        <div className={classNames(styles.liteflowAddNodePrependIcon)}></div>
-      </div>
-      <div
-        className={classNames(styles.liteflowAddNodeAppend)}
-        onClick={onAppend}
-      >
-        <div className={classNames(styles.liteflowAddNodeAppendIcon)}></div>
-      </div>
-      <div className={classNames(styles.liteflowDeleteNode)} onClick={onDelete}>
-        <CloseCircleOutlined />
-      </div>
+      {toolbar.prepend && (
+        <div
+          className={classNames(styles.liteflowAddNodePrepend)}
+          onClick={onPrepend}
+        >
+          <div className={classNames(styles.liteflowAddNodePrependIcon)}></div>
+        </div>
+      )}
+      {toolbar.append && (
+        <div
+          className={classNames(styles.liteflowAddNodeAppend)}
+          onClick={onAppend}
+        >
+          <div className={classNames(styles.liteflowAddNodeAppendIcon)}></div>
+        </div>
+      )}
+      {toolbar.delete && (
+        <div
+          className={classNames(styles.liteflowDeleteNode)}
+          onClick={onDelete}
+        >
+          <CloseCircleOutlined />
+        </div>
+      )}
     </div>
   );
 };

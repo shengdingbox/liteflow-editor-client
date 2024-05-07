@@ -33,7 +33,10 @@ export default class Chain extends ELNode {
         label: { text: '开始' },
       },
     });
-    start.setData({ model: this, parent: undefined }, { overwrite: true });
+    start.setData(
+      { model: this, toolbar: { prepend: false, append: true, delete: true } },
+      { overwrite: true },
+    );
 
     cells.push(start);
 
@@ -50,7 +53,10 @@ export default class Chain extends ELNode {
         label: { text: '结束' },
       },
     });
-    last.setData({ model: this, parent: undefined }, { overwrite: true });
+    last.setData(
+      { model: this, toolbar: { prepend: true, append: false, delete: true } },
+      { overwrite: true },
+    );
     cells.push(last);
 
     if (nextCells.length) {
@@ -81,5 +87,37 @@ export default class Chain extends ELNode {
    */
   public toEL(): string {
     return this.children.map((x) => x.toEL()).join(', ');
+  }
+
+  /**
+   * 在开始节点的后面、插入新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public append(newNode: ELNode): boolean {
+    if (this.children.length === 1) {
+      if (this.children[0].prependChild(newNode, 0)) {
+        newNode.parent = this.children[0];
+        return true;
+      }
+    }
+    this.children.push(newNode);
+    return true;
+  }
+
+  /**
+   * 在结束节点的前面、插入新节点
+   * @param child 新节点
+   * @returns
+   */
+  public prepend(newNode: ELNode): boolean {
+    if (this.children.length === 1) {
+      if (this.children[0].appendChild(newNode)) {
+        newNode.parent = this.children[0];
+        return true;
+      }
+    }
+    this.children.push(newNode);
+    return true;
   }
 }
