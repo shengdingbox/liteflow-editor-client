@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import { Input } from 'antd';
-import { Edge, Graph } from '@antv/x6';
+import { Edge, Node, Graph } from '@antv/x6';
 import useClickAway from '../../../hooks/useClickAway';
 import {
   NODE_GROUP,
@@ -8,12 +8,15 @@ import {
   BRANCH_GROUP,
   CONTROL_GROUP,
 } from '../../../cells';
+import { ELBuilder } from '../../../model/builder';
 import styles from './index.module.less';
 
 interface IProps {
   x: number;
   y: number;
-  edge: Edge;
+  edge?: Edge;
+  node?: Node;
+  scene?: string;
   visible: boolean;
   flowGraph: Graph;
 }
@@ -22,7 +25,7 @@ const groups = [NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP];
 
 const FlowChartContextPad: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
-  const { x, y, visible, flowGraph, edge } = props;
+  const { x, y, visible, flowGraph, edge, node, scene } = props;
 
   useClickAway(() => onClickAway(), menuRef);
 
@@ -32,13 +35,24 @@ const FlowChartContextPad: React.FC<IProps> = (props) => {
   );
   const onClickMenu = useCallback(
     (cellType) => {
-      flowGraph.trigger('graph:addNodeOnEdge', {
-        edge,
-        node: { shape: cellType.type },
-      });
+      if (edge) {
+        flowGraph.trigger('graph:addNodeOnEdge', {
+          edge,
+          node: { shape: cellType.type },
+        });
+      } else if (node) {
+        const { model } = node.getData() || {};
+        if (scene === 'prepend') {
+          model.prepend(ELBuilder.createELNode(cellType.type, model));
+        } else {
+          model.append(ELBuilder.createELNode(cellType.type, model));
+        }
+        flowGraph.trigger('model:change');
+      }
+
       onClickAway();
     },
-    [flowGraph, edge],
+    [flowGraph, edge, node],
   );
 
   return !visible ? null : (

@@ -35,14 +35,16 @@ const defaultMenuInfo: IMenuInfo = {
 interface IPadInfo {
   x: number;
   y: number;
-  edge: Edge;
+  edge?: Edge;
+  node?: Node;
+  scene?: string;
   visible: boolean;
 }
 
 const defaultPadInfo: IPadInfo = {
   x: 0,
   y: 0,
-  edge: Edge.create({}),
+  scene: 'append',
   visible: false,
 };
 

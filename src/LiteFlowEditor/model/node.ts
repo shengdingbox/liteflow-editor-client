@@ -29,20 +29,65 @@ export default abstract class ELNode {
   public properties?: Properties;
 
   /**
-   * 添加子节点
+   * 在后面添加子节点
    * @param child 子节点
    * @param index 指定位置
    */
-  public appendChild(child: ELNode, index?: number) {
+  public appendChild(newNode: ELNode, index?: number | ELNode): boolean {
     if (this.children) {
-      if (index) {
-        this.children.splice(index, 0, child);
+      // 尝试在父节点中添加新节点
+      if (typeof index === 'number') {
+        // 1. 如果有索引
+        this.children.splice(index, 0, newNode);
+        return true;
+      } else if (index) {
+        // 2. 如果有目标节点
+        const _index = this.children.indexOf(index);
+        if (_index !== -1) {
+          this.children.splice(_index + 1, 0, newNode);
+          return true;
+        } else {
+          this.children.push(newNode);
+          return true;
+        }
       } else {
-        this.children.push(child);
+        // 4. 否则直接插入
+        this.children.push(newNode);
+        return true;
       }
-    } else {
-      this.children = [child];
     }
+    return false;
+  }
+
+  /**
+   * 在后面添加子节点
+   * @param child 子节点
+   * @param index 指定位置
+   */
+  public prependChild(newNode: ELNode, index?: number | ELNode): boolean {
+    if (this.children) {
+      // 尝试在父节点中添加新节点
+      if (typeof index === 'number') {
+        // 1. 如果有索引
+        this.children.splice(index, 0, newNode);
+        return true;
+      } else if (index) {
+        // 2. 如果有目标节点
+        const _index = this.children.indexOf(index);
+        if (_index !== -1) {
+          this.children.splice(_index, 0, newNode);
+          return true;
+        } else {
+          this.children.splice(0, 0, newNode);
+          return true;
+        }
+      } else {
+        // 4. 否则直接插入
+        this.children.splice(0, 0, newNode);
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -56,6 +101,40 @@ export default abstract class ELNode {
         this.children.splice(index, 1);
         return true;
       }
+    }
+    return false;
+  }
+
+  /**
+   * 在当前节点的前面、插入新节点
+   * @param child 新节点
+   * @returns
+   */
+  public prepend(newNode: ELNode): boolean {
+    if (this.parent) {
+      if (this.parent.prependChild(newNode, this)) {
+        newNode.parent = this.parent;
+        return true;
+      }
+    } else {
+      return this.prependChild(newNode);
+    }
+    return false;
+  }
+
+  /**
+   * 在当前节点的后面、插入新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public append(newNode: ELNode): boolean {
+    if (this.parent) {
+      if (this.parent.appendChild(newNode, this)) {
+        newNode.parent = this.parent;
+        return true;
+      }
+    } else {
+      return this.appendChild(newNode);
     }
     return false;
   }

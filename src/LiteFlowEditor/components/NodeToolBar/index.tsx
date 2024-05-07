@@ -7,29 +7,23 @@ import styles from './index.module.less';
 const NodeToolBar: React.FC<any> = (props) => {
   const { node } = props;
   const { model } = node.getData() || {};
-  const addNodeOnEdge = ({ clientX, clientY, targetEdges }: any) => {
-    if (targetEdges.length) {
-      node.model?.graph.trigger('graph:showContextPad', {
-        x: clientX,
-        y: clientY,
-        edge: targetEdges[0],
-        node,
-      });
-    }
-  };
   const onPrepend = debounce(({ clientX, clientY }: any) => {
-    const targetEdges =
-      node.model?.getIncomingEdges(node) ||
-      node.model?.getOutgoingEdges(node) ||
-      [];
-    addNodeOnEdge({ clientX, clientY, targetEdges });
+    node.model?.graph.trigger('graph:showContextPad', {
+      x: clientX,
+      y: clientY,
+      node,
+      scene: 'prepend',
+      edge: undefined,
+    });
   }, 100);
   const onAppend = debounce(({ clientX, clientY }: any) => {
-    const targetEdges =
-      node.model?.getOutgoingEdges(node) ||
-      node.model?.getIncomingEdges(node) ||
-      [];
-    addNodeOnEdge({ clientX, clientY, targetEdges });
+    node.model?.graph.trigger('graph:showContextPad', {
+      x: clientX,
+      y: clientY,
+      node,
+      scene: 'append',
+      edge: undefined,
+    });
   }, 100);
   const onDelete = debounce(() => {
     Modal.confirm({
