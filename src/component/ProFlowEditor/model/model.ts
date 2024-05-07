@@ -90,6 +90,8 @@ const portGroups = {
     attrs: {
       circle: {
         r: 6,
+        stroke: 'transparent',
+        fill: 'transparent',
         // magnet: true,
         // stroke: '#31d0c6',
         // strokeWidth: 2,
@@ -105,6 +107,8 @@ const portGroups = {
     attrs: {
       circle: {
         r: 6,
+        stroke: 'transparent',
+        fill: 'transparent',
         // magnet: true,
         // stroke: '#31d0c6',
         // strokeWidth: 2,
@@ -120,6 +124,8 @@ const portGroups = {
     attrs: {
       circle: {
         r: 6,
+        stroke: 'transparent',
+        fill: 'transparent',
         // magnet: true,
         // stroke: '#31d0c6',
         // strokeWidth: 2,

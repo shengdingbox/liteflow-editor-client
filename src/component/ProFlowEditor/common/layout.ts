@@ -77,8 +77,8 @@ export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
   });
 };
 
-const X_STEP = 90;
-const Y_STEP = 90;
+const X_STEP = 80;
+const Y_STEP = 80;
 
 interface SimpleNode {
   id: string;

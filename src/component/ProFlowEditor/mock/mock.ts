@@ -66,14 +66,14 @@ export const IfDemo: LiteNodeData = {
       props: { node: 'x' },
       multiple: [
         {
-          name: 'yes',
+          name: 'Yes',
           children: [
             { type: 'common', props: { node: 'a1' } },
             { type: 'common', props: { node: 'a2' } },
           ],
         },
         {
-          name: 'no',
+          name: 'No',
           children: [{ type: 'common', props: { node: 'b' } }],
         },
       ],
@@ -104,6 +104,7 @@ export const WhileDemo: LiteNodeData = {
       children: [
         { type: 'common', props: { node: 'a' } },
         { type: 'common', props: { node: 'b' } },
+        { type: 'common', props: { node: 'c' } },
       ],
     },
   ],
