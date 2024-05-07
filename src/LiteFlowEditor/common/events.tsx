@@ -116,7 +116,7 @@ const registerEvents = (flowGraph: Graph): void => {
       targetIndex = targetParent.children.indexOf(targetModel) + 1;
     }
     const newELNode = ELBuilder.createELNode(droppingNode.shape, targetParent);
-    targetParent.children.splice(targetIndex, 0, newELNode);
+    targetParent.appendChild(newELNode, targetIndex);
     flowGraph.trigger('model:change');
   });
 };

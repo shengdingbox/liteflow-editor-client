@@ -31,10 +31,15 @@ export default abstract class ELNode {
   /**
    * 添加子节点
    * @param child 子节点
+   * @param index 指定位置
    */
-  public appendChild(child: ELNode) {
+  public appendChild(child: ELNode, index?: number) {
     if (this.children) {
-      this.children?.push(child);
+      if (index) {
+        this.children.splice(index, 0, child);
+      } else {
+        this.children.push(child);
+      }
     } else {
       this.children = [child];
     }
