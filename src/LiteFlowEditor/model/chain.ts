@@ -41,43 +41,31 @@ export default class Chain extends ELNode {
     cells.push(start);
 
     // 2. 其次：解析已有的节点
-    let nextCells: Cell[] = [];
+    let last: Node = start;
     this.children.forEach((x) => {
-      nextCells = nextCells.concat(x.toCells(start, cells));
+      last = x.toCells(last, cells) as Node;
     });
 
     // 3. 最后：添加一个结束节点
-    const last: Node = Node.create({
+    const end: Node = Node.create({
       shape: NODE_TYPE_END,
       attrs: {
         label: { text: '结束' },
       },
     });
-    last.setData(
+    end.setData(
       { model: this, toolbar: { prepend: true, append: false, delete: true } },
       { overwrite: true },
     );
-    cells.push(last);
+    cells.push(end);
 
-    if (nextCells.length) {
-      nextCells.forEach((next) => {
-        cells.push(
-          Edge.create({
-            shape: LITEFLOW_EDGE,
-            source: next.id,
-            target: last.id,
-          }),
-        );
-      });
-    } else {
-      cells.push(
-        Edge.create({
-          shape: LITEFLOW_EDGE,
-          source: start.id,
-          target: last.id,
-        }),
-      );
-    }
+    cells.push(
+      Edge.create({
+        shape: LITEFLOW_EDGE,
+        source: last.id,
+        target: end.id,
+      }),
+    );
 
     return cells;
   }

@@ -110,6 +110,9 @@ export default abstract class ELNode {
         return true;
       }
     }
+    if (this.condition && this.condition === child) {
+      return this.remove();
+    }
     return false;
   }
 
