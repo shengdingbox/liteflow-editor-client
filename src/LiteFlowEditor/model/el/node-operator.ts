@@ -46,7 +46,7 @@ export default class NodeOperator extends ELNode {
       },
       ...(options.node || {}),
     });
-    node.setData({ model: this, parent }, { overwrite: true });
+    node.setData({ model: this }, { overwrite: true });
     cells.push(node);
 
     if (previous) {

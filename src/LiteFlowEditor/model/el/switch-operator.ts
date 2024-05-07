@@ -50,14 +50,14 @@ export default class SwitchOperator extends ELNode {
     cells: Cell[],
     options?: Record<string, any>,
   ): Node {
-    const { condition, children, parent } = this;
+    const { condition, children } = this;
     const start = Node.create({
       shape: condition.type,
       attrs: {
         label: { text: condition.id },
       },
     });
-    start.setData({ model: this, parent }, { overwrite: true });
+    start.setData({ model: this }, { overwrite: true });
     cells.push(start);
     cells.push(
       Edge.create({
@@ -72,7 +72,7 @@ export default class SwitchOperator extends ELNode {
         label: { text: '' },
       },
     });
-    end.setData({ model: this, parent }, { overwrite: true });
+    end.setData({ model: this }, { overwrite: true });
     cells.push(end);
     if (children.length) {
       children.forEach((child) => {

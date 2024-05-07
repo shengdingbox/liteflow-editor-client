@@ -50,18 +50,7 @@ const registerEvents = (flowGraph: Graph): void => {
   flowGraph.on('node:dblclick', () => {
     flowGraph.trigger('graph:editNode');
   });
-  flowGraph.on('node:click', (args) => {
-    const targetNode = args.node;
-    if (targetNode.shape === ConditionTypeEnum.WHEN) {
-      const targetNodeData = targetNode.getData().model;
-      targetNodeData.children.push({
-        type: NodeTypeEnum.COMMON,
-        id: `xxx${Math.ceil(Math.random() * 100)}`,
-      });
-      flowGraph.trigger('model:change');
-    }
-  });
-  flowGraph.on('blank:contextmenu', (args) => {
+  flowGraph.on('blank:contextmenu', () => {
     // const {
     //   e: { clientX, clientY },
     // } = args;

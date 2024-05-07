@@ -40,14 +40,14 @@ export default class WhenOperator extends ELNode {
     cells: Cell[],
     options?: Record<string, any>,
   ): Node {
-    const { children, parent } = this;
+    const { children } = this;
     const start = Node.create({
       shape: ConditionTypeEnum.WHEN,
       attrs: {
         label: { text: '' },
       },
     });
-    start.setData({ model: this, parent }, { overwrite: true });
+    start.setData({ model: this }, { overwrite: true });
     cells.push(start);
     cells.push(
       Edge.create({
@@ -62,7 +62,7 @@ export default class WhenOperator extends ELNode {
         label: { text: '' },
       },
     });
-    end.setData({ model: this, parent }, { overwrite: true });
+    end.setData({ model: this }, { overwrite: true });
     cells.push(end);
     if (children.length) {
       children.forEach((child) => {

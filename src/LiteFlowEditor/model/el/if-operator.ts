@@ -57,7 +57,7 @@ export default class IfOperator extends ELNode {
         label: { text: condition.id },
       },
     });
-    start.setData({ model: this, parent }, { overwrite: true });
+    start.setData({ model: this }, { overwrite: true });
     cells.push(start);
     cells.push(
       Edge.create({
@@ -72,7 +72,7 @@ export default class IfOperator extends ELNode {
         label: { text: '' },
       },
     });
-    end.setData({ model: this, parent }, { overwrite: true });
+    end.setData({ model: this }, { overwrite: true });
     cells.push(end);
     const [first, last] = children;
     const trueNode = first.toCells(start, cells, {
