@@ -59,6 +59,10 @@ const createFlowChart = (
             content,
           );
         } else {
+          const labelColor = label?.attrs?.label.color as string;
+          if (labelColor) {
+            content.style.color = labelColor;
+          }
           content.appendChild(
             document.createTextNode(label?.attrs?.label.text + ''),
           );

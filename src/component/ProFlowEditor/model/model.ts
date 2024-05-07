@@ -56,7 +56,7 @@ function nodeToCells(
       node.multiple?.forEach((line) => {
         preNodeId = curNode.id;
         line.children.forEach((n, i) => {
-          const label = i === 0 ? line.name : '';
+          const label = i === 0 ? line.name : undefined;
           preNodeId = nodeToCells(n, cells, {
             nodeId: preNodeId,
             edgeLabel: label,
@@ -221,7 +221,7 @@ function createEdge(
 ) {
   return {
     shape: 'LITEFLOW_EDGE',
-    labels: [{ attrs: { label: { text: label } } }],
+    labels: [{ attrs: { label: { text: label, color: '#666' } } }],
     id: generateNewId(),
     source: { cell: from, port: fromPort },
     target: { cell: to, port: toPort },

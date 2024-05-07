@@ -53,7 +53,7 @@ export default {
     position: {
       distance: 0.5,
       options: {
-        keepGradient: true,
+        keepGradient: false,
         // ensureLegibility: true,
       },
     },
