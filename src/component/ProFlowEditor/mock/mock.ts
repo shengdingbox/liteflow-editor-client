@@ -51,7 +51,9 @@ export const SwitchDemo: LiteNodeData = {
           children: [{ type: 'common', props: { node: 'b' } }],
         },
         {
-          children: [{ type: 'common', props: { node: 'c' } }],
+          children: [
+            // { type: 'common', props: { node: 'c' } }
+          ],
         },
       ],
     },
@@ -74,7 +76,9 @@ export const IfDemo: LiteNodeData = {
         },
         {
           name: 'No',
-          children: [{ type: 'common', props: { node: 'b' } }],
+          children: [
+            // { type: 'common', props: { node: 'b' } }
+          ],
         },
       ],
     },
@@ -88,8 +92,8 @@ export const ForDemo: LiteNodeData = {
       type: 'for',
       props: { node: 'x' },
       children: [
-        { type: 'common', props: { node: 'a' } },
-        { type: 'common', props: { node: 'b' } },
+        // { type: 'common', props: { node: 'a' } },
+        // { type: 'common', props: { node: 'b' } },
       ],
     },
   ],

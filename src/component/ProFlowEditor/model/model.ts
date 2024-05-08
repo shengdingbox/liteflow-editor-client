@@ -34,27 +34,26 @@ function nodeToCells(
     return preNodeId;
   } else if (comp.childrenType === 'include') {
     preNodeId = curNode.id;
-    node.children?.forEach((n, i) => {
-      const port = i === 0 ? 'bottom1' : undefined;
-      preNodeId = nodeToCells(n, cells, { nodeId: preNodeId, port });
-    });
+    if (node.children!?.length > 0) {
+      node.children?.forEach((n, i) => {
+        const port = i === 0 ? 'bottom1' : undefined;
+        preNodeId = nodeToCells(n, cells, { nodeId: preNodeId, port });
+      });
+    } else {
+      const emptyNode = createVirtualNode('NodeVirtualComponent');
+      cells.push(emptyNode);
+      cells.push(createEdge(preNodeId, 'bottom1', emptyNode.id, 'in'));
+      preNodeId = emptyNode.id;
+    }
     cells.push(createEdge(preNodeId, 'out', curNode.id, 'bottom2'));
     return curNode.id;
   } else if (comp.childrenType === 'multiple') {
     const virtualNode = createVirtualNode('LITEFLOW_INTERMEDIATE_END');
     cells.push(virtualNode);
-    if (comp.multipleType === 'when' || comp.multipleType === 'switch') {
-      node.multiple?.forEach((line) => {
-        preNodeId = curNode.id;
-        line.children.forEach((n) => {
-          preNodeId = nodeToCells(n, cells, { nodeId: preNodeId });
-        });
-        cells.push(createEdge(preNodeId, 'out', virtualNode.id, 'in'));
-      });
-      return virtualNode.id;
-    } else if (comp.multipleType === 'if') {
-      node.multiple?.forEach((line) => {
-        preNodeId = curNode.id;
+
+    node.multiple?.forEach((line) => {
+      preNodeId = curNode.id;
+      if (line.children.length > 0) {
         line.children.forEach((n, i) => {
           const label = i === 0 ? line.name : undefined;
           preNodeId = nodeToCells(n, cells, {
@@ -62,12 +61,18 @@ function nodeToCells(
             edgeLabel: label,
           });
         });
-        cells.push(createEdge(preNodeId, 'out', virtualNode.id, 'in'));
-      });
-      return virtualNode.id;
-    }
+      } else {
+        const emptyNode = createVirtualNode('NodeVirtualComponent');
+        cells.push(emptyNode);
+        cells.push(createEdge(preNodeId, 'out', emptyNode.id, 'in', line.name));
+        preNodeId = emptyNode.id;
+      }
+      cells.push(createEdge(preNodeId, 'out', virtualNode.id, 'in'));
+    });
+    return virtualNode.id;
+  } else {
+    return curNode.id;
   }
-  return curNode.id;
 }
 
 export function toGraphJson(node: LiteNodeData): any {
