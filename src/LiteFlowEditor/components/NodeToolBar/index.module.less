@@ -42,27 +42,48 @@
       filter: opacity(1);
     }
   }
-  .liteflowDeleteNode {
+  .liteflowTopToolBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    top: -8px;
-    right: -2px;
-    width: 12px;
-    height: 12px;
-    vertical-align: middle;
+    top: -24px;
+    left: 50%;
+    width: 50px;
+    height: 24px;
+    margin-left: -25px;
+    border-radius: 4px;
     background-color: #fff;
-    border-radius: 6px;
+    box-shadow: 0 0 0 1px rgba(64, 87, 109, 0.07),
+      0 2px 12px rgba(53, 71, 90, 0.2);
+  }
+  .liteflowToolBarBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
+    font-size: 16px;
+    border: 1px solid transparent;
+    &:hover {
+      border: 1px solid #ccc;
+      background-color: rgba(64, 87, 109, 0.07);
+    }
+  }
+  .liteflowDeleteNode {
     color: #f54a45;
   }
   .liteflowAddNodePrepend,
   .liteflowAddNodeAppend,
-  .liteflowDeleteNode {
+  .liteflowTopToolBar {
     display: none;
   }
   &:hover {
     .liteflowAddNodePrepend,
     .liteflowAddNodeAppend,
-    .liteflowDeleteNode {
-      display: block;
+    .liteflowTopToolBar {
+      display: flex;
     }
   }
 }

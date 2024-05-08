@@ -185,6 +185,7 @@ export default abstract class ELNode {
     cells?: Cell[],
     options?: Record<string, any>,
   ): Cell[] | Node;
+
   /**
    * 转换为EL表达式字符串
    */
@@ -243,6 +244,7 @@ export class ELStartNode extends ELNode {
   public toCells(): Cell[] | Node {
     throw new Error('Method not implemented.');
   }
+
   public toEL(): string {
     throw new Error('Method not implemented.');
   }
@@ -291,6 +293,7 @@ export class ELEndNode extends ELNode {
   public toCells(): Node<Node.Properties> {
     throw new Error('Method not implemented.');
   }
+
   public toEL(): string {
     throw new Error('Method not implemented.');
   }

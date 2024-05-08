@@ -57,7 +57,15 @@ export default class Chain extends ELNode {
       },
     });
     start.setData(
-      { model: this, toolbar: { prepend: false, append: true, delete: true } },
+      {
+        model: this,
+        toolbar: {
+          prepend: false,
+          append: true,
+          delete: false,
+          replace: false,
+        },
+      },
       { overwrite: true },
     );
 
@@ -77,7 +85,15 @@ export default class Chain extends ELNode {
       },
     });
     end.setData(
-      { model: this, toolbar: { prepend: true, append: false, delete: true } },
+      {
+        model: this,
+        toolbar: {
+          prepend: true,
+          append: false,
+          delete: false,
+          replace: false,
+        },
+      },
       { overwrite: true },
     );
     cells.push(end);
@@ -124,5 +140,12 @@ export default class Chain extends ELNode {
     }
     this.children.push(newNode);
     return true;
+  }
+
+  /**
+   * 根节点不允许删除
+   */
+  public remove(): boolean {
+    return false;
   }
 }

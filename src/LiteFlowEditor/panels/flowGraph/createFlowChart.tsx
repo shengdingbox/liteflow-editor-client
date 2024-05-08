@@ -89,11 +89,11 @@ const createFlowChart = (
     },
     // https://x6.antv.vision/zh/docs/tutorial/basic/background
     background: {
-      color: '#ffffff',
+      color: '#f4f7fc',
     },
     // https://x6.antv.vision/zh/docs/tutorial/basic/grid
     grid: {
-      visible: false,
+      visible: true,
     },
     // https://x6.antv.vision/zh/docs/tutorial/basic/selection
     selecting: {

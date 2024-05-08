@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Graph, Edge, Cell } from '@antv/x6';
+import { Graph, Edge, Cell, Node } from '@antv/x6';
 import createFlowChart from './panels/flowGraph/createFlowChart';
 import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
 import FlowChartContextMenu from './panels/flowGraph/contextMenu';
