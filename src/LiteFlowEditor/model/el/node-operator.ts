@@ -2,6 +2,23 @@ import { Cell, Node, Edge } from '@antv/x6';
 import ELNode from '../node';
 import { LITEFLOW_EDGE, NodeTypeEnum } from '../../constant';
 
+/**
+ * 节点组件操作符：是EL表达式树型结构的叶子结点。
+ *
+ * 例如一个选择编排(SWITCH)示例：
+ * (1) EL表达式语法：SWITCH(x).to(a, b, c, d)
+ * (2) JSON表示形式：
+ * {
+    type: ConditionTypeEnum.SWITCH,
+    condition: { type: NodeTypeEnum.SWITCH, id: 'x' },
+    children: [
+      { type: NodeTypeEnum.COMMON, id: 'a' },
+      { type: NodeTypeEnum.COMMON, id: 'b' },
+      { type: NodeTypeEnum.COMMON, id: 'c' },
+      { type: NodeTypeEnum.COMMON, id: 'd' },
+    ],
+  }
+ */
 export default class NodeOperator extends ELNode {
   type: NodeTypeEnum;
   parent: ELNode;
