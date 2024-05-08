@@ -16,6 +16,7 @@ const NodeToolBar: React.FC<any> = (props) => {
       y: clientY,
       node,
       scene: 'prepend',
+      title: '前插节点',
       edge: null,
     });
   }, 100);
@@ -25,6 +26,7 @@ const NodeToolBar: React.FC<any> = (props) => {
       y: clientY,
       node,
       scene: 'append',
+      title: '后插节点',
       edge: null,
     });
   }, 100);
@@ -34,6 +36,7 @@ const NodeToolBar: React.FC<any> = (props) => {
       y: clientY,
       node,
       scene: 'replace',
+      title: '替换节点',
       edge: null,
     });
   }, 100);

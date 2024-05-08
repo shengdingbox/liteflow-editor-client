@@ -3,7 +3,9 @@ import { Graph, Edge, Cell, Node } from '@antv/x6';
 import createFlowChart from './panels/flowGraph/createFlowChart';
 import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
 import FlowChartContextMenu from './panels/flowGraph/contextMenu';
-import FlowChartContextPad from './panels/flowGraph/contextPad';
+import FlowChartContextPad, {
+  IContextPadScene,
+} from './panels/flowGraph/contextPad';
 import GraphContext from './context/GraphContext';
 import Layout from './panels/layout';
 import SideBar from './panels/sideBar';
@@ -37,7 +39,7 @@ interface IPadInfo {
   y: number;
   edge?: Edge;
   node?: Node;
-  scene?: string;
+  scene?: IContextPadScene;
   visible: boolean;
 }
 

@@ -11,12 +11,15 @@ import {
 import { ELBuilder } from '../../../model/builder';
 import styles from './index.module.less';
 
+export type IContextPadScene = 'append' | 'prepend' | 'replace';
+
 interface IProps {
   x: number;
   y: number;
   edge?: Edge;
   node?: Node;
-  scene?: string;
+  scene?: IContextPadScene;
+  title?: string;
   visible: boolean;
   flowGraph: Graph;
 }
@@ -25,7 +28,16 @@ const groups = [NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP];
 
 const FlowChartContextPad: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
-  const { x, y, visible, flowGraph, edge, node, scene } = props;
+  const {
+    x,
+    y,
+    visible,
+    flowGraph,
+    edge,
+    node,
+    scene = 'append',
+    title = '插入节点',
+  } = props;
 
   useClickAway(() => onClickAway(), menuRef);
 
@@ -44,6 +56,8 @@ const FlowChartContextPad: React.FC<IProps> = (props) => {
         const { model } = node.getData() || {};
         if (scene === 'prepend') {
           model.prepend(ELBuilder.createELNode(cellType.type, model));
+        } else if (scene === 'replace') {
+          model.replace(ELBuilder.createELNode(cellType.type, model));
         } else {
           model.append(ELBuilder.createELNode(cellType.type, model));
         }
@@ -62,7 +76,7 @@ const FlowChartContextPad: React.FC<IProps> = (props) => {
       style={{ left: x, top: y }}
     >
       <div className={styles.liteflowEditorContextPadHeader}>
-        <h3 className={styles.liteflowEditorContextPadTitle}>插入节点</h3>
+        <h3 className={styles.liteflowEditorContextPadTitle}>{title}</h3>
       </div>
       <div className={styles.liteflowEditorContextPadBody}>
         <div className={styles.liteflowEditorContextPadSearch}>

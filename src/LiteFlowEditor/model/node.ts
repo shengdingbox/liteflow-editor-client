@@ -178,6 +178,41 @@ export default abstract class ELNode {
   }
 
   /**
+   * 替换当前节点为新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public replace(newNode: ELNode): boolean {
+    if (this.parent) {
+      this.parent.replaceNodeWith(this, newNode);
+    }
+    return false;
+  }
+
+  /**
+   * 替换老节点为新节点
+   * @param oldNode 老节点
+   * @param newNode 新节点
+   */
+  public replaceNodeWith(oldNode: ELNode, newNode: ELNode): boolean {
+    newNode.parent = this;
+    if (this.children) {
+      // 尝试在子节点中查找老节点位置
+      const index = this.children.indexOf(oldNode);
+      if (index !== -1) {
+        this.children.splice(index, 1, newNode);
+        return true;
+      }
+    }
+    if (this.condition === oldNode) {
+      // 3. 如果是在condition之后追加
+      this.condition = newNode;
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * 转换为X6的图数据格式
    */
   public abstract toCells(
