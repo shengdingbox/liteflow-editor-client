@@ -7,7 +7,7 @@
   .liteflowAddNodePrepend {
     position: absolute;
     top: 5px;
-    left: -16px;
+    left: -18px;
     width: 18px;
     height: 20px;
     background-color: #d9d9d9;
@@ -26,7 +26,7 @@
   .liteflowAddNodeAppend {
     position: absolute;
     top: 5px;
-    right: -16px;
+    right: -17px;
     width: 18px;
     height: 20px;
     background-color: #d9d9d9;
@@ -71,7 +71,17 @@
     }
   }
   .liteflowDeleteNode {
+    position: relative;
     color: #f54a45;
+    &:before {
+      position: absolute;
+      top: 0;
+      left: -4px;
+      width: 1px;
+      height: 18px;
+      content: ' ';
+      border-left: solid 1px rgba(57, 76, 96, 0.15);
+    }
   }
   .liteflowAddNodePrepend,
   .liteflowAddNodeAppend,
