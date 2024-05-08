@@ -16,6 +16,33 @@ interface ParseParameters {
   parent: ELNode;
 }
 
+/**
+ * 将EL表达式的JSON表示，构造成ELNode模型表示。
+ * EL表达式的模型表示：数据结构本质上是一个树形结构。
+ * 例如一个串行编排(THEN)：
+  {
+    type: ConditionTypeEnum.THEN,
+    children: [
+      { type: NodeTypeEnum.COMMON, id: 'a' },
+      { type: NodeTypeEnum.COMMON, id: 'b' },
+      { type: NodeTypeEnum.COMMON, id: 'c' },
+      { type: NodeTypeEnum.COMMON, id: 'd' },
+    ],
+  }
+ * 通过ELNode节点模型表示为：
+                                          ┌─────────────────┐
+                                      ┌──▶│  NodeOperator   │
+                                      │   └─────────────────┘
+                                      │   ┌─────────────────┐
+                                      ├──▶│  NodeOperator   │
+  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘
+  │  Chain  │───▶│  ThenOperator   │──┤   ┌─────────────────┐
+  └─────────┘    └─────────────────┘  ├──▶│  NodeOperator   │
+                                      │   └─────────────────┘
+                                      │   ┌─────────────────┐
+                                      └──▶│  NodeOperator   │
+                                          └─────────────────┘
+ */
 export class ELBuilder {
   public static build(data: Record<string, any>) {
     return builder(data);
