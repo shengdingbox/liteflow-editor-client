@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { Cell, Graph } from '@antv/x6';
 import { debounce } from 'lodash';
 import { MIN_ZOOM, MAX_ZOOM } from '../../constant';
@@ -31,14 +31,15 @@ const createFlowChart = (
             flowGraph.trigger('button:click', { e, edge });
           }, 100);
           ReactDOM.render(
-            // @ts-ignore
-            <Button
-              size="small"
-              onClick={handleOnClick}
-              className="liteflow-edge-add-button"
-            >
-              +
-            </Button>,
+            <Tooltip title="插入节点">
+              <Button
+                size="small"
+                onClick={handleOnClick}
+                className="liteflow-edge-add-button"
+              >
+                +
+              </Button>
+            </Tooltip>,
             content,
           );
         } else {

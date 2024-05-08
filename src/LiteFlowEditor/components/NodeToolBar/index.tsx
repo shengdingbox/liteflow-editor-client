@@ -16,7 +16,7 @@ const NodeToolBar: React.FC<any> = (props) => {
       y: clientY,
       node,
       scene: 'prepend',
-      title: '前插节点',
+      title: '前面插入节点',
       edge: null,
     });
   }, 100);
@@ -26,7 +26,7 @@ const NodeToolBar: React.FC<any> = (props) => {
       y: clientY,
       node,
       scene: 'append',
-      title: '后插节点',
+      title: '后面插入节点',
       edge: null,
     });
   }, 100);
@@ -36,7 +36,7 @@ const NodeToolBar: React.FC<any> = (props) => {
       y: clientY,
       node,
       scene: 'replace',
-      title: '替换节点',
+      title: '替换当前节点',
       edge: null,
     });
   }, 100);
@@ -58,7 +58,11 @@ const NodeToolBar: React.FC<any> = (props) => {
           className={classNames(styles.liteflowAddNodePrepend)}
           onClick={onPrepend}
         >
-          <div className={classNames(styles.liteflowAddNodePrependIcon)}></div>
+          <Tooltip title="前面插入节点">
+            <div
+              className={classNames(styles.liteflowAddNodePrependIcon)}
+            ></div>
+          </Tooltip>
         </div>
       )}
       {toolbar.append && (
@@ -66,7 +70,9 @@ const NodeToolBar: React.FC<any> = (props) => {
           className={classNames(styles.liteflowAddNodeAppend)}
           onClick={onAppend}
         >
-          <div className={classNames(styles.liteflowAddNodeAppendIcon)}></div>
+          <Tooltip title="后面插入节点">
+            <div className={classNames(styles.liteflowAddNodeAppendIcon)}></div>
+          </Tooltip>
         </div>
       )}
       {(toolbar.replace || toolbar.delete) && (
@@ -76,7 +82,7 @@ const NodeToolBar: React.FC<any> = (props) => {
               className={classNames(styles.liteflowToolBarBtn)}
               onClick={onReplace}
             >
-              <Tooltip title="替换节点">
+              <Tooltip title="替换当前节点">
                 <EditOutlined />
               </Tooltip>
             </div>
