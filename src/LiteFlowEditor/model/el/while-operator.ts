@@ -8,6 +8,26 @@ import {
 } from '../../constant';
 import NodeOperator from './node-operator';
 
+/**
+ * 循环编排操作符：WHILE。
+ *
+ * 例如一个WHILE循环编排示例：
+ * (1) EL表达式语法：WHILE(x).DO(THEN(a, b))
+ * (2) JSON表示形式：
+ * {
+    type: ConditionTypeEnum.WHILE,
+    condition: { type: NodeTypeEnum.WHILE, id: 'x' },
+    children: [
+      {
+        type: ConditionTypeEnum.THEN,
+        children: [
+          { type: NodeTypeEnum.COMMON, id: 'a' },
+          { type: NodeTypeEnum.COMMON, id: 'b' },
+        ],
+      },
+    ],
+  }
+ */
 export default class WhileOperator extends ELNode {
   type = ConditionTypeEnum.WHILE;
   parent: ELNode;

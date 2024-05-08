@@ -7,6 +7,28 @@ import {
 } from '../../constant';
 import NodeOperator from './node-operator';
 
+/**
+ * 并行编排操作符：WHEN。
+ *
+ * 例如一个并行编排(WHEN)示例：
+ * (1) EL表达式语法：THEN(a, WHEN(b, c, d), e)
+ * (2) JSON表示形式：
+ * {
+    type: ConditionTypeEnum.THEN,
+    children: [
+      { type: NodeTypeEnum.COMMON, id: 'a' },
+      {
+        type: ConditionTypeEnum.WHEN,
+        children: [
+          { type: NodeTypeEnum.COMMON, id: 'b' },
+          { type: NodeTypeEnum.COMMON, id: 'c' },
+          { type: NodeTypeEnum.COMMON, id: 'd' },
+        ],
+      },
+      { type: NodeTypeEnum.COMMON, id: 'e' },
+    ],
+  }
+ */
 export default class WhenOperator extends ELNode {
   type = ConditionTypeEnum.WHEN;
   parent: ELNode;

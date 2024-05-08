@@ -3,6 +3,22 @@ import ELNode, { Properties } from '../node';
 import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
 import NodeOperator from './node-operator';
 
+/**
+ * 串行编排操作符：THEN。
+ *
+ * 例如一个串行编排(THEN)示例：
+ * (1) EL表达式语法：THEN(a, b, c, d)
+ * (2) JSON表示形式：
+ * {
+    type: ConditionTypeEnum.THEN,
+    children: [
+      { type: NodeTypeEnum.COMMON, id: 'a' },
+      { type: NodeTypeEnum.COMMON, id: 'b' },
+      { type: NodeTypeEnum.COMMON, id: 'c' },
+      { type: NodeTypeEnum.COMMON, id: 'd' },
+    ],
+  }
+ */
 export default class ThenOperator extends ELNode {
   type = ConditionTypeEnum.THEN;
   parent: ELNode;

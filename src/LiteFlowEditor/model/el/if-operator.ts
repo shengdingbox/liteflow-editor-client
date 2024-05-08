@@ -8,6 +8,20 @@ import {
 } from '../../constant';
 import NodeOperator from './node-operator';
 
+/**
+ * 条件编排操作符：IF。
+ *
+ * 例如一个条件编排(IF)示例：
+ * (1) EL表达式语法：IF(x, a)
+ * (2) JSON表示形式：
+ * {
+    type: ConditionTypeEnum.IF,
+    condition: { type: NodeTypeEnum.IF, id: 'x' },
+    children: [
+      { type: NodeTypeEnum.COMMON, id: 'a' }
+    ],
+  }
+ */
 export default class IfOperator extends ELNode {
   type = ConditionTypeEnum.IF;
   parent: ELNode;

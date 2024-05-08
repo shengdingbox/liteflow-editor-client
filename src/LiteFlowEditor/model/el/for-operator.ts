@@ -8,6 +8,26 @@ import {
 } from '../../constant';
 import NodeOperator from './node-operator';
 
+/**
+ * 循环编排操作符：FOR。
+ *
+ * 例如一个FOR循环编排示例：
+ * (1) EL表达式语法：FOR(x).DO(THEN(a, b))
+ * (2) JSON表示形式：
+ * {
+    type: ConditionTypeEnum.FOR,
+    condition: { type: NodeTypeEnum.FOR, id: 'x' },
+    children: [
+      {
+        type: ConditionTypeEnum.THEN,
+        children: [
+          { type: NodeTypeEnum.COMMON, id: 'a' },
+          { type: NodeTypeEnum.COMMON, id: 'b' },
+        ],
+      },
+    ],
+  }
+ */
 export default class ForOperator extends ELNode {
   type = ConditionTypeEnum.FOR;
   parent: ELNode;
