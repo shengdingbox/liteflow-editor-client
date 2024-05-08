@@ -55,6 +55,7 @@ export default class ThenOperator extends ELNode {
     });
     return last;
   }
+
   /**
    * 转换为EL表达式字符串
    */

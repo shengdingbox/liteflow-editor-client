@@ -97,6 +97,7 @@ export default class SwitchOperator extends ELNode {
 
     return end;
   }
+
   /**
    * 转换为EL表达式字符串
    */

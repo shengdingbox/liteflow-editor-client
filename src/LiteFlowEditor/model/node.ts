@@ -242,7 +242,9 @@ export interface Properties {
  */
 export class ELStartNode extends ELNode {
   public type = NodeTypeEnum.VIRTUAL;
+  /** 代理的节点组件 */
   public proxy: ELNode;
+  /** 代理节点组件的相关属性 */
   public parent?: ELNode;
 
   constructor(proxy: ELNode) {
@@ -276,10 +278,25 @@ export class ELStartNode extends ELNode {
     return this.proxy.remove();
   }
 
+  /**
+   * 替换当前节点为新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public replace(newNode: ELNode): boolean {
+    return this.proxy.replace(newNode);
+  }
+
+  /**
+   * 转换为X6的图数据格式
+   */
   public toCells(): Cell[] | Node {
     throw new Error('Method not implemented.');
   }
 
+  /**
+   * 转换为EL表达式字符串
+   */
   public toEL(): string {
     throw new Error('Method not implemented.');
   }
@@ -325,10 +342,25 @@ export class ELEndNode extends ELNode {
     return this.proxy.remove();
   }
 
+  /**
+   * 替换当前节点为新节点
+   * @param newNode 新节点
+   * @returns
+   */
+  public replace(newNode: ELNode): boolean {
+    return this.proxy.replace(newNode);
+  }
+
+  /**
+   * 转换为X6的图数据格式
+   */
   public toCells(): Node<Node.Properties> {
     throw new Error('Method not implemented.');
   }
 
+  /**
+   * 转换为EL表达式字符串
+   */
   public toEL(): string {
     throw new Error('Method not implemented.');
   }
