@@ -33,6 +33,9 @@ export default abstract class ELNode {
    * @param child 子节点
    * @param index 指定位置
    */
+  public appendChild(newNode: ELNode): boolean;
+  public appendChild(newNode: ELNode, index: number): boolean;
+  public appendChild(newNode: ELNode, sibling: ELNode): boolean;
   public appendChild(newNode: ELNode, index?: number | ELNode): boolean {
     newNode.parent = this;
     if (this.children) {
@@ -68,6 +71,9 @@ export default abstract class ELNode {
    * @param child 子节点
    * @param index 指定位置
    */
+  public prependChild(newNode: ELNode): boolean;
+  public prependChild(newNode: ELNode, index: number): boolean;
+  public prependChild(newNode: ELNode, sibling: ELNode): boolean;
   public prependChild(newNode: ELNode, index?: number | ELNode): boolean {
     newNode.parent = this;
     if (this.children) {
@@ -181,6 +187,10 @@ export interface Properties {
   [key: string]: any;
 }
 
+/**
+ * 操作符中开始节点的模型（作为操作符模型的代理），
+ * 操作符包括WHEN。
+ */
 export class ELStartNode extends ELNode {
   public type = NodeTypeEnum.VIRTUAL;
   public proxy: ELNode;
@@ -217,7 +227,7 @@ export class ELStartNode extends ELNode {
     return this.proxy.remove();
   }
 
-  public toCells(): Node<Node.Properties> {
+  public toCells(): Cell[] | Node {
     throw new Error('Method not implemented.');
   }
   public toEL(): string {
@@ -225,6 +235,10 @@ export class ELStartNode extends ELNode {
   }
 }
 
+/**
+ * 操作符中结束节点的模型（作为操作符模型的代理），
+ * 操作符包括WHEN、SWITCH、IF、FOR、WHILE等等
+ */
 export class ELEndNode extends ELNode {
   public type = NodeTypeEnum.VIRTUAL;
   public proxy: ELNode;
