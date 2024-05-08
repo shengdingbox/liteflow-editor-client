@@ -5,12 +5,11 @@ import { LITEFLOW_EDGE, NodeTypeEnum } from '../../constant';
 /**
  * 节点组件操作符：是EL表达式树型结构的叶子结点。
  *
- * 例如一个选择编排(SWITCH)示例：
- * (1) EL表达式语法：SWITCH(x).to(a, b, c, d)
+ * 例如一个串行编排(THEN)：
+ * (1) EL表达式形式：THEN(a, b, c, d)
  * (2) JSON表示形式：
  * {
-    type: ConditionTypeEnum.SWITCH,
-    condition: { type: NodeTypeEnum.SWITCH, id: 'x' },
+    type: ConditionTypeEnum.THEN,
     children: [
       { type: NodeTypeEnum.COMMON, id: 'a' },
       { type: NodeTypeEnum.COMMON, id: 'b' },
@@ -18,6 +17,19 @@ import { LITEFLOW_EDGE, NodeTypeEnum } from '../../constant';
       { type: NodeTypeEnum.COMMON, id: 'd' },
     ],
   }
+ * (3) 通过ELNode节点模型表示为：
+                                          ┌─────────────────┐
+                                      ┌──▶│  NodeOperator   │
+                                      │   └─────────────────┘
+                                      │   ┌─────────────────┐
+                                      ├──▶│  NodeOperator   │
+  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘
+  │  Chain  │───▶│  ThenOperator   │──┤   ┌─────────────────┐
+  └─────────┘    └─────────────────┘  ├──▶│  NodeOperator   │
+                                      │   └─────────────────┘
+                                      │   ┌─────────────────┐
+                                      └──▶│  NodeOperator   │
+                                          └─────────────────┘
  */
 export default class NodeOperator extends ELNode {
   type: NodeTypeEnum;
