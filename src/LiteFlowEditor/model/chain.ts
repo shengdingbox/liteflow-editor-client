@@ -21,7 +21,7 @@ import {
       { type: NodeTypeEnum.COMMON, id: 'd' },
     ],
   }
- * (3) 通过ELNode节点模型表示为：
+ * (3) 通过ELNode节点模型进行表示的组合关系为：
                                           ┌─────────────────┐
                                       ┌──▶│  NodeOperator   │
                                       │   └─────────────────┘
