@@ -15,16 +15,16 @@ import { ConditionTypeEnum, NodeTypeEnum } from '../constant';
   }
  * 通过ELNode节点模型表示为：
                                           ┌─────────────────┐
-                                      ┌──▶│  NodeComponent  │
+                                      ┌──▶│  NodeOperator   │
                                       │   └─────────────────┘
                                       │   ┌─────────────────┐
-                                      ├──▶│  NodeComponent  │
+                                      ├──▶│  NodeOperator   │
   ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘
   │  Chain  │───▶│  ThenOperator   │──┤   ┌─────────────────┐
-  └─────────┘    └─────────────────┘  ├──▶│  NodeComponent  │
+  └─────────┘    └─────────────────┘  ├──▶│  NodeOperator   │
                                       │   └─────────────────┘
                                       │   ┌─────────────────┐
-                                      └──▶│  NodeComponent  │
+                                      └──▶│  NodeOperator   │
                                           └─────────────────┘
  */
 export default abstract class ELNode {

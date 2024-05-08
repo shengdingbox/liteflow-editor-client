@@ -21,16 +21,16 @@ import {
   }
  * 通过ELNode节点模型表示为：
                                           ┌─────────────────┐
-                                      ┌──▶│  NodeComponent  │
+                                      ┌──▶│  NodeOperator   │
                                       │   └─────────────────┘
                                       │   ┌─────────────────┐
-                                      ├──▶│  NodeComponent  │
+                                      ├──▶│  NodeOperator   │
   ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘
   │  Chain  │───▶│  ThenOperator   │──┤   ┌─────────────────┐
-  └─────────┘    └─────────────────┘  ├──▶│  NodeComponent  │
+  └─────────┘    └─────────────────┘  ├──▶│  NodeOperator   │
                                       │   └─────────────────┘
                                       │   ┌─────────────────┐
-                                      └──▶│  NodeComponent  │
+                                      └──▶│  NodeOperator   │
                                           └─────────────────┘
  */
 export default class Chain extends ELNode {
