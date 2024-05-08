@@ -46,10 +46,10 @@ export default abstract class ELNode {
    * @param newNode 子节点
    * @param index 指定位置：可以是索引，也可以是兄弟节点
    */
-  public appendChild(newNode: ELNode): boolean;
-  public appendChild(newNode: ELNode, index: number): boolean;
-  public appendChild(newNode: ELNode, sibling: ELNode): boolean;
-  public appendChild(newNode: ELNode, index?: number | ELNode): boolean {
+  public appendChildAt(newNode: ELNode): boolean;
+  public appendChildAt(newNode: ELNode, index: number): boolean;
+  public appendChildAt(newNode: ELNode, sibling: ELNode): boolean;
+  public appendChildAt(newNode: ELNode, index?: number | ELNode): boolean {
     newNode.parent = this;
     if (this.children) {
       // 尝试在父节点中添加新节点
@@ -65,7 +65,7 @@ export default abstract class ELNode {
           return true;
         } else if (this.condition === index) {
           // 3. 如果是在condition之后追加
-          return this.appendChild(newNode, 0);
+          return this.appendChildAt(newNode, 0);
         } else {
           this.children.push(newNode);
           return true;
@@ -84,10 +84,10 @@ export default abstract class ELNode {
    * @param newNode 子节点
    * @param index 指定位置：可以是索引，也可以是兄弟节点
    */
-  public prependChild(newNode: ELNode): boolean;
-  public prependChild(newNode: ELNode, index: number): boolean;
-  public prependChild(newNode: ELNode, sibling: ELNode): boolean;
-  public prependChild(newNode: ELNode, index?: number | ELNode): boolean {
+  public prependChildAt(newNode: ELNode): boolean;
+  public prependChildAt(newNode: ELNode, index: number): boolean;
+  public prependChildAt(newNode: ELNode, sibling: ELNode): boolean;
+  public prependChildAt(newNode: ELNode, index?: number | ELNode): boolean {
     newNode.parent = this;
     if (this.children) {
       // 尝试在父节点中添加新节点
@@ -142,11 +142,11 @@ export default abstract class ELNode {
    */
   public prepend(newNode: ELNode): boolean {
     if (this.parent) {
-      if (this.parent.prependChild(newNode, this)) {
+      if (this.parent.prependChildAt(newNode, this)) {
         return true;
       }
     } else {
-      return this.prependChild(newNode);
+      return this.prependChildAt(newNode);
     }
     return false;
   }
@@ -158,11 +158,11 @@ export default abstract class ELNode {
    */
   public append(newNode: ELNode): boolean {
     if (this.parent) {
-      if (this.parent.appendChild(newNode, this)) {
+      if (this.parent.appendChildAt(newNode, this)) {
         return true;
       }
     } else {
-      return this.appendChild(newNode);
+      return this.appendChildAt(newNode);
     }
     return false;
   }
@@ -184,7 +184,7 @@ export default abstract class ELNode {
    */
   public replace(newNode: ELNode): boolean {
     if (this.parent) {
-      this.parent.replaceNodeWith(this, newNode);
+      this.parent.replaceChild(this, newNode);
     }
     return false;
   }
@@ -194,7 +194,7 @@ export default abstract class ELNode {
    * @param oldNode 老节点
    * @param newNode 新节点
    */
-  public replaceNodeWith(oldNode: ELNode, newNode: ELNode): boolean {
+  public replaceChild(oldNode: ELNode, newNode: ELNode): boolean {
     newNode.parent = this;
     if (this.children) {
       // 尝试在子节点中查找老节点位置
@@ -268,7 +268,7 @@ export class ELStartNode extends ELNode {
    * @returns
    */
   public append(newNode: ELNode): boolean {
-    return this.proxy.prependChild(newNode);
+    return this.proxy.prependChildAt(newNode);
   }
 
   /**
@@ -323,7 +323,7 @@ export class ELEndNode extends ELNode {
    * @returns
    */
   public prepend(newNode: ELNode): boolean {
-    return this.proxy.appendChild(newNode);
+    return this.proxy.appendChildAt(newNode);
   }
 
   /**

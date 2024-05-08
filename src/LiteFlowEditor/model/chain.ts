@@ -123,7 +123,7 @@ export default class Chain extends ELNode {
    */
   public append(newNode: ELNode): boolean {
     if (this.children.length === 1) {
-      return this.children[0].prependChild(newNode, 0);
+      return this.children[0].prependChildAt(newNode, 0);
     }
     this.children.push(newNode);
     return true;
@@ -136,7 +136,7 @@ export default class Chain extends ELNode {
    */
   public prepend(newNode: ELNode): boolean {
     if (this.children.length === 1) {
-      return this.children[0].appendChild(newNode);
+      return this.children[0].appendChildAt(newNode);
     }
     this.children.push(newNode);
     return true;
