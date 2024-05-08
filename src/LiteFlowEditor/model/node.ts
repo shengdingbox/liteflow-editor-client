@@ -4,7 +4,9 @@ import { ConditionTypeEnum, NodeTypeEnum } from '../constant';
 /**
  * EL表达式的模型表示：数据结构本质上是一个树形结构。
  * 例如一个串行编排(THEN)：
-  {
+ * (1) EL表达式形式：THEN(a, b, c, d)
+ * (2) JSON表示形式：
+ * {
     type: ConditionTypeEnum.THEN,
     children: [
       { type: NodeTypeEnum.COMMON, id: 'a' },
@@ -13,7 +15,7 @@ import { ConditionTypeEnum, NodeTypeEnum } from '../constant';
       { type: NodeTypeEnum.COMMON, id: 'd' },
     ],
   }
- * 通过ELNode节点模型表示为：
+ * (3) 通过ELNode节点模型表示为：
                                           ┌─────────────────┐
                                       ┌──▶│  NodeOperator   │
                                       │   └─────────────────┘

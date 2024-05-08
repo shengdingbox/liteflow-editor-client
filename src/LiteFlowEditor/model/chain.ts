@@ -10,7 +10,9 @@ import {
 /**
  * EL表达式的根节点——EL表达式的所有延伸内容，都是在根节点上开始的。
  * 例如一个串行编排(THEN)：
-  {
+ * (1) EL表达式形式：THEN(a, b, c, d)
+ * (2) JSON表示形式：
+ * {
     type: ConditionTypeEnum.THEN,
     children: [
       { type: NodeTypeEnum.COMMON, id: 'a' },
@@ -19,7 +21,7 @@ import {
       { type: NodeTypeEnum.COMMON, id: 'd' },
     ],
   }
- * 通过ELNode节点模型表示为：
+ * (3) 通过ELNode节点模型表示为：
                                           ┌─────────────────┐
                                       ┌──▶│  NodeOperator   │
                                       │   └─────────────────┘
