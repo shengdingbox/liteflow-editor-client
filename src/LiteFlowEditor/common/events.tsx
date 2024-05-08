@@ -1,7 +1,6 @@
 import { Dom, Graph, Rectangle } from '@antv/x6';
-import { NodeTypeEnum, ConditionTypeEnum } from '../constant';
 import { getSelectedEdges } from '../utils/flowChartUtils';
-import { ELBuilder } from '../model/builder';
+import ELBuilder from '../model/builder';
 
 export function findViewsFromPoint(flowGraph: Graph, x: number, y: number) {
   return flowGraph
@@ -50,17 +49,16 @@ const registerEvents = (flowGraph: Graph): void => {
   flowGraph.on('node:dblclick', () => {
     flowGraph.trigger('graph:editNode');
   });
-  flowGraph.on('blank:contextmenu', () => {
-    // const {
-    //   e: { clientX, clientY },
-    // } = args;
-    // flowGraph.cleanSelection();
-    // flowGraph.trigger('graph:showContextMenu', {
-    //   x: clientX,
-    //   y: clientY,
-    //   scene: 'blank',
-    // });
+  flowGraph.on('blank:contextmenu', (args) => {
+    const {
+      e: { clientX, clientY },
+    } = args;
     flowGraph.cleanSelection();
+    flowGraph.trigger('graph:showContextMenu', {
+      x: clientX,
+      y: clientY,
+      scene: 'blank',
+    });
   });
   flowGraph.on('node:contextmenu', (args) => {
     const {

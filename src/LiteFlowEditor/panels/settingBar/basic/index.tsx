@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Cell, Graph } from '@antv/x6';
 import { Select } from 'antd';
 import mocks from '../../../mock';
-import { ELBuilder } from '../../../model/builder';
+import ELBuilder from '../../../model/builder';
 import { ConditionTypeEnum } from '../../../constant';
 import { setModel, useModel } from '../../../hooks/useModel';
 import { forceLayout } from '../../../common/layout';

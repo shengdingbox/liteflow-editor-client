@@ -8,7 +8,7 @@ import {
   BRANCH_GROUP,
   CONTROL_GROUP,
 } from '../../../cells';
-import { ELBuilder } from '../../../model/builder';
+import ELBuilder from '../../../model/builder';
 import styles from './index.module.less';
 
 export type IContextPadScene = 'append' | 'prepend' | 'replace';

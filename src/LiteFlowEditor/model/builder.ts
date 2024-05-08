@@ -45,7 +45,7 @@ interface ParseParameters {
                                       └──▶│  NodeOperator   │
                                           └─────────────────┘
  */
-export class ELBuilder {
+export default class ELBuilder {
   public static build(data: Record<string, any>) {
     return builder(data);
   }
@@ -75,7 +75,7 @@ export class ELBuilder {
   }
 }
 
-export default function builder(data: Record<string, any>): ELNode {
+export function builder(data: Record<string, any>): ELNode {
   const chain: Chain = new Chain();
   let next: ELNode | undefined = parse({ parent: chain, data });
   if (next) {
