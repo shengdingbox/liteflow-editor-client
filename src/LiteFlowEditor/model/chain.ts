@@ -8,7 +8,30 @@ import {
 } from '../constant';
 
 /**
- * EL表达式的根节点。
+ * EL表达式的根节点——EL表达式的所有延伸内容，都是在根节点上开始的。
+ * 例如一个串行编排(THEN)：
+  {
+    type: ConditionTypeEnum.THEN,
+    children: [
+      { type: NodeTypeEnum.COMMON, id: 'a' },
+      { type: NodeTypeEnum.COMMON, id: 'b' },
+      { type: NodeTypeEnum.COMMON, id: 'c' },
+      { type: NodeTypeEnum.COMMON, id: 'd' },
+    ],
+  }
+ * 通过ELNode节点模型表示为：
+                                 ┌─────────────────┐
+                             ┌──▶│  NodeComponent  │
+                             │   └─────────────────┘
+                             │   ┌─────────────────┐
+                             ├──▶│  NodeComponent  │
+  ┌─────────┐    ┌────────┐  │   └─────────────────┘
+  │  Chain  │───▶│  Then  │──┤   ┌─────────────────┐
+  └─────────┘    └────────┘  ├──▶│  NodeComponent  │
+                             │   └─────────────────┘
+                             │   ┌─────────────────┐
+                             └──▶│  NodeComponent  │
+                                 └─────────────────┘
  */
 export default class Chain extends ELNode {
   type = ConditionTypeEnum.CHAIN;

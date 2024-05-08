@@ -13,6 +13,19 @@ import { ConditionTypeEnum, NodeTypeEnum } from '../constant';
       { type: NodeTypeEnum.COMMON, id: 'd' },
     ],
   }
+ * 通过ELNode节点模型表示为：
+                                 ┌─────────────────┐
+                             ┌──▶│  NodeComponent  │
+                             │   └─────────────────┘
+                             │   ┌─────────────────┐
+                             ├──▶│  NodeComponent  │
+  ┌─────────┐    ┌────────┐  │   └─────────────────┘
+  │  Chain  │───▶│  Then  │──┤   ┌─────────────────┐
+  └─────────┘    └────────┘  ├──▶│  NodeComponent  │
+                             │   └─────────────────┘
+                             │   ┌─────────────────┐
+                             └──▶│  NodeComponent  │
+                                 └─────────────────┘
  */
 export default abstract class ELNode {
   // 节点类型：可以是编排类型，也可以是组件类型
@@ -30,8 +43,8 @@ export default abstract class ELNode {
 
   /**
    * 在后面添加子节点
-   * @param child 子节点
-   * @param index 指定位置
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
    */
   public appendChild(newNode: ELNode): boolean;
   public appendChild(newNode: ELNode, index: number): boolean;
@@ -68,8 +81,8 @@ export default abstract class ELNode {
 
   /**
    * 在后面添加子节点
-   * @param child 子节点
-   * @param index 指定位置
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
    */
   public prependChild(newNode: ELNode): boolean;
   public prependChild(newNode: ELNode, index: number): boolean;
