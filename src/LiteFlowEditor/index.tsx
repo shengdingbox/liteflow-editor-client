@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Graph, Edge, Cell, Node } from '@antv/x6';
-import createFlowChart from './panels/flowGraph/createFlowChart';
+import createFlowGraph from './panels/flowGraph/createFlowGraph';
 import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
-import FlowChartContextMenu from './panels/flowGraph/contextMenu';
-import FlowChartContextPad, {
+import FlowGraphContextMenu from './panels/flowGraph/contextMenu';
+import FlowGraphContextPad, {
   IContextPadScene,
 } from './panels/flowGraph/contextPad';
 import GraphContext from './context/GraphContext';
@@ -55,7 +55,7 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);
   const miniMapRef = useRef<HTMLDivElement>(null);
-  const [flowGraph, setFlowChart] = useState<Graph>();
+  const [flowGraph, setFlowGraph] = useState<Graph>();
   const [contextMenuInfo, setContextMenuInfo] =
     useState<IMenuInfo>(defaultMenuInfo);
   const [contextPadInfo, setContextPadInfo] =
@@ -63,9 +63,9 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
 
   useEffect(() => {
     if (graphRef.current && miniMapRef.current) {
-      const flowGraph = createFlowChart(graphRef.current, miniMapRef.current);
+      const flowGraph = createFlowGraph(graphRef.current, miniMapRef.current);
       onReady?.(flowGraph);
-      setFlowChart(flowGraph);
+      setFlowGraph(flowGraph);
     }
   }, []);
 
@@ -150,10 +150,10 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
           <div className={styles.liteflowEditorMiniMap} ref={miniMapRef} />
           {flowGraph && <NodeEditorModal flowGraph={flowGraph} />}
           {flowGraph && (
-            <FlowChartContextMenu {...contextMenuInfo} flowGraph={flowGraph} />
+            <FlowGraphContextMenu {...contextMenuInfo} flowGraph={flowGraph} />
           )}
           {flowGraph && (
-            <FlowChartContextPad {...contextPadInfo} flowGraph={flowGraph} />
+            <FlowGraphContextPad {...contextPadInfo} flowGraph={flowGraph} />
           )}
         </div>
       </Layout>

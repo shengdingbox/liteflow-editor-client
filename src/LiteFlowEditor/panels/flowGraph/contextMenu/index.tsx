@@ -30,7 +30,7 @@ const menuConfigMap: { [scene: string]: IMenuConfig[] } = {
   blank: blankMenuConfig,
 };
 
-const FlowChartContextMenu: React.FC<IProps> = (props) => {
+const FlowGraphContextMenu: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
   const { x, y, scene, visible, flowGraph } = props;
   const menuConfig = menuConfigMap[scene];
@@ -120,4 +120,4 @@ const Helper = {
   },
 };
 
-export default FlowChartContextMenu;
+export default FlowGraphContextMenu;

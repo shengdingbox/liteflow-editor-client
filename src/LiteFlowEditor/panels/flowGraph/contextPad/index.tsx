@@ -26,7 +26,7 @@ interface IProps {
 
 const groups = [NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP];
 
-const FlowChartContextPad: React.FC<IProps> = (props) => {
+const FlowGraphContextPad: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
   const {
     x,
@@ -120,4 +120,4 @@ const FlowChartContextPad: React.FC<IProps> = (props) => {
   );
 };
 
-export default FlowChartContextPad;
+export default FlowGraphContextPad;
