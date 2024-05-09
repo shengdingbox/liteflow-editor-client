@@ -143,8 +143,7 @@ export default class Chain extends ELNode {
         return this.children[0].prependChild(newNode, 0);
       }
     }
-    this.children.splice(0, 0, newNode);
-    return true;
+    return this.appendChild(newNode, 0);
   }
 
   /**
@@ -156,8 +155,7 @@ export default class Chain extends ELNode {
     if (this.children.length === 1) {
       return this.children[0].appendChild(newNode);
     }
-    this.children.push(newNode);
-    return true;
+    return this.appendChild(newNode);
   }
 
   /**
