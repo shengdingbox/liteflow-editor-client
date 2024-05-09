@@ -149,4 +149,17 @@ export default class IfOperator extends ELNode {
       ...this.children.map((x) => x.toEL()),
     ].join(', ')})`;
   }
+
+  /**
+   * 转换为JSON格式
+   */
+  public toJSON(): Record<string, any> {
+    const { type, condition, children, properties } = this;
+    return {
+      type,
+      condition: condition.toJSON(),
+      children: children.map((child) => child.toJSON()),
+      properties,
+    };
+  }
 }

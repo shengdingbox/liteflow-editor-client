@@ -95,4 +95,12 @@ export default class NodeOperator extends ELNode {
   public toEL(): string {
     return this.id;
   }
+
+  /**
+   * 转换为JSON格式
+   */
+  public toJSON(): Record<string, any> {
+    const { type, id } = this;
+    return { type, id };
+  }
 }

@@ -231,7 +231,7 @@ export default abstract class ELNode {
   /**
    * 转换为JSON格式
    */
-  // public abstract toJSON(): Record<string, any>;
+  public abstract toJSON(): Record<string, any>;
 }
 
 /**
@@ -307,6 +307,13 @@ export class ELStartNode extends ELNode {
   public toEL(): string {
     throw new Error('Method not implemented.');
   }
+
+  /**
+   * 转换为JSON格式
+   */
+  public toJSON(): Record<string, any> {
+    throw new Error('Method not implemented.');
+  }
 }
 
 /**
@@ -369,6 +376,13 @@ export class ELEndNode extends ELNode {
    * 转换为EL表达式字符串
    */
   public toEL(): string {
+    throw new Error('Method not implemented.');
+  }
+
+  /**
+   * 转换为JSON格式
+   */
+  public toJSON(): Record<string, any> {
     throw new Error('Method not implemented.');
   }
 }

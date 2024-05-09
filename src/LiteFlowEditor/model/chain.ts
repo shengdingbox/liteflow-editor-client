@@ -119,6 +119,20 @@ export default class Chain extends ELNode {
   }
 
   /**
+   * 转换为JSON格式
+   */
+  public toJSON(): Record<string, any> {
+    if (this.children.length) {
+      if (this.children.length === 1) {
+        return this.children[0].toJSON();
+      } else {
+        return this.children.map((child) => child.toJSON());
+      }
+    }
+    return {};
+  }
+
+  /**
    * 在开始节点的后面、插入新节点
    * @param newNode 新节点
    * @returns

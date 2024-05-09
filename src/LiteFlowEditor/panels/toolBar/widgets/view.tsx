@@ -5,6 +5,7 @@ import { Modal } from 'antd';
 import JsonView from 'react-json-view';
 
 import makeBtnWidget from './common/makeBtnWidget';
+import { useModel } from '../../../hooks';
 
 interface IProps {
   flowGraph: Graph;
@@ -13,6 +14,7 @@ interface IProps {
 const View: React.FC<IProps> = makeBtnWidget({
   tooltip: '查看DSL',
   handler(flowGraph: Graph) {
+    const model = useModel();
     Modal.info({
       title: '查看DSL',
       width: 1000,
@@ -25,11 +27,11 @@ const View: React.FC<IProps> = makeBtnWidget({
           enableClipboard={true}
           displayDataTypes={false}
           displayObjectSize={false}
-          src={flowGraph.toJSON()}
+          src={model.toJSON()}
         />
       ),
     });
-    console.log(JSON.stringify(flowGraph.toJSON(), null, 2));
+    console.log(JSON.stringify(model.toJSON(), null, 2));
   },
   getIcon() {
     return <EyeOutlined />;
