@@ -4,6 +4,7 @@ import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
   NODE_TYPE_INTERMEDIATE_END,
+  NodeTypeEnum,
 } from '../../constant';
 import NodeOperator from './node-operator';
 
@@ -31,11 +32,11 @@ import NodeOperator from './node-operator';
  */
 export default class WhenOperator extends ELNode {
   type = ConditionTypeEnum.WHEN;
-  parent: ELNode;
+  parent?: ELNode;
   children: ELNode[] = [];
   properties?: Properties;
 
-  constructor(parent: ELNode, children?: ELNode[], properties?: Properties) {
+  constructor(parent?: ELNode, children?: ELNode[], properties?: Properties) {
     super();
     this.parent = parent;
     if (children) {
@@ -46,11 +47,12 @@ export default class WhenOperator extends ELNode {
 
   /**
    * 创建新的节点
-   * @param parent 父节点
+   * @param parent 新节点的父节点
+   * @param type 新节点的子节点类型
    */
-  public static create(parent: ELNode): ELNode {
-    const newNode = new WhenOperator(parent, []);
-    newNode.children = [NodeOperator.create(newNode)];
+  public static create(parent?: ELNode, type?: NodeTypeEnum): ELNode {
+    const newNode = new WhenOperator(parent);
+    newNode.appendChild(NodeOperator.create(newNode, type));
     return newNode;
   }
 

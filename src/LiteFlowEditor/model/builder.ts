@@ -79,7 +79,7 @@ export function builder(data: Record<string, any>): ELNode {
   const chain: Chain = new Chain();
   let next: ELNode | undefined = parse({ parent: chain, data });
   if (next) {
-    chain.appendChildAt(next);
+    chain.appendChild(next);
   }
   return chain;
 }
@@ -116,7 +116,7 @@ function parseSequence({ parent, data }: ParseParameters): ELNode {
   children.forEach((child: Record<string, any>) => {
     const childNode = parse({ parent, data: child });
     if (childNode) {
-      parent.appendChildAt(childNode);
+      parent.appendChild(childNode);
     }
   });
   return parent;
@@ -131,7 +131,7 @@ function parseControl({ parent, data }: ParseParameters): ELNode {
   children.forEach((child: Record<string, any>) => {
     const childNode = parse({ parent, data: child });
     if (childNode) {
-      parent.appendChildAt(childNode);
+      parent.appendChild(childNode);
     }
   });
   return parent;

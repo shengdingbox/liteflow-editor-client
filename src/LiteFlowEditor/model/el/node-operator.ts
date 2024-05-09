@@ -33,30 +33,28 @@ import { LITEFLOW_EDGE, NodeTypeEnum } from '../../constant';
  */
 export default class NodeOperator extends ELNode {
   type: NodeTypeEnum;
-  parent: ELNode;
+  parent?: ELNode;
   id: string;
 
-  constructor(parent: ELNode, type: NodeTypeEnum, id: string) {
+  constructor(parent?: ELNode, type?: NodeTypeEnum, id?: string) {
     super();
     this.parent = parent;
-    this.type = type;
-    this.id = id;
+    this.type = type || NodeTypeEnum.COMMON;
+    this.id = id || `common${Math.ceil(Math.random() * 100)}`;
   }
 
   /**
    * 创建新的节点
-   * @param parent 父节点
+   * @param parent 新节点的父节点
+   * @param type 新节点的节点类型
+   * @param id 新节点的节点Id
    */
   public static create(
-    parent: ELNode,
+    parent?: ELNode,
     type?: NodeTypeEnum,
     id?: string,
   ): ELNode {
-    return new NodeOperator(
-      parent,
-      type || NodeTypeEnum.COMMON,
-      id || `common${Math.ceil(Math.random() * 100)}`,
-    );
+    return new NodeOperator(parent, type, id);
   }
 
   /**
