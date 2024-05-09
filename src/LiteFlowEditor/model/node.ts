@@ -226,6 +226,16 @@ export default abstract class ELNode {
   ): Cell[] | Node;
 
   /**
+   * 获取需要选中的X6 Cell
+   */
+  public selectCells(): Cell[] {
+    if (this.parent?.condition === this) {
+      return this.parent.getCells();
+    }
+    return this.getCells();
+  }
+
+  /**
    * 获取当前X6 Cell内容
    */
   public getCells(): Cell[] {
@@ -242,19 +252,19 @@ export default abstract class ELNode {
   }
 
   /**
-   * 设置当前X6 Cell内容
-   * @param cells 节点/边
+   * 重置当前存储的X6 Cell内容
    */
-  public setCells(cells: Cell[]) {
-    this.cells = cells;
+  public resetCells() {
+    this.cells = [];
   }
 
   /**
    * 添加X6 Cell相关内容
    * @param cell X6 节点/边
    */
-  public pushCell(cell: Cell) {
+  public addCell(cell: Cell): Cell {
     this.cells.push(cell);
+    return cell;
   }
 
   /**
@@ -336,6 +346,13 @@ export class ELStartNode extends ELNode {
   }
 
   /**
+   * 获取当前X6 Cell内容
+   */
+  public getCells(): Cell[] {
+    return this.proxy.getCells();
+  }
+
+  /**
    * 转换为EL表达式字符串
    */
   public toEL(): string {
@@ -404,6 +421,13 @@ export class ELEndNode extends ELNode {
    */
   public toCells(): Node<Node.Properties> {
     throw new Error('Method not implemented.');
+  }
+
+  /**
+   * 获取当前X6 Cell内容
+   */
+  public getCells(): Cell[] {
+    return this.proxy.getCells();
   }
 
   /**

@@ -1,17 +1,19 @@
+import { Node } from '@antv/x6';
 import classNames from 'classnames';
 import { debounce } from 'lodash';
 import { Modal, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { INodeData } from '../../model/node';
 import styles from './index.module.less';
 
-const NodeToolBar: React.FC<any> = (props) => {
+const NodeToolBar: React.FC<{ node: Node }> = (props) => {
   const { node } = props;
   const {
     model,
     toolbar = { append: true, delete: true, prepend: true, replace: true },
-  } = node.getData() || {};
+  } = node.getData<INodeData>() || {};
   const onPrepend = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph.trigger('graph:showContextPad', {
+    node.model?.graph?.trigger('graph:showContextPad', {
       x: clientX,
       y: clientY,
       node,
@@ -21,7 +23,7 @@ const NodeToolBar: React.FC<any> = (props) => {
     });
   }, 100);
   const onAppend = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph.trigger('graph:showContextPad', {
+    node.model?.graph?.trigger('graph:showContextPad', {
       x: clientX,
       y: clientY,
       node,
@@ -31,7 +33,8 @@ const NodeToolBar: React.FC<any> = (props) => {
     });
   }, 100);
   const onReplace = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph.trigger('graph:showContextPad', {
+    node.model?.graph?.select(model.getCells());
+    node.model?.graph?.trigger('graph:showContextPad', {
       x: clientX,
       y: clientY,
       node,
@@ -41,12 +44,13 @@ const NodeToolBar: React.FC<any> = (props) => {
     });
   }, 100);
   const onDelete = debounce(() => {
+    node.model?.graph?.select(model.selectCells());
     Modal.confirm({
       title: `确认要删除节点${(model.id && `“${model.id}”`) || ''}？`,
       content: '点击确认按钮进行删除，点击取消按钮返回',
       onOk() {
         if (model.remove()) {
-          node.model?.graph.trigger('model:change');
+          node.model?.graph?.trigger('model:change');
         }
       },
     });

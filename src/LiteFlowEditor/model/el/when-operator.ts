@@ -74,6 +74,7 @@ export default class WhenOperator extends ELNode {
     cells: Cell[],
     options?: Record<string, any>,
   ): Node {
+    this.resetCells();
     const { children } = this;
     const start = Node.create({
       shape: ConditionTypeEnum.WHEN,
@@ -82,7 +83,7 @@ export default class WhenOperator extends ELNode {
       },
     });
     start.setData({ model: new ELStartNode(this) }, { overwrite: true });
-    cells.push(start);
+    cells.push(this.addCell(start));
     cells.push(
       Edge.create({
         shape: LITEFLOW_EDGE,
@@ -97,7 +98,7 @@ export default class WhenOperator extends ELNode {
       },
     });
     end.setData({ model: new ELEndNode(this) }, { overwrite: true });
-    cells.push(end);
+    cells.push(this.addCell(end));
     if (children.length) {
       children.forEach((child) => {
         const next = child.toCells(start, cells, options) as Node;

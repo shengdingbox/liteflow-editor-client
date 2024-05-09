@@ -72,6 +72,7 @@ export default class IfOperator extends ELNode {
     cells: Cell[],
     options?: Record<string, any>,
   ): Node {
+    this.resetCells();
     const { condition, children = [] } = this;
     const start = Node.create({
       shape: condition.type,
@@ -80,7 +81,7 @@ export default class IfOperator extends ELNode {
       },
     });
     start.setData({ model: condition }, { overwrite: true });
-    cells.push(start);
+    cells.push(this.addCell(start));
     cells.push(
       Edge.create({
         shape: LITEFLOW_EDGE,
@@ -95,7 +96,7 @@ export default class IfOperator extends ELNode {
       },
     });
     end.setData({ model: new ELEndNode(this) }, { overwrite: true });
-    cells.push(end);
+    cells.push(this.addCell(end));
     const [first, last] = children;
     const trueNode = first.toCells(start, cells, {
       edge: { label: 'true' },
@@ -116,7 +117,7 @@ export default class IfOperator extends ELNode {
           label: { text: '' },
         },
       });
-      cells.push(falseNode);
+      cells.push(this.addCell(falseNode));
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,

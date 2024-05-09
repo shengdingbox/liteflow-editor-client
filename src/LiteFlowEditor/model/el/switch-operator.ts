@@ -80,6 +80,7 @@ export default class SwitchOperator extends ELNode {
     cells: Cell[],
     options?: Record<string, any>,
   ): Node {
+    this.resetCells();
     const { condition, children } = this;
     const start = Node.create({
       shape: condition.type,
@@ -88,7 +89,7 @@ export default class SwitchOperator extends ELNode {
       },
     });
     start.setData({ model: condition }, { overwrite: true });
-    cells.push(start);
+    cells.push(this.addCell(start));
     cells.push(
       Edge.create({
         shape: LITEFLOW_EDGE,
@@ -103,7 +104,7 @@ export default class SwitchOperator extends ELNode {
       },
     });
     end.setData({ model: new ELEndNode(this) }, { overwrite: true });
-    cells.push(end);
+    cells.push(this.addCell(end));
     if (children.length) {
       children.forEach((child) => {
         const next = child.toCells(start, cells, options) as Node;

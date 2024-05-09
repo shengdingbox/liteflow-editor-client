@@ -65,7 +65,8 @@ export default class NodeOperator extends ELNode {
     cells: Cell[],
     options: Record<string, any> = {},
   ): Node {
-    const { id, type, parent } = this;
+    this.resetCells();
+    const { id, type } = this;
     const node = Node.create({
       shape: type,
       attrs: {
@@ -74,7 +75,7 @@ export default class NodeOperator extends ELNode {
       ...(options.node || {}),
     });
     node.setData({ model: this }, { overwrite: true });
-    cells.push(node);
+    cells.push(this.addCell(node));
 
     if (previous) {
       cells.push(
