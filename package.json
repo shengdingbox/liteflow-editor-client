@@ -9,6 +9,9 @@
     "test": "umi-test",
     "test:coverage": "umi-test --coverage"
   },
+  "authors": [
+    "shijiangjiayou@163.com", "wu_qingwan@126.com"
+  ],
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
