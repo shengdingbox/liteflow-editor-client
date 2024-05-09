@@ -51,7 +51,7 @@ export default class ELBuilder {
   }
   public static createELNode(
     type: ConditionTypeEnum | NodeTypeEnum,
-    parent: ELNode,
+    parent?: ELNode,
   ): ELNode {
     switch (type) {
       // 1. 编排类型

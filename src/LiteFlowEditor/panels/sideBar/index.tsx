@@ -10,6 +10,8 @@ import {
   IGroupItem,
 } from '../../cells';
 import { findViewsFromPoint } from '../../common/events';
+import ELBuilder from '../../model/builder';
+import { INodeData } from '../../model/node';
 import styles from './index.module.less';
 
 const { Panel } = Collapse;
@@ -34,17 +36,28 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             position.x + size.width / 2,
             position.y + size.height / 2,
           );
-          const edgeViews =
+          let cellViews =
             cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) ||
             [];
-          if (edgeViews && edgeViews.length) {
+          if (cellViews && cellViews.length) {
             const currentEdge: Edge = flowGraph.getCellById(
-              edgeViews[0].cell.id,
+              cellViews[0].cell.id,
             ) as Edge;
             flowGraph.trigger('graph:addNodeOnEdge', {
               edge: currentEdge,
               node: droppingNode,
             });
+          }
+          cellViews =
+            cellViewsFromPoint.filter((cellView) => cellView.isNodeView()) ||
+            [];
+          if (cellViews && cellViews.length) {
+            const currentNode: Node = flowGraph.getCellById(
+              cellViews[0].cell.id,
+            ) as Node;
+            let { model } = currentNode.getData<INodeData>() || {};
+            model?.replace(ELBuilder.createELNode(droppingNode.shape as any));
+            flowGraph.trigger('model:change');
           }
           return false;
         },

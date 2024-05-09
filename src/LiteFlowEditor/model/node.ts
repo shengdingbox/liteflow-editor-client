@@ -42,6 +42,8 @@ export default abstract class ELNode {
   public id?: string;
   // 编排节点的属性：可以设置id/tag等等
   public properties?: Properties;
+  // 当前节点的X6 Cell内容
+  public cells: Cell[] = [];
 
   /**
    * 在后面添加子节点
@@ -224,6 +226,38 @@ export default abstract class ELNode {
   ): Cell[] | Node;
 
   /**
+   * 获取当前X6 Cell内容
+   */
+  public getCells(): Cell[] {
+    let cells: Cell[] = [...this.cells];
+    if (this.condition) {
+      cells = cells.concat(this.condition.getCells());
+    }
+    if (this.children && this.children.length) {
+      this.children.forEach((child) => {
+        cells = cells.concat(child.getCells());
+      });
+    }
+    return cells;
+  }
+
+  /**
+   * 设置当前X6 Cell内容
+   * @param cells 节点/边
+   */
+  public setCells(cells: Cell[]) {
+    this.cells = cells;
+  }
+
+  /**
+   * 添加X6 Cell相关内容
+   * @param cell X6 节点/边
+   */
+  public pushCell(cell: Cell) {
+    this.cells.push(cell);
+  }
+
+  /**
    * 转换为EL表达式字符串
    */
   public abstract toEL(): string;
@@ -385,4 +419,14 @@ export class ELEndNode extends ELNode {
   public toJSON(): Record<string, any> {
     throw new Error('Method not implemented.');
   }
+}
+
+export interface INodeData {
+  model: ELNode;
+  toolbar?: {
+    prepend?: boolean;
+    append?: boolean;
+    delete?: boolean;
+    replace?: boolean;
+  };
 }

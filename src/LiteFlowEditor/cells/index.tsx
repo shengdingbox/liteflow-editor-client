@@ -1,4 +1,4 @@
-import { Graph } from '@antv/x6';
+import { Graph, Node } from '@antv/x6';
 import '@antv/x6-react-shape';
 import { NODE_WIDTH, NODE_HEIGHT } from '../constant';
 /** AntV X6自定义节点 */
@@ -33,13 +33,13 @@ import NodeView from '../components/NodeView';
   For,
   While,
   Virtual,
-].forEach((cell: any) => {
+].forEach((cell: LiteFlowNode) => {
   // 注册AntV X6节点
   const { type, label, icon, node = {} } = cell;
   Graph.registerNode(type, {
     // primer: 'circle',
     inherit: 'react-shape',
-    component(node: any) {
+    component(node: Node) {
       return <NodeView node={node} icon={icon} />;
     },
     width: NODE_WIDTH,
