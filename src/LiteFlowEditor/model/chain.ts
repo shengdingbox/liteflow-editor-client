@@ -125,9 +125,11 @@ export default class Chain extends ELNode {
    */
   public append(newNode: ELNode): boolean {
     if (this.children.length === 1) {
-      return this.children[0].prependChild(newNode, 0);
+      if (this.children[0].type === ConditionTypeEnum.THEN) {
+        return this.children[0].prependChild(newNode, 0);
+      }
     }
-    this.children.push(newNode);
+    this.children.splice(0, 0, newNode);
     return true;
   }
 
