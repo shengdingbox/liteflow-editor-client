@@ -21,6 +21,13 @@ import NodeOperator from './node-operator';
       { type: NodeTypeEnum.COMMON, id: 'a' }
     ],
   }
+  * (3) 通过ELNode节点模型进行表示的组合关系为：
+                                          ┌─────────────────┐
+                                      ┌──▶│  NodeOperator   │
+  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘
+  │  Chain  │───▶│    IfOperator   │──┤   ┌─────────────────┐
+  └─────────┘    └─────────────────┘  └──▶│  NodeOperator   │
+                                          └─────────────────┘
  */
 export default class IfOperator extends ELNode {
   type = ConditionTypeEnum.IF;

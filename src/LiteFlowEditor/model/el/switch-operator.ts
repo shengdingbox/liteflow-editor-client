@@ -12,7 +12,7 @@ import NodeOperator from './node-operator';
  * 选择编排操作符：SWITCH。
  *
  * 例如一个选择编排(SWITCH)示例：
- * (1) EL表达式语法：SWITCH(x).to(a, b, c, d)
+ * (1) EL表达式语法：SWITCH(x).to(a, b, c)
  * (2) JSON表示形式：
  * {
     type: ConditionTypeEnum.SWITCH,
@@ -21,9 +21,21 @@ import NodeOperator from './node-operator';
       { type: NodeTypeEnum.COMMON, id: 'a' },
       { type: NodeTypeEnum.COMMON, id: 'b' },
       { type: NodeTypeEnum.COMMON, id: 'c' },
-      { type: NodeTypeEnum.COMMON, id: 'd' },
     ],
   }
+  * (3) 通过ELNode节点模型进行表示的组合关系为：
+                                          ┌─────────────────┐
+                                      ┌──▶│  NodeOperator   │
+                                      │   └─────────────────┘
+                                      │   ┌─────────────────┐
+                                      ├──▶│  NodeOperator   │
+  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘
+  │  Chain  │───▶│ SwitchOperator  │──┤   ┌─────────────────┐
+  └─────────┘    └─────────────────┘  ├──▶│  NodeOperator   │
+                                      │   └─────────────────┘
+                                      │   ┌─────────────────┐
+                                      └──▶│  NodeOperator   │
+                                          └─────────────────┘
  */
 export default class SwitchOperator extends ELNode {
   type = ConditionTypeEnum.SWITCH;

@@ -18,6 +18,19 @@ import NodeOperator from './node-operator';
       { type: NodeTypeEnum.COMMON, id: 'd' },
     ],
   }
+  * (3) 通过ELNode节点模型进行表示的组合关系为：
+                                          ┌─────────────────┐
+                                      ┌──▶│  NodeOperator   │
+                                      │   └─────────────────┘
+                                      │   ┌─────────────────┐
+                                      ├──▶│  NodeOperator   │
+  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘
+  │  Chain  │───▶│  ThenOperator   │──┤   ┌─────────────────┐
+  └─────────┘    └─────────────────┘  ├──▶│  NodeOperator   │
+                                      │   └─────────────────┘
+                                      │   ┌─────────────────┐
+                                      └──▶│  NodeOperator   │
+                                          └─────────────────┘
  */
 export default class ThenOperator extends ELNode {
   type = ConditionTypeEnum.THEN;

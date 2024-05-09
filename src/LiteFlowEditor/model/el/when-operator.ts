@@ -29,6 +29,16 @@ import NodeOperator from './node-operator';
       { type: NodeTypeEnum.COMMON, id: 'e' },
     ],
   }
+  * (3) 通过ELNode节点模型进行表示的组合关系为：
+                                          ┌─────────────────┐      ┌─────────────────┐
+                                      ┌──▶│  NodeOperator   │  ┌──▶│  NodeOperator   │
+  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘  │   └─────────────────┘
+  │  Chain  │───▶│  ThenOperator   │──┤   ┌─────────────────┐  │   ┌─────────────────┐
+  └─────────┘    └─────────────────┘  ├──▶│  WhenOperator   │──┼──▶│  NodeOperator   │
+                                      │   └─────────────────┘  │   └─────────────────┘
+                                      │   ┌─────────────────┐  │   ┌─────────────────┐
+                                      └──▶│  NodeOperator   │  └──▶│  NodeOperator   │
+                                          └─────────────────┘      └─────────────────┘
  */
 export default class WhenOperator extends ELNode {
   type = ConditionTypeEnum.WHEN;

@@ -27,6 +27,15 @@ import NodeOperator from './node-operator';
       },
     ],
   }
+  * (3) 通过ELNode节点模型进行表示的组合关系为：
+                                          ┌─────────────────┐
+                                      ┌──▶│  NodeOperator   │
+  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘      ┌─────────────────┐
+  │  Chain  │───▶│  WhileOperator  │──┤   ┌─────────────────┐  ┌──▶│  NodeOperator   │
+  └─────────┘    └─────────────────┘  └──▶│  ThenOperator   │──┤   └─────────────────┘
+                                          └─────────────────┘  │   ┌─────────────────┐
+                                                               └──▶│  NodeOperator   │
+                                                                   └─────────────────┘
  */
 export default class WhileOperator extends ELNode {
   type = ConditionTypeEnum.WHILE;
