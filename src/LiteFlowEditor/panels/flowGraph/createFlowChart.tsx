@@ -26,6 +26,7 @@ const createFlowChart = (
         content.style.display = 'flex';
         content.style.alignItems = 'center';
         content.style.justifyContent = 'center';
+        content.style.overflow = 'hidden';
         if (label?.attrs?.label.text === '+') {
           const handleOnClick = debounce((e: any) => {
             flowGraph.trigger('button:click', { e, edge });
