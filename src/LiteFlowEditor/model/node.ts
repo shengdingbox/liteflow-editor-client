@@ -254,8 +254,9 @@ export default abstract class ELNode {
   /**
    * 重置当前存储的X6 Cell内容
    */
-  public resetCells() {
-    this.cells = [];
+  public resetCells(): void;
+  public resetCells(cells?: Cell[]): void {
+    this.cells = cells || [];
   }
 
   /**
