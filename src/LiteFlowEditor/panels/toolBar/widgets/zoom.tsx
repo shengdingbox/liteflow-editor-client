@@ -5,7 +5,7 @@ import { MAX_ZOOM, MIN_ZOOM } from '../../../constant';
 import { shortcuts } from '../../../common/shortcuts';
 import makeBtnWidget from './common/makeBtnWidget';
 import { useGraph } from '../../../hooks';
-import styles from './index.module.less';
+import styles from './zoom.module.less';
 
 interface IProps {
   flowGraph: Graph;
