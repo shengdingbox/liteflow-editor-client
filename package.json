@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "copy-files": "copyfiles -u 1 \"src/**/*.less\" es/src",
     "dev": "umi dev",
     "start": "export NODE_OPTIONS=--openssl-legacy-provider && umi dev",
     "build": "umi build",
@@ -41,6 +42,7 @@
     "@types/react-dom": "^17.0.0",
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.5.20",
+    "copyfiles": "^2.4.1",
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.0",
     "typescript": "^4.1.2",
