@@ -150,7 +150,7 @@ class FeimaFlowLayout {
       return !inMap[n.id];
     });
     if (!firstNode) {
-      throw new Error('now first node');
+      throw new Error('no first node');
     }
     firstNode.x = X_STEP;
     firstNode.y = Y_STEP;

@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import AddNodeButtons from '../AddNodeButtons';
 import NodeToolBar from '../NodeToolBar';
 import styles from './index.module.less';
 
@@ -9,7 +8,7 @@ const NodeView: React.FC<any> = (props) => {
     <div className={classNames(styles.liteflowShapeWrapper)}>
       <img className={styles.liteflowShapeSvg} src={icon}></img>
       {/* <AddNodeButtons node={node} /> */}
-      <NodeToolBar node={node} />
+      {/* <NodeToolBar node={node} /> */}
     </div>
   );
 };

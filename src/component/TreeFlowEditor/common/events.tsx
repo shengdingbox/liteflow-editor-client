@@ -60,28 +60,6 @@ const registerEvents = (flowGraph: Graph): void => {
       flowGraph.trigger('model:change');
     }
   });
-  flowGraph.on('blank:contextmenu', (args) => {
-    const {
-      e: { clientX, clientY },
-    } = args;
-    flowGraph.cleanSelection();
-    flowGraph.trigger('graph:showContextMenu', {
-      x: clientX,
-      y: clientY,
-      scene: 'blank',
-    });
-  });
-  flowGraph.on('button:click', (args: any) => {
-    const {
-      e: { clientX, clientY },
-      edge,
-    } = args;
-    flowGraph.trigger('graph:showContextPad', {
-      x: clientX,
-      y: clientY,
-      edge,
-    });
-  });
   flowGraph.on('graph:addNodeOnEdge', (args: any) => {
     const { edge: currentEdge, node: droppingNode } = args;
     let targetNode = currentEdge.getTargetNode();

@@ -1,7 +1,8 @@
-import { LiteNodeData, NodeCompStore, NodeData } from '../constant/Comp';
+import { NodeCompStore } from '../constant/Comp';
+import { NodeData } from '../types/node';
 
 function nodeToCells(
-  node: LiteNodeData,
+  node: NodeData,
   cells: Array<Record<string, any>>,
   pre?: {
     nodeId?: string;
@@ -10,8 +11,8 @@ function nodeToCells(
   },
 ): string {
   let preNodeId = pre?.nodeId;
-  const comp = NodeCompStore[node.type];
-  const curNode = pre ? createNode(node) : createVirtualNode('LITEFLOW_START');
+  const comp = NodeCompStore.getNode(node.type);
+  const curNode = pre ? createNode(node) : createVirtualNode('buildin/start');
   cells.push(curNode);
   if (pre?.nodeId) {
     cells.push(
@@ -26,13 +27,13 @@ function nodeToCells(
   }
 
   // children
-  if (comp.childrenType === 'then') {
+  if (comp.metadata.childrenType === 'then') {
     preNodeId = curNode.id;
     node.children?.forEach((n) => {
       preNodeId = nodeToCells(n, cells, { nodeId: preNodeId });
     });
     return preNodeId;
-  } else if (comp.childrenType === 'include') {
+  } else if (comp.metadata.childrenType === 'include') {
     preNodeId = curNode.id;
     if (node.children!?.length > 0) {
       node.children?.forEach((n, i) => {
@@ -47,7 +48,7 @@ function nodeToCells(
     }
     cells.push(createEdge(preNodeId, 'out', curNode.id, 'bottom2'));
     return curNode.id;
-  } else if (comp.childrenType === 'multiple') {
+  } else if (comp.metadata.childrenType === 'multiple') {
     const virtualNode = createVirtualNode('LITEFLOW_INTERMEDIATE_END');
     cells.push(virtualNode);
 
@@ -78,7 +79,7 @@ function nodeToCells(
 export function toGraphJson(node: NodeData): any {
   const cells: Array<Record<string, any>> = [];
   const lastNodeId = nodeToCells(node, cells);
-  const endNode = createVirtualNode('LITEFLOW_END');
+  const endNode = createVirtualNode('buildin/end');
   cells.push(endNode);
   cells.push(createEdge(lastNodeId, 'out', endNode.id, 'in'));
 
@@ -141,7 +142,7 @@ const portGroups = {
 };
 
 function createNode(node: NodeData) {
-  const comp = NodeCompStore[node.type];
+  const comp = NodeCompStore.getNode(node.type);
   const ports = {
     groups: portGroups,
     items: [

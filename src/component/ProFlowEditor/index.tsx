@@ -129,9 +129,9 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
           {flowGraph && (
             <FlowChartContextMenu {...contextMenuInfo} flowGraph={flowGraph} />
           )}
-          {flowGraph && (
+          {/* {flowGraph && (
             <FlowChartContextPad {...contextPadInfo} flowGraph={flowGraph} />
-          )}
+          )} */}
         </div>
       </Layout>
     </GraphContext.Provider>
