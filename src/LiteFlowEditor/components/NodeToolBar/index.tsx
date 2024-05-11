@@ -5,6 +5,7 @@ import { Modal, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { INodeData } from '../../model/node';
 import styles from './index.module.less';
+import { history } from '../../hooks/useHistory';
 
 const NodeToolBar: React.FC<{ node: Node }> = (props) => {
   const { node } = props;
@@ -53,6 +54,7 @@ const NodeToolBar: React.FC<{ node: Node }> = (props) => {
       content: '点击确认按钮进行删除，点击取消按钮返回',
       onOk() {
         if (model.remove()) {
+          history.push();
           node.model?.graph?.trigger('model:change');
         }
       },

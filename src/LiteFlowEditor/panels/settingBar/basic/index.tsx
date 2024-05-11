@@ -5,6 +5,7 @@ import mocks from '../../../mock';
 import ELBuilder from '../../../model/builder';
 import { ConditionTypeEnum } from '../../../constant';
 import { setModel, useModel } from '../../../hooks/useModel';
+import { history } from '../../../hooks/useHistory';
 import { forceLayout } from '../../../common/layout';
 import styles from './index.module.less';
 
@@ -24,6 +25,7 @@ const Basic: React.FC<IProps> = (props) => {
     const mockData = mocks[value] as any;
     const model = ELBuilder.build(mockData);
     setModel(model);
+    history.cleanHistory();
     flowGraph.trigger('model:change');
     setELString(model.toEL());
     setSelectedValue(value);
@@ -33,6 +35,7 @@ const Basic: React.FC<IProps> = (props) => {
     const mockData = mocks[selectedValue] as any;
     const model = ELBuilder.build(mockData);
     setModel(model);
+    history.cleanHistory();
     flowGraph.trigger('model:change');
     setELString(model.toEL());
 

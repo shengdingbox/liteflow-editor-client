@@ -1,14 +1,15 @@
 import { Graph } from '@antv/x6';
-import { cloneDeep } from 'lodash';
+import { setModel, useModel } from './useModel';
+import ELBuilder from '../model/builder';
 
 export const history = {
   $historyStack: [] as any[],
   $cursorIndex: 0 as number,
   $graph: undefined as Graph | undefined,
   init(graph: Graph) {
-    this.$historyStack = [cloneDeep(graph.toJSON())];
-    this.$cursorIndex = 0;
     this.$graph = graph;
+    this.$historyStack = [];
+    this.$cursorIndex = 0;
   },
   canRedo() {
     return this.$cursorIndex < this.$historyStack.length - 1;
@@ -27,7 +28,7 @@ export const history = {
     if (nextState) {
       this.$historyStack.push(nextState);
     } else {
-      this.$historyStack.push(cloneDeep(this.$graph.toJSON()));
+      this.$historyStack.push(useModel().toJSON());
     }
     this.$cursorIndex++;
     this.$graph.trigger('toolBar:forceUpdate');
@@ -36,7 +37,8 @@ export const history = {
   redo() {
     if (this.canRedo()) {
       this.$cursorIndex++;
-      this.$graph.fromJSON(this.$historyStack[this.$cursorIndex]);
+      setModel(ELBuilder.build(this.$historyStack[this.$cursorIndex]));
+      this.$graph.trigger('model:change');
       this.$graph.trigger('toolBar:forceUpdate');
       this.$graph.trigger('settingBar:forceUpdate');
     }
@@ -44,13 +46,14 @@ export const history = {
   undo() {
     if (this.canUndo()) {
       this.$cursorIndex--;
-      this.$graph.fromJSON(this.$historyStack[this.$cursorIndex]);
+      setModel(ELBuilder.build(this.$historyStack[this.$cursorIndex]));
+      this.$graph.trigger('model:change');
       this.$graph.trigger('toolBar:forceUpdate');
       this.$graph.trigger('settingBar:forceUpdate');
     }
   },
   cleanHistory() {
-    this.$historyStack = [cloneDeep(this.$graph.toJSON())];
+    this.$historyStack = [useModel().toJSON()];
     this.$cursorIndex = 0;
     this.$graph.trigger('toolBar:forceUpdate');
     this.$graph.trigger('settingBar:forceUpdate');

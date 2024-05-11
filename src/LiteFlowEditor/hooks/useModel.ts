@@ -1,6 +1,8 @@
-let model: any;
+import ELNode from '../model/node';
 
-export const setModel = (_newModel: any) => {
+let model: ELNode;
+
+export const setModel = (_newModel: ELNode) => {
   model = _newModel;
 };
 

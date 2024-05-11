@@ -13,6 +13,7 @@ import { findViewsFromPoint } from '../../common/events';
 import ELBuilder from '../../model/builder';
 import { INodeData } from '../../model/node';
 import styles from './index.module.less';
+import { history } from '../../hooks/useHistory';
 
 const { Panel } = Collapse;
 
@@ -57,6 +58,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             ) as Node;
             let { model } = currentNode.getData<INodeData>() || {};
             model?.replace(ELBuilder.createELNode(droppingNode.shape as any));
+            history.push();
             flowGraph.trigger('model:change');
           }
           return false;

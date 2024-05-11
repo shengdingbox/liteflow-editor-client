@@ -46,8 +46,8 @@ interface ParseParameters {
                                           └─────────────────┘
  */
 export default class ELBuilder {
-  public static build(data: Record<string, any>) {
-    return builder(data);
+  public static build(data: Record<string, any> | Record<string, any>[]) {
+    return build(data);
   }
   public static createELNode(
     type: ConditionTypeEnum | NodeTypeEnum,
@@ -75,16 +75,26 @@ export default class ELBuilder {
   }
 }
 
-export function builder(data: Record<string, any>): ELNode {
+function build(data: Record<string, any> | Record<string, any>[]): ELNode {
   const chain: Chain = new Chain();
-  const next: ELNode | undefined = parse({ parent: chain, data });
-  if (next) {
-    chain.appendChild(next);
+  if (Array.isArray(data)) {
+    data.forEach((item) => {
+      const next: ELNode | undefined = parse({ parent: chain, data: item });
+      if (next) {
+        chain.appendChild(next);
+      }
+    });
+  } else {
+    const next: ELNode | undefined = parse({ parent: chain, data });
+    if (next) {
+      chain.appendChild(next);
+    }
   }
+
   return chain;
 }
 
-export function parse({ parent, data }: ParseParameters): ELNode | undefined {
+function parse({ parent, data }: ParseParameters): ELNode | undefined {
   if (!data.type) {
     return undefined;
   }

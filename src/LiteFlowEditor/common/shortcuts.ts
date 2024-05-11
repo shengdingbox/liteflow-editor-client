@@ -3,6 +3,7 @@ import { message, Modal } from 'antd';
 import { Graph } from '@antv/x6';
 import { MIN_ZOOM, MAX_ZOOM, ZOOM_STEP } from '../constant';
 import { getSelectedNodes } from '../utils/flowChartUtils';
+import { history } from '../hooks/useHistory';
 
 interface Shortcut {
   keys: string | string[];
@@ -20,15 +21,15 @@ export const shortcuts: { [key: string]: Shortcut } = {
   },
   undo: {
     keys: 'meta + z',
-    handler(flowGraph: Graph) {
-      flowGraph.undo();
+    handler() {
+      history.undo();
       return false;
     },
   },
   redo: {
     keys: 'meta + shift + z',
-    handler(flowGraph: Graph) {
-      flowGraph.redo();
+    handler() {
+      history.redo();
       return false;
     },
   },
@@ -85,6 +86,7 @@ export const shortcuts: { [key: string]: Shortcut } = {
               const { model } = node.getData() || {};
               model?.remove?.();
             });
+            history.push();
             flowGraph.trigger('model:change');
           },
         });

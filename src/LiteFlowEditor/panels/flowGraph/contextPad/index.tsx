@@ -10,6 +10,7 @@ import {
 } from '../../../cells';
 import ELBuilder from '../../../model/builder';
 import styles from './index.module.less';
+import { history } from '../../../hooks/useHistory';
 
 interface IProps {
   x: number;
@@ -59,6 +60,7 @@ const FlowGraphContextPad: React.FC<IProps> = (props) => {
         } else {
           model.append(ELBuilder.createELNode(cellType.type, model));
         }
+        history.push();
         flowGraph.trigger('model:change');
       }
 

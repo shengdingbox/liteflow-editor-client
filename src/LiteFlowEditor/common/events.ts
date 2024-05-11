@@ -1,6 +1,7 @@
 import { Dom, Graph, Rectangle } from '@antv/x6';
 import { getSelectedEdges } from '../utils/flowChartUtils';
 import ELBuilder from '../model/builder';
+import { history } from '../hooks/useHistory';
 
 export function findViewsFromPoint(flowGraph: Graph, x: number, y: number) {
   return flowGraph
@@ -84,6 +85,7 @@ const registerEvents = (flowGraph: Graph): void => {
     let targetNode = currentEdge.getSourceNode();
     let { model } = targetNode?.getData();
     model.append(ELBuilder.createELNode(droppingNode.shape, model));
+    history.push();
     flowGraph.trigger('model:change');
   });
 };

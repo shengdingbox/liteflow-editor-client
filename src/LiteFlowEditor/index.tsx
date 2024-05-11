@@ -13,6 +13,7 @@ import styles from './index.module.less';
 import '@antv/x6/dist/x6.css';
 import { forceLayout } from './common/layout';
 import { useModel } from './hooks';
+import { history } from './hooks/useHistory';
 
 interface IProps {
   onReady?: (graph: Graph) => void;
@@ -57,6 +58,7 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
       const flowGraph = createFlowGraph(graphRef.current, miniMapRef.current);
       onReady?.(flowGraph);
       setFlowGraph(flowGraph);
+      history.init(flowGraph);
     }
   }, []);
 
