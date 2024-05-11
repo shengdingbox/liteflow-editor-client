@@ -12,37 +12,40 @@ const NodeToolBar: React.FC<{ node: Node }> = (props) => {
     model,
     toolbar = { append: true, delete: true, prepend: true, replace: true },
   } = node.getData<INodeData>() || {};
-  const onPrepend = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph?.trigger('graph:showContextPad', {
-      x: clientX,
-      y: clientY,
+  const showContextPad = debounce((info: any) => {
+    node.model?.graph?.trigger('graph:showContextPad', info);
+  }, 100);
+  const onPrepend = (event: any) => {
+    showContextPad({
+      x: event.clientX,
+      y: event.clientY,
       node,
       scene: 'prepend',
       title: '前面插入节点',
       edge: null,
     });
-  }, 100);
-  const onAppend = debounce(({ clientX, clientY }: any) => {
-    node.model?.graph?.trigger('graph:showContextPad', {
-      x: clientX,
-      y: clientY,
+  };
+  const onAppend = (event: any) => {
+    showContextPad({
+      x: event.clientX,
+      y: event.clientY,
       node,
       scene: 'append',
       title: '后面插入节点',
       edge: null,
     });
-  }, 100);
-  const onReplace = debounce(({ clientX, clientY }: any) => {
+  };
+  const onReplace = (event: any) => {
     node.model?.graph?.select(model.getNodes());
-    node.model?.graph?.trigger('graph:showContextPad', {
-      x: clientX,
-      y: clientY,
+    showContextPad({
+      x: event.clientX,
+      y: event.clientY,
       node,
       scene: 'replace',
       title: '替换当前节点',
       edge: null,
     });
-  }, 100);
+  };
   const onDelete = debounce(() => {
     node.model?.graph?.select(model.selectNodes());
     Modal.confirm({

@@ -11,8 +11,6 @@ import {
 import ELBuilder from '../../../model/builder';
 import styles from './index.module.less';
 
-export type IContextPadScene = 'append' | 'prepend' | 'replace';
-
 interface IProps {
   x: number;
   y: number;

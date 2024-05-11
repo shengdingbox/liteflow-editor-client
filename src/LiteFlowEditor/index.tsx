@@ -3,9 +3,7 @@ import { Graph, Edge, Cell, Node } from '@antv/x6';
 import createFlowGraph from './panels/flowGraph/createFlowGraph';
 import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
 import FlowGraphContextMenu from './panels/flowGraph/contextMenu';
-import FlowGraphContextPad, {
-  IContextPadScene,
-} from './panels/flowGraph/contextPad';
+import FlowGraphContextPad from './panels/flowGraph/contextPad';
 import GraphContext from './context/GraphContext';
 import Layout from './panels/layout';
 import SideBar from './panels/sideBar';
@@ -18,13 +16,6 @@ import { useModel } from './hooks';
 
 interface IProps {
   onReady?: (graph: Graph) => void;
-}
-
-interface IMenuInfo {
-  x: number;
-  y: number;
-  scene: string;
-  visible: boolean;
 }
 
 const defaultMenuInfo: IMenuInfo = {

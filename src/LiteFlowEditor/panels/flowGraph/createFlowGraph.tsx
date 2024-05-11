@@ -28,9 +28,16 @@ const createFlowChart = (
         content.style.justifyContent = 'center';
         content.style.overflow = 'hidden';
         if (label?.attrs?.label.text === '+') {
-          const handleOnClick = debounce((e: any) => {
-            flowGraph.trigger('button:click', { e, edge });
+          const showContextPad = debounce((info: any) => {
+            flowGraph.trigger('graph:showContextPad', info);
           }, 100);
+          const handleOnClick = (event: any) => {
+            showContextPad({
+              x: event.clientX,
+              y: event.clientY,
+              edge,
+            });
+          };
           ReactDOM.render(
             <Tooltip title="插入节点">
               <Button

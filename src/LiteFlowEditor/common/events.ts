@@ -76,16 +76,8 @@ const registerEvents = (flowGraph: Graph): void => {
       scene: 'node',
     });
   });
-  flowGraph.on('button:click', (args: any) => {
-    const {
-      e: { clientX, clientY },
-      edge,
-    } = args;
-    flowGraph.trigger('graph:showContextPad', {
-      x: clientX,
-      y: clientY,
-      edge,
-    });
+  flowGraph.on('blank:mousedown', () => {
+    flowGraph.cleanSelection();
   });
   flowGraph.on('graph:addNodeOnEdge', (args: any) => {
     const { edge: currentEdge, node: droppingNode } = args;

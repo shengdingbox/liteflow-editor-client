@@ -16,3 +16,12 @@ declare interface LiteFlowNode {
   node?: any;
   disabled?: boolean;
 }
+
+declare interface IMenuInfo {
+  x: number;
+  y: number;
+  scene: string;
+  visible: boolean;
+}
+
+declare type IContextPadScene = 'append' | 'prepend' | 'replace';
