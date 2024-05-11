@@ -1,6 +1,6 @@
-import { Cell, Node } from '@antv/x6';
+import { Cell, Node, Edge } from '@antv/x6';
 import ELNode, { Properties } from '../node';
-import { ConditionTypeEnum, NodeTypeEnum } from '../../constant';
+import { ConditionTypeEnum, LITEFLOW_EDGE, NodeTypeEnum } from '../../constant';
 import NodeOperator from './node-operator';
 
 /**
@@ -74,16 +74,41 @@ export default class ThenOperator extends ELNode {
    * 转换为X6的图数据格式
    */
   public toCells(
-    previous: Node,
-    cells: Cell[],
-    options?: Record<string, any>,
-  ): Node {
+    cells: Cell[] = this.cells,
+    options: Record<string, any> = {},
+  ): Cell[] {
+    this.resetCells(cells);
     const { children } = this;
-    let last: Node = previous;
+    let last: Node;
     children.forEach((child) => {
-      last = child.toCells(last, cells, options) as Node;
+      child.toCells([], options);
+      const next = child.getStartNode();
+      if (last) {
+        cells.push(
+          Edge.create({
+            shape: LITEFLOW_EDGE,
+            source: last.id,
+            target: next.id,
+          }),
+        );
+      }
+      last = child.getEndNode();
     });
-    return last;
+    return this.getCells();
+  }
+
+  /**
+   * 获取当前节点的开始节点
+   */
+  public getStartNode(): Node {
+    return this.children[0].getStartNode();
+  }
+
+  /**
+   * 获取当前节点的结束节点
+   */
+  public getEndNode(): Node {
+    return this.children[this.children.length - 1].getEndNode();
   }
 
   /**

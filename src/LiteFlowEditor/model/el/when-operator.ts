@@ -45,6 +45,8 @@ export default class WhenOperator extends ELNode {
   parent?: ELNode;
   children: ELNode[] = [];
   properties?: Properties;
+  startNode?: Node;
+  endNode?: Node;
 
   constructor(parent?: ELNode, children?: ELNode[], properties?: Properties) {
     super();
@@ -70,11 +72,10 @@ export default class WhenOperator extends ELNode {
    * 转换为X6的图数据格式
    */
   public toCells(
-    previous: Node,
-    cells: Cell[],
-    options?: Record<string, any>,
-  ): Node {
-    this.resetCells();
+    cells: Cell[] = this.cells,
+    options: Record<string, any> = {},
+  ): Cell[] {
+    this.resetCells(cells);
     const { children } = this;
     const start = Node.create({
       shape: ConditionTypeEnum.WHEN,
@@ -83,14 +84,9 @@ export default class WhenOperator extends ELNode {
       },
     });
     start.setData({ model: new ELStartNode(this) }, { overwrite: true });
-    cells.push(this.addCell(start));
-    cells.push(
-      Edge.create({
-        shape: LITEFLOW_EDGE,
-        source: previous.id,
-        target: start.id,
-      }),
-    );
+    cells.push(this.addNode(start));
+    this.startNode = start;
+
     const end = Node.create({
       shape: NODE_TYPE_INTERMEDIATE_END,
       attrs: {
@@ -98,14 +94,25 @@ export default class WhenOperator extends ELNode {
       },
     });
     end.setData({ model: new ELEndNode(this) }, { overwrite: true });
-    cells.push(this.addCell(end));
+    cells.push(this.addNode(end));
+    this.endNode = end;
+
     if (children.length) {
       children.forEach((child) => {
-        const next = child.toCells(start, cells, options) as Node;
+        child.toCells([], options);
+        const nextStartNode = child.getStartNode();
         cells.push(
           Edge.create({
             shape: LITEFLOW_EDGE,
-            source: next.id,
+            source: start.id,
+            target: nextStartNode.id,
+          }),
+        );
+        const nextEndNode = child.getEndNode();
+        cells.push(
+          Edge.create({
+            shape: LITEFLOW_EDGE,
+            source: nextEndNode.id,
             target: end.id,
           }),
         );
@@ -120,7 +127,21 @@ export default class WhenOperator extends ELNode {
       );
     }
 
-    return end;
+    return this.getCells();
+  }
+
+  /**
+   * 获取当前节点的开始节点
+   */
+  public getStartNode(): Node {
+    return this.startNode as Node;
+  }
+
+  /**
+   * 获取当前节点的结束节点
+   */
+  public getEndNode(): Node {
+    return this.endNode as Node;
   }
 
   /**

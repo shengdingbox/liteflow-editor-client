@@ -1,6 +1,6 @@
-import { Cell, Node, Edge } from '@antv/x6';
+import { Cell, Node } from '@antv/x6';
 import ELNode from '../node';
-import { LITEFLOW_EDGE, NodeTypeEnum } from '../../constant';
+import { NodeTypeEnum } from '../../constant';
 
 /**
  * 节点组件操作符：是EL表达式树型结构的叶子结点。
@@ -35,6 +35,7 @@ export default class NodeOperator extends ELNode {
   type: NodeTypeEnum;
   parent?: ELNode;
   id: string;
+  node?: Node;
 
   constructor(parent?: ELNode, type?: NodeTypeEnum, id?: string) {
     super();
@@ -61,11 +62,10 @@ export default class NodeOperator extends ELNode {
    * 转换为X6的图数据格式
    */
   public toCells(
-    previous: Node,
-    cells: Cell[],
+    cells: Cell[] = this.cells,
     options: Record<string, any> = {},
-  ): Node {
-    this.resetCells();
+  ): Cell[] {
+    this.resetCells(cells);
     const { id, type } = this;
     const node = Node.create({
       shape: type,
@@ -75,19 +75,23 @@ export default class NodeOperator extends ELNode {
       ...(options.node || {}),
     });
     node.setData({ model: this }, { overwrite: true });
-    cells.push(this.addCell(node));
+    cells.push(this.addNode(node));
+    this.node = node;
+    return this.getCells();
+  }
 
-    if (previous) {
-      cells.push(
-        Edge.create({
-          shape: LITEFLOW_EDGE,
-          source: previous.id,
-          target: node.id,
-          ...(options.edge || {}),
-        }),
-      );
-    }
-    return node;
+  /**
+   * 获取当前节点的开始节点
+   */
+  public getStartNode(): Node {
+    return this.node as Node;
+  }
+
+  /**
+   * 获取当前节点的结束节点
+   */
+  public getEndNode(): Node {
+    return this.node as Node;
   }
 
   /**

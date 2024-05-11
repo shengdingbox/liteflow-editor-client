@@ -38,6 +38,8 @@ import {
 export default class Chain extends ELNode {
   type = ConditionTypeEnum.CHAIN;
   children: ELNode[] = [];
+  startNode?: Node;
+  endNode?: Node;
 
   constructor(children?: ELNode[]) {
     super();
@@ -50,7 +52,8 @@ export default class Chain extends ELNode {
    * 转换为X6的图数据格式
    */
   public toCells(): Cell[] {
-    const cells: Cell[] = [];
+    this.resetCells();
+    const cells: Cell[] = this.cells;
     // 1. 首先：添加一个开始节点
     const start: Node = Node.create({
       shape: NODE_TYPE_START,
@@ -70,13 +73,21 @@ export default class Chain extends ELNode {
       },
       { overwrite: true },
     );
-
     cells.push(start);
+    this.startNode = start;
 
     // 2. 其次：解析已有的节点
     let last: Node = start;
     this.children.forEach((x) => {
-      last = x.toCells(last, cells) as Node;
+      x.toCells([], {});
+      cells.push(
+        Edge.create({
+          shape: LITEFLOW_EDGE,
+          source: last.id,
+          target: x.getStartNode().id,
+        }),
+      );
+      last = x.getEndNode();
     });
 
     // 3. 最后：添加一个结束节点
@@ -99,6 +110,7 @@ export default class Chain extends ELNode {
       { overwrite: true },
     );
     cells.push(end);
+    this.endNode = end;
 
     cells.push(
       Edge.create({
@@ -108,7 +120,21 @@ export default class Chain extends ELNode {
       }),
     );
 
-    return cells;
+    return this.getCells();
+  }
+
+  /**
+   * 获取当前节点的开始节点
+   */
+  public getStartNode(): Node {
+    return this.startNode as Node;
+  }
+
+  /**
+   * 获取当前节点的结束节点
+   */
+  public getEndNode(): Node {
+    return this.endNode as Node;
   }
 
   /**

@@ -35,6 +35,8 @@ export default class IfOperator extends ELNode {
   condition: ELNode = new NodeOperator(this, NodeTypeEnum.IF, 'x');
   children: ELNode[] = [];
   properties?: Properties;
+  startNode?: Node;
+  endNode?: Node;
 
   constructor(
     parent?: ELNode,
@@ -68,11 +70,10 @@ export default class IfOperator extends ELNode {
    * 转换为X6的图数据格式
    */
   public toCells(
-    previous: Node,
-    cells: Cell[],
-    options?: Record<string, any>,
-  ): Node {
-    this.resetCells();
+    cells: Cell[] = this.cells,
+    options: Record<string, any> = {},
+  ): Cell[] {
+    this.resetCells(cells);
     const { condition, children = [] } = this;
     const start = Node.create({
       shape: condition.type,
@@ -81,14 +82,9 @@ export default class IfOperator extends ELNode {
       },
     });
     start.setData({ model: condition }, { overwrite: true });
-    cells.push(this.addCell(start));
-    cells.push(
-      Edge.create({
-        shape: LITEFLOW_EDGE,
-        source: previous.id,
-        target: start.id,
-      }),
-    );
+    cells.push(this.addNode(start));
+    this.startNode = start;
+
     const end = Node.create({
       shape: NODE_TYPE_INTERMEDIATE_END,
       attrs: {
@@ -96,11 +92,20 @@ export default class IfOperator extends ELNode {
       },
     });
     end.setData({ model: new ELEndNode(this) }, { overwrite: true });
-    cells.push(this.addCell(end));
+    cells.push(this.addNode(end));
+    this.endNode = end;
+
     const [first, last] = children;
-    const trueNode = first.toCells(start, cells, {
-      edge: { label: 'true' },
-    }) as Node;
+    first.toCells([], options);
+    const trueNode = first.getStartNode();
+    cells.push(
+      Edge.create({
+        shape: LITEFLOW_EDGE,
+        source: start.id,
+        target: trueNode.id,
+        label: 'true',
+      }),
+    );
     cells.push(
       Edge.create({
         shape: LITEFLOW_EDGE,
@@ -117,7 +122,8 @@ export default class IfOperator extends ELNode {
           label: { text: '' },
         },
       });
-      cells.push(this.addCell(falseNode));
+      falseNode.setData({ model: new ELEndNode(this) }, { overwrite: true });
+      cells.push(this.addNode(falseNode));
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
@@ -127,9 +133,14 @@ export default class IfOperator extends ELNode {
         }),
       );
     } else {
-      falseNode = last.toCells(start, cells, {
-        edge: { label: 'false' },
-      }) as Node;
+      last.toCells([], options);
+      falseNode = last.getStartNode();
+      Edge.create({
+        shape: LITEFLOW_EDGE,
+        source: start.id,
+        target: falseNode.id,
+        label: 'false',
+      });
     }
     cells.push(
       Edge.create({
@@ -138,7 +149,21 @@ export default class IfOperator extends ELNode {
         target: end.id,
       }),
     );
-    return end;
+    return this.getCells();
+  }
+
+  /**
+   * 获取当前节点的开始节点
+   */
+  public getStartNode(): Node {
+    return this.startNode as Node;
+  }
+
+  /**
+   * 获取当前节点的结束节点
+   */
+  public getEndNode(): Node {
+    return this.endNode as Node;
   }
 
   /**

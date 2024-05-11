@@ -44,6 +44,8 @@ export default abstract class ELNode {
   public properties?: Properties;
   // 当前节点的X6 Cell内容
   public cells: Cell[] = [];
+  // 当前节点的X6 Node内容
+  public nodes: Node[] = [];
 
   /**
    * 在后面添加子节点
@@ -220,19 +222,31 @@ export default abstract class ELNode {
    * 转换为X6的图数据格式
    */
   public abstract toCells(
-    previous?: Node,
     cells?: Cell[],
     options?: Record<string, any>,
-  ): Cell[] | Node;
+  ): Cell[];
 
   /**
    * 获取需要选中的X6 Cell
    */
-  public selectCells(): Cell[] {
+  public selectNodes(): Cell[] {
     if (this.parent?.condition === this) {
-      return this.parent.getCells();
+      return this.parent.getNodes();
     }
-    return this.getCells();
+    return this.getNodes();
+  }
+
+  /**
+   * 获取当前X6 Node内容
+   */
+  public getNodes(): Node[] {
+    let nodes: Node[] = [...this.nodes];
+    if (this.children && this.children.length) {
+      this.children.forEach((child) => {
+        nodes = nodes.concat(child.getNodes());
+      });
+    }
+    return nodes;
   }
 
   /**
@@ -240,9 +254,6 @@ export default abstract class ELNode {
    */
   public getCells(): Cell[] {
     let cells: Cell[] = [...this.cells];
-    if (this.condition) {
-      cells = cells.concat(this.condition.getCells());
-    }
     if (this.children && this.children.length) {
       this.children.forEach((child) => {
         cells = cells.concat(child.getCells());
@@ -255,17 +266,30 @@ export default abstract class ELNode {
    * 重置当前存储的X6 Cell内容
    */
   public resetCells(): void;
-  public resetCells(cells?: Cell[]): void {
+  public resetCells(cells: Cell[]): void;
+  public resetCells(cells: Cell[], nodes: Node[]): void;
+  public resetCells(cells?: Cell[], nodes?: Node[]): void {
     this.cells = cells || [];
+    this.nodes = nodes || [];
   }
 
   /**
-   * 添加X6 Cell相关内容
-   * @param cell X6 节点/边
+   * 获取当前节点的开始节点
    */
-  public addCell(cell: Cell): Cell {
-    this.cells.push(cell);
-    return cell;
+  public abstract getStartNode(): Node;
+
+  /**
+   * 获取当前节点的结束节点
+   */
+  public abstract getEndNode(): Node;
+
+  /**
+   * 添加X6 Node相关内容
+   * @param node X6 节点
+   */
+  public addNode(node: Node): Node {
+    this.nodes.push(node);
+    return node;
   }
 
   /**
@@ -342,7 +366,7 @@ export class ELStartNode extends ELNode {
   /**
    * 转换为X6的图数据格式
    */
-  public toCells(): Cell[] | Node {
+  public toCells(): Cell[] {
     throw new Error('Method not implemented.');
   }
 
@@ -351,6 +375,27 @@ export class ELStartNode extends ELNode {
    */
   public getCells(): Cell[] {
     return this.proxy.getCells();
+  }
+
+  /**
+   * 获取当前X6 节点内容
+   */
+  public getNodes(): Node[] {
+    return this.proxy.getNodes();
+  }
+
+  /**
+   * 获取当前节点的开始节点
+   */
+  public getStartNode(): Node {
+    return this.proxy.getStartNode();
+  }
+
+  /**
+   * 获取当前节点的结束节点
+   */
+  public getEndNode(): Node {
+    return this.proxy.getEndNode();
   }
 
   /**
@@ -420,7 +465,7 @@ export class ELEndNode extends ELNode {
   /**
    * 转换为X6的图数据格式
    */
-  public toCells(): Node<Node.Properties> {
+  public toCells(): Cell[] {
     throw new Error('Method not implemented.');
   }
 
@@ -429,6 +474,27 @@ export class ELEndNode extends ELNode {
    */
   public getCells(): Cell[] {
     return this.proxy.getCells();
+  }
+
+  /**
+   * 获取当前X6 节点内容
+   */
+  public getNodes(): Node[] {
+    return this.proxy.getNodes();
+  }
+
+  /**
+   * 获取当前节点的开始节点
+   */
+  public getStartNode(): Node {
+    return this.proxy.getStartNode();
+  }
+
+  /**
+   * 获取当前节点的结束节点
+   */
+  public getEndNode(): Node {
+    return this.proxy.getEndNode();
   }
 
   /**
