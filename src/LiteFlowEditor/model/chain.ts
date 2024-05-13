@@ -141,7 +141,7 @@ export default class Chain extends ELNode {
    * 转换为EL表达式字符串
    */
   public toEL(): string {
-    return this.children.map((x) => x.toEL()).join(', ');
+    return `${this.children.map((x) => x.toEL()).join(', ')};`;
   }
 
   /**
