@@ -28,6 +28,7 @@ import { NodeCompStore } from '../constant/Comp';
 import { NodeData } from '../types/node';
 import { toGraphJson } from '../model/model';
 import { forceLayout } from '../common/layout';
+import { Store } from '../store/Store';
 
 Graph.registerEdge(LITEFLOW_EDGE, liteflowEdge);
 Graph.registerRouter(LITEFLOW_ROUTER, liteflowRouter);
@@ -82,7 +83,7 @@ const bindKeyboards = (flowGraph: Graph): void => {
 const createFlowChart = (
   container: HTMLDivElement,
   miniMapContainer: HTMLDivElement,
-  node: NodeData,
+  store: Store,
 ): Graph => {
   const flowGraph = new Graph({
     autoResize: true,
@@ -99,7 +100,13 @@ const createFlowChart = (
         if (label?.attrs?.label.text === '+') {
           ReactDOM.render(
             // @ts-ignore
-            <Button size="small" className="liteflow-edge-add-button">
+            <Button
+              size="small"
+              className="liteflow-edge-add-button"
+              onClick={() => {
+                store.removeNode('');
+              }}
+            >
               +
             </Button>,
             content,
@@ -252,18 +259,6 @@ const createFlowChart = (
   });
   registerEvents(flowGraph);
   bindKeyboards(flowGraph);
-
-  setTimeout(() => {
-    const modelJSON = toGraphJson(node);
-
-    // 显示图形
-    flowGraph.scroller.disableAutoResize();
-    flowGraph.startBatch('update');
-    flowGraph.fromJSON(modelJSON);
-    forceLayout(flowGraph);
-    flowGraph.stopBatch('update');
-    flowGraph.scroller.enableAutoResize();
-  }, 2000);
 
   return flowGraph;
 };

@@ -15,7 +15,9 @@ export class Store extends HistoryStore<DocumentModel> {
   }
 
   // just for this example
-  @action removeNode(id: string) {}
+  @action removeNode(id: string) {
+    this.document.data.children?.splice(0, 1);
+  }
 }
 
 export function createStore(initData: NodeData) {

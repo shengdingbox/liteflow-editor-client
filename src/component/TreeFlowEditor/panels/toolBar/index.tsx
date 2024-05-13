@@ -9,6 +9,7 @@ interface IProps {}
 const ToolBar: React.FC<IProps> = () => {
   const flowGraph = useGraph();
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
+  console.log('===flowGraph', flowGraph);
 
   useEffect(() => {
     flowGraph?.on('toolBar:forceUpdate', forceUpdate);

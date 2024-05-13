@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Graph, Edge } from '@antv/x6';
 import createFlowChart from './graph/createFlowChart';
 import './buildinNodes';
-import GraphContext from './context/GraphContext';
+import GraphContext, { Grapher } from './context/GraphContext';
 import Layout from './panels/layout';
 import styles from './index.module.less';
 import '@antv/x6/dist/x6.css';
@@ -30,20 +30,22 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);
   const miniMapRef = useRef<HTMLDivElement>(null);
-  const [flowGraph, setFlowChart] = useState<Graph>();
-  const [store, setStore] = useState<Store>();
+  const [grapher, setGrapher] = useState<Grapher>(new Grapher());
+  // const [store, setStore] = useState<Store>();
+  // const store = createStore(initSchema);
 
   useEffect(() => {
     if (graphRef.current && miniMapRef.current) {
-      const flowGraph = createFlowChart(
+      const grapher = new Grapher(
         graphRef.current,
         miniMapRef.current,
         initSchema,
       );
-      onReady?.(flowGraph);
-      fetchData(flowGraph);
-      setFlowChart(flowGraph);
-      setStore(createStore(initSchema));
+      setGrapher(grapher);
+      onReady?.(grapher.flowGraph!);
+      // fetchData(flowGraph);
+      // setFlowChart(flowGraph);
+      // setStore(createStore(initSchema));
     }
   }, []);
 
@@ -51,10 +53,12 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   useEffect(() => {
     const handler = () => {
       requestAnimationFrame(() => {
-        if (flowGraph && wrapperRef && wrapperRef.current) {
-          const width = wrapperRef.current.clientWidth;
-          const height = wrapperRef.current.clientHeight;
-          flowGraph.resize(width, height);
+        if (grapher.isReady()) {
+          if (grapher.flowGraph && wrapperRef && wrapperRef.current) {
+            const width = wrapperRef.current.clientWidth;
+            const height = wrapperRef.current.clientHeight;
+            grapher.flowGraph.resize(width, height);
+          }
         }
       });
     };
@@ -62,14 +66,14 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
     return () => {
       window.removeEventListener('resize', handler);
     };
-  }, [flowGraph, wrapperRef]);
+  }, [grapher, wrapperRef]);
 
-  const fetchData = (flowGraph: Graph) => {
-    flowGraph.fromJSON({ cells: [] });
-  };
+  // const fetchData = (flowGraph: Graph) => {
+  //   flowGraph.fromJSON({ cells: [] });
+  // };
 
   return (
-    <GraphContext.Provider value={{ graph: flowGraph, store }}>
+    <GraphContext.Provider value={grapher}>
       <Layout>
         <div className={styles.liteflowEditorContainer} ref={wrapperRef}>
           <div className={styles.liteflowEditorGraph} ref={graphRef} />
