@@ -82,8 +82,8 @@ const registerEvents = (flowGraph: Graph): void => {
   });
   flowGraph.on('graph:addNodeOnEdge', (args: any) => {
     const { edge: currentEdge, node: droppingNode } = args;
-    let targetNode = currentEdge.getSourceNode();
-    let { model } = targetNode?.getData();
+    const targetNode = currentEdge.getSourceNode();
+    const { model } = targetNode?.getData();
     model.append(ELBuilder.createELNode(droppingNode.shape, model));
     history.push();
     flowGraph.trigger('model:change');
