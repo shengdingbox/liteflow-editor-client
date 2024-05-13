@@ -1,30 +1,49 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Graph, Edge } from '@antv/x6';
-import createFlowChart from './panels/flowGraph/createFlowChart';
+import createFlowChart from './graph/createFlowChart';
 import './buildinNodes';
-import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
 import GraphContext from './context/GraphContext';
 import Layout from './panels/layout';
 import styles from './index.module.less';
 import '@antv/x6/dist/x6.css';
+import { NodeComp, NodeData } from './types/node';
+import { Store, createStore } from './store/Store';
 
 interface IProps {
   onReady?: (graph: Graph) => void;
+  initSchema?: NodeData;
+  saveSchema?: (data: NodeData) => Promise<void>;
+  compGroups: Array<[string, NodeComp[]]>;
 }
 
+const defaultSchema = {
+  type: 'buildin/start',
+  children: [
+    { type: 'buildin/common', props: { node: 'a' } },
+    { type: 'buildin/common', props: { node: 'b' } },
+    { type: 'buildin/common', props: { node: 'c' } },
+  ],
+};
+
 const LiteFlowEditor: React.FC<IProps> = (props) => {
-  const { onReady } = props;
+  const { onReady, initSchema = defaultSchema } = props;
   const wrapperRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);
   const miniMapRef = useRef<HTMLDivElement>(null);
   const [flowGraph, setFlowChart] = useState<Graph>();
+  const [store, setStore] = useState<Store>();
 
   useEffect(() => {
     if (graphRef.current && miniMapRef.current) {
-      const flowGraph = createFlowChart(graphRef.current, miniMapRef.current);
+      const flowGraph = createFlowChart(
+        graphRef.current,
+        miniMapRef.current,
+        initSchema,
+      );
       onReady?.(flowGraph);
       fetchData(flowGraph);
       setFlowChart(flowGraph);
+      setStore(createStore(initSchema));
     }
   }, []);
 
@@ -50,15 +69,11 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   };
 
   return (
-    // @ts-ignore
-    <GraphContext.Provider // @ts-ignore
-      value={{ graph: flowGraph }}
-    >
-      <Layout flowGraph={flowGraph}>
+    <GraphContext.Provider value={{ graph: flowGraph, store }}>
+      <Layout>
         <div className={styles.liteflowEditorContainer} ref={wrapperRef}>
           <div className={styles.liteflowEditorGraph} ref={graphRef} />
           <div className={styles.liteflowEditorMiniMap} ref={miniMapRef} />
-          {flowGraph && <NodeEditorModal flowGraph={flowGraph} />}
         </div>
       </Layout>
     </GraphContext.Provider>

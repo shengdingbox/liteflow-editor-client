@@ -17,8 +17,8 @@ interface IBtnWidgetProps {
 }
 
 const makeBtnWidget = (options: IOptions) => {
-  const Widget: React.FC<IBtnWidgetProps> = () => {
-    const flowGraph = useGraph();
+  const Widget: React.FC<IBtnWidgetProps> = (props) => {
+    const { flowGraph } = props;
     const { tooltip, getIcon, handler } = options;
     const iconWrapperCls = [styles.btnWidget];
     let { disabled = false, selected = false } = options;

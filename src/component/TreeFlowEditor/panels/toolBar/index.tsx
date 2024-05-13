@@ -4,20 +4,22 @@ import widgets from './widgets';
 import { useGraph } from '../../hooks';
 import styles from './index.module.less';
 
-interface IProps {
-  flowGraph: Graph;
-}
+interface IProps {}
 
 const ToolBar: React.FC<IProps> = () => {
-  const flowGraph: Graph = useGraph();
+  const flowGraph = useGraph();
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
 
   useEffect(() => {
-    flowGraph.on('toolBar:forceUpdate', forceUpdate);
+    flowGraph?.on('toolBar:forceUpdate', forceUpdate);
     return () => {
-      flowGraph.off('toolBar:forceUpdate');
+      flowGraph?.off('toolBar:forceUpdate');
     };
   }, [flowGraph]);
+
+  if (!flowGraph) {
+    return null;
+  }
 
   return (
     <div className={styles.liteflowEditorToolBarContainer}>

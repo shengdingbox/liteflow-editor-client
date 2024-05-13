@@ -34,7 +34,7 @@ const ZoomIn: React.FC<IProps> = makeBtnWidget({
 });
 
 const Zoom: React.FC<IProps> = (props) => {
-  const flowGraph = useGraph();
+  const { flowGraph } = props;
   const [scale, setScale] = useState<number>(flowGraph.zoom());
   useEffect(() => {
     const handleScale = () => {

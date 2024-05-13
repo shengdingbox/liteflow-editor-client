@@ -1,12 +1,13 @@
 import { Context, createContext, RefObject } from 'react';
 import { Graph } from '@antv/x6';
-import { NodeCompStore } from '../constant/Comp';
+import { Store } from '../store/Store';
 
 interface IGraphContext {
-  graph: Graph;
+  graph?: Graph;
+  store?: Store;
 }
 
-const defaultValue: IGraphContext = {} as any;
+const defaultValue: IGraphContext = {};
 
 export const GraphContext: Context<IGraphContext> = createContext(defaultValue);
 

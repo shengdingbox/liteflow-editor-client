@@ -15,11 +15,14 @@ const SettingBar: React.FC<IProps> = (props) => {
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
 
   useEffect(() => {
+    if (!flowGraph) {
+      return;
+    }
     flowGraph.on('settingBar:forceUpdate', forceUpdate);
     return () => {
       flowGraph.off('settingBar:forceUpdate');
     };
-  }, []);
+  }, [flowGraph]);
 
   return (
     <div className={styles.liteflowEditorSettingBarContainer}>
@@ -33,9 +36,7 @@ const SettingBar: React.FC<IProps> = (props) => {
           alignItems: 'center',
         }}
       >
-        <TabPane tab={'测试'} key={'basic'}>
-          <Basic flowGraph={flowGraph} />
-        </TabPane>
+        <TabPane tab={'测试'} key={'basic'}></TabPane>
       </Tabs>
     </div>
   );

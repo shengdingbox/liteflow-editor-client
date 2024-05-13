@@ -179,7 +179,7 @@ function createNode(node: NodeData) {
   return {
     view: 'react-shape-view',
     attrs: { label: { text: node.props?.node } },
-    shape: comp.shape,
+    shape: comp.metadata.type,
     id: generateNewId(),
     data: { toolbar: { delete: true } },
     zIndex: 1,

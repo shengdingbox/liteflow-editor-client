@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { findViewsFromPoint } from '../../common/events';
 import styles from './index.module.less';
 import { NodeComp } from '../../types/node';
+import { useGraph } from '../../hooks';
 
 const { Panel } = Collapse;
 
@@ -14,49 +15,50 @@ interface IGroupItem {
   cellTypes: LiteFlowNode[];
 }
 
-interface ISideBarProps {
-  flowGraph: Graph;
-  groups: Array<[string, NodeComp[]]>;
-}
+interface ISideBarProps {}
 
 const SideBar: React.FC<ISideBarProps> = (props) => {
-  const { flowGraph } = props;
+  const flowGraph = useGraph();
   const [groups, setGroups] = useState<IGroupItem[]>([]);
-  const dnd = useMemo(
-    () =>
-      new Addon.Dnd({
-        target: flowGraph,
-        scaled: true,
-        validateNode: (droppingNode: Node) => {
-          const position = droppingNode.getPosition();
-          const size = droppingNode.getSize();
-          const cellViewsFromPoint = findViewsFromPoint(
-            flowGraph,
-            position.x + size.width / 2,
-            position.y + size.height / 2,
-          );
-          const edgeViews =
-            cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) ||
-            [];
-          if (edgeViews && edgeViews.length) {
-            const currentEdge: Edge = flowGraph.getCellById(
-              edgeViews[0].cell.id,
-            ) as Edge;
-            flowGraph.trigger('graph:addNodeOnEdge', {
-              edge: currentEdge,
-              node: droppingNode,
-            });
-          }
-          return false;
-        },
-      }),
-    [flowGraph],
-  );
+  const dnd = useMemo(() => {
+    if (!flowGraph) {
+      // throw new Error('flowGraph is null');
+      return null;
+    }
+    return new Addon.Dnd({
+      target: flowGraph,
+      scaled: true,
+      validateNode: (droppingNode: Node) => {
+        const position = droppingNode.getPosition();
+        const size = droppingNode.getSize();
+        const cellViewsFromPoint = findViewsFromPoint(
+          flowGraph,
+          position.x + size.width / 2,
+          position.y + size.height / 2,
+        );
+        const edgeViews =
+          cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) || [];
+        if (edgeViews && edgeViews.length) {
+          const currentEdge: Edge = flowGraph.getCellById(
+            edgeViews[0].cell.id,
+          ) as Edge;
+          flowGraph.trigger('graph:addNodeOnEdge', {
+            edge: currentEdge,
+            node: droppingNode,
+          });
+        }
+        return false;
+      },
+    });
+  }, [flowGraph]);
 
   // life
   // useEffect(() => {
   //   setGroups([NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP]);
   // }, []);
+  if (!dnd) {
+    return null;
+  }
 
   return (
     <div className={styles.liteflowEditorSideBarContainer}>
