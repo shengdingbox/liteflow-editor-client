@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
 import { Graph, Edge, Cell, Node } from '@antv/x6';
 import createFlowGraph from './panels/flowGraph/createFlowGraph';
 import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
@@ -42,7 +48,10 @@ const defaultPadInfo: IPadInfo = {
   visible: false,
 };
 
-const LiteFlowEditor: React.FC<IProps> = (props) => {
+export default forwardRef<React.FC, IProps>(function LiteFlowEditor(
+  props,
+  ref,
+) {
   const { onReady } = props;
   const wrapperRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);
@@ -52,6 +61,17 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
     useState<IMenuInfo>(defaultMenuInfo);
   const [contextPadInfo, setContextPadInfo] =
     useState<IPadInfo>(defaultPadInfo);
+
+  useImperativeHandle(ref, () => {
+    return {
+      getGraphInstance() {
+        return flowGraph;
+      },
+      toJSON() {
+        return useModel().toJSON();
+      },
+    } as any;
+  });
 
   useEffect(() => {
     if (graphRef.current && miniMapRef.current) {
@@ -152,6 +172,4 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
       </Layout>
     </GraphContext.Provider>
   );
-};
-
-export default LiteFlowEditor;
+});
