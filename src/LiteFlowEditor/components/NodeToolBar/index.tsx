@@ -55,7 +55,6 @@ const NodeToolBar: React.FC<{ node: Node }> = (props) => {
       onOk() {
         if (model.remove()) {
           history.push();
-          node.model?.graph?.trigger('model:change');
         }
       },
     });

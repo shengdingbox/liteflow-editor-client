@@ -87,7 +87,6 @@ export const shortcuts: { [key: string]: Shortcut } = {
               model?.remove?.();
             });
             history.push();
-            flowGraph.trigger('model:change');
           },
         });
       }

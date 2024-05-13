@@ -1,6 +1,7 @@
 import { Graph } from '@antv/x6';
 import { setModel, useModel } from './useModel';
 import ELBuilder from '../model/builder';
+import ELNode from '../model/node';
 
 export const history = {
   $historyStack: [] as any[],
@@ -17,7 +18,7 @@ export const history = {
   canUndo() {
     return this.$cursorIndex > 0;
   },
-  push(nextState: any) {
+  push(nextState: ELNode) {
     if (this.$historyStack.length > this.$cursorIndex + 1) {
       this.$historyStack.splice(
         this.$cursorIndex + 1,
@@ -26,11 +27,12 @@ export const history = {
     }
 
     if (nextState) {
-      this.$historyStack.push(nextState);
+      this.$historyStack.push(nextState.toJSON());
     } else {
       this.$historyStack.push(useModel().toJSON());
     }
     this.$cursorIndex++;
+    this.$graph.trigger('model:change');
     this.$graph.trigger('toolBar:forceUpdate');
     this.$graph.trigger('settingBar:forceUpdate');
   },
@@ -55,6 +57,7 @@ export const history = {
   cleanHistory() {
     this.$historyStack = [useModel().toJSON()];
     this.$cursorIndex = 0;
+    this.$graph.trigger('model:change');
     this.$graph.trigger('toolBar:forceUpdate');
     this.$graph.trigger('settingBar:forceUpdate');
   },

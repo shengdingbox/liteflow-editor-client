@@ -61,7 +61,6 @@ const FlowGraphContextPad: React.FC<IProps> = (props) => {
           model.append(ELBuilder.createELNode(cellType.type, model));
         }
         history.push();
-        flowGraph.trigger('model:change');
       }
 
       onClickAway();

@@ -86,7 +86,6 @@ const registerEvents = (flowGraph: Graph): void => {
     const { model } = targetNode?.getData();
     model.append(ELBuilder.createELNode(droppingNode.shape, model));
     history.push();
-    flowGraph.trigger('model:change');
   });
 };
 

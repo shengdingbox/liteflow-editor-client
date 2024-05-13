@@ -59,7 +59,6 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             let { model } = currentNode.getData<INodeData>() || {};
             model?.replace(ELBuilder.createELNode(droppingNode.shape as any));
             history.push();
-            flowGraph.trigger('model:change');
           }
           return false;
         },

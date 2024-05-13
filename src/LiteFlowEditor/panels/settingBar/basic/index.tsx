@@ -26,7 +26,6 @@ const Basic: React.FC<IProps> = (props) => {
     const model = ELBuilder.build(mockData);
     setModel(model);
     history.cleanHistory();
-    flowGraph.trigger('model:change');
     setELString(model.toEL());
     setSelectedValue(value);
   };
@@ -36,7 +35,6 @@ const Basic: React.FC<IProps> = (props) => {
     const model = ELBuilder.build(mockData);
     setModel(model);
     history.cleanHistory();
-    flowGraph.trigger('model:change');
     setELString(model.toEL());
 
     const modelJSON = model.toCells() as Cell[];
