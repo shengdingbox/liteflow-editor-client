@@ -48,10 +48,7 @@ const defaultPadInfo: IPadInfo = {
   visible: false,
 };
 
-export default forwardRef<React.FC, IProps>(function LiteFlowEditor(
-  props,
-  ref,
-) {
+const LiteFlowEditor = forwardRef<React.FC, IProps>(function (props, ref) {
   const { onReady } = props;
   const wrapperRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);
@@ -173,3 +170,5 @@ export default forwardRef<React.FC, IProps>(function LiteFlowEditor(
     </GraphContext.Provider>
   );
 });
+
+export default LiteFlowEditor;
