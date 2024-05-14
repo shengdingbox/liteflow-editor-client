@@ -5,7 +5,7 @@ import { NodeComp } from '../types/node';
 const config: NodeComp = {
   metadata: {
     label: '结束',
-    type: 'buildin/end',
+    type: 'BUILDIN/END',
     icon,
   },
 };

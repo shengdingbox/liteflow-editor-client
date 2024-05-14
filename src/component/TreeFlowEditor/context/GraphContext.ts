@@ -1,17 +1,19 @@
 import { Context, createContext, RefObject } from 'react';
 import { Graph } from '@antv/x6';
 import { Store } from '../store/Store';
-import createFlowChart from '../graph/createFlowChart';
-import { NodeData } from '../types/node';
+import createFlowChart, { bindKeyboards } from '../graph/createFlowChart';
+import { NodeComp, NodeData } from '../types/node';
 import { autorun } from 'mobx';
 import { toGraphJson } from '../model/model';
 import { forceLayout } from '../common/layout';
+import registerEvents from '../common/events';
 
 interface GrapherOpts {
   container: HTMLDivElement;
   miniMapContainer: HTMLDivElement;
   initSchema: NodeData;
   onSave?: (data: NodeData) => Promise<void>;
+  compGroups?: Array<[string, NodeComp[]]>;
 }
 
 export class Grapher {
@@ -27,8 +29,11 @@ export class Grapher {
     this.flowGraph = createFlowChart(
       opts.container,
       opts.miniMapContainer,
-      this.store,
+      opts.compGroups,
     );
+    bindKeyboards(this);
+    registerEvents(this);
+
     this.onSave = opts.onSave;
     autorun(() => {
       if (!this.store) {

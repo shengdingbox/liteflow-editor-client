@@ -7,16 +7,18 @@ import ToolBar from '../toolBar';
 import SettingBar from '../settingBar';
 import styles from './index.module.less';
 import { useGraph } from '../../hooks';
+import { NodeComp } from '../../types/node';
 
-interface IProps {}
+interface IProps {
+  compGroups?: Array<[string, NodeComp[]]>;
+}
 
 const Layout: React.FC<IProps> = (props) => {
-  const { children } = props;
+  const { compGroups, children } = props;
 
-  let sideBar, toolBar, settingBar;
-  sideBar = <SideBar />;
-  toolBar = <ToolBar />;
-  settingBar = <SettingBar />;
+  const sideBar = <SideBar key="siderBar" compGroups={compGroups} />;
+  const toolBar = <ToolBar />;
+  const settingBar = <SettingBar key="settingBar" />;
 
   return (
     <div className={styles.liteflowEditorLayoutContainer}>

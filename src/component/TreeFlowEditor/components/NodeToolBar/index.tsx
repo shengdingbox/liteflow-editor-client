@@ -3,8 +3,10 @@ import { debounce } from 'lodash';
 import { Modal, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import styles from './index.module.less';
+import { useGrapher } from '../../hooks/useGraph';
 
 const NodeToolBar: React.FC<any> = (props) => {
+  const grapher = useGrapher();
   const { node } = props;
   const nodeId = node.id;
   const {
@@ -15,16 +17,9 @@ const NodeToolBar: React.FC<any> = (props) => {
     },
   } = node.getData() || {};
   const onDelete = debounce(() => {
-    Modal.confirm({
-      title: `确认要删除节点${nodeId}？`,
-      content: '点击确认按钮进行删除，点击取消按钮返回',
-      onOk() {
-        if (model.remove()) {
-          node.model?.graph.trigger('model:change');
-        }
-      },
-    });
+    grapher.store.removeNode(nodeId);
   }, 100);
+
   return (
     <div className={classNames(styles.liteflowNodeToolBar)}>
       {(toolbar.replace || toolbar.delete) && (

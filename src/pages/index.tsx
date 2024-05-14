@@ -1,37 +1,28 @@
 import { Graph } from '@antv/x6';
 import TreeFlowEditor from '../component/TreeFlowEditor';
 import styles from './index.less';
-
-const onReady = (flowGraph: Graph): void => {
-  console.log(flowGraph);
-};
+import { compGroups } from './comps/groups';
 
 const initSchema = {
-  type: 'buildin/start',
+  id: 'start',
+  type: 'BUILDIN/START',
   children: [
     {
-      type: 'buildin/common',
-      props: {
-        node: 'a',
-      },
       id: 'i1r6iz2qd7d',
+      type: 'BUILDIN/COMMON',
+      props: { node: 'a' },
     },
     {
-      type: 'buildin/common',
-      props: {
-        node: 'b',
-      },
       id: '3xqfj3psj4r',
+      type: 'BUILDIN/COMMON',
+      props: { node: 'b' },
     },
     {
-      type: 'buildin/common',
-      props: {
-        node: 'c',
-      },
       id: '1nq1eu2gl0l',
+      type: 'BUILDIN/COMMON',
+      props: { node: 'c' },
     },
   ],
-  id: 'deuq00k39gd',
 };
 
 export default function IndexPage() {
@@ -39,7 +30,7 @@ export default function IndexPage() {
     <div className={styles.container}>
       <TreeFlowEditor
         initSchema={initSchema}
-        onReady={onReady}
+        compGroups={compGroups}
         onSave={async (data) => {
           console.log('====save data', data);
         }}

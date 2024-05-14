@@ -16,7 +16,7 @@ interface IProps {
 
 const tools: React.FC<IProps>[][] = [
   [Zoom],
-  [FitWindow, Undo, Redo, Selection, Save, View],
+  [FitWindow, Undo, Redo, Selection, Save, View, Layout],
 ];
 
 export default tools;

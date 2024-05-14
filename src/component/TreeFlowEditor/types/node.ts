@@ -9,7 +9,7 @@ export interface NodeComp {
     multipleType?: 'if' | 'switch' | 'when';
   };
 
-  defaults?: Array<Omit<NodeData, 'id'>>;
+  defaults?: Array<Omit<NodeData, 'id' | 'type'>>;
 }
 
 export interface NodeData {

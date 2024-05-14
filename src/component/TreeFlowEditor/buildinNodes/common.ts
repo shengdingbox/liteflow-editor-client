@@ -3,7 +3,7 @@ import { NodeComp } from '../types/node';
 
 const config: NodeComp = {
   metadata: {
-    type: 'buildin/common',
+    type: 'BUILDIN/COMMON',
     icon,
   },
 };

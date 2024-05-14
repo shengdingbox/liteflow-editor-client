@@ -1,90 +1,97 @@
-import ReactDOM from 'react-dom';
-import { Button } from 'antd';
 import { Cell, Graph } from '@antv/x6';
 import '@antv/x6-react-shape';
+import { Button } from 'antd';
+import ReactDOM from 'react-dom';
 // import { debounce } from 'lodash';
-import shortcuts from '../common/shortcuts';
-import registerEvents from '../common/events';
-import { NODE_WIDTH, NODE_HEIGHT } from '../constant';
-import NodeView from '../components/NodeView';
-import {
-  MIN_ZOOM,
-  MAX_ZOOM,
-  LITEFLOW_EDGE,
-  LITEFLOW_ROUTER,
-  LITEFLOW_ANCHOR,
-} from '../constant';
-import MiniMapSimpleNode from '../panels/flowGraph/miniMapSimpleNode';
+import liteflowAnchor from '../common/anchor';
 import liteflowEdge from '../common/edge';
 import liteflowRouter from '../common/router';
-import liteflowAnchor from '../common/anchor';
+import shortcuts from '../common/shortcuts';
+import NodeView from '../components/NodeView';
+import {
+  LITEFLOW_ANCHOR,
+  LITEFLOW_EDGE,
+  LITEFLOW_ROUTER,
+  MAX_ZOOM,
+  MIN_ZOOM,
+  NODE_HEIGHT,
+  NODE_WIDTH,
+} from '../constant';
+import MiniMapSimpleNode from '../panels/flowGraph/miniMapSimpleNode';
 
-import Start from '../buildinNodes/start';
-import End from '../buildinNodes/end';
 import Common from '../buildinNodes/common';
+import End from '../buildinNodes/end';
 import MultipleEnd from '../buildinNodes/multiple-end';
 import MultiplePlaceholder from '../buildinNodes/multiple-placeholder';
+import Start from '../buildinNodes/start';
 import { NodeCompStore } from '../constant/Comp';
-import { NodeData } from '../types/node';
-import { toGraphJson } from '../model/model';
-import { forceLayout } from '../common/layout';
+import { Grapher } from '../context/GraphContext';
 import { Store } from '../store/Store';
+import { NodeComp } from '../types/node';
 
 Graph.registerEdge(LITEFLOW_EDGE, liteflowEdge);
 Graph.registerRouter(LITEFLOW_ROUTER, liteflowRouter);
 Graph.registerAnchor(LITEFLOW_ANCHOR, liteflowAnchor);
 
-[Start, End, Common, MultipleEnd, MultiplePlaceholder].forEach((nodeComp) => {
-  // 注册AntV X6节点
-  const { type, label, icon } = nodeComp.metadata;
-  Graph.registerNode(type, {
-    primer: 'circle',
-    inherit: 'react-shape',
-    component(node: any) {
-      return <NodeView node={node} icon={icon} />;
-    },
-    width: NODE_WIDTH,
-    height: NODE_HEIGHT,
-    attrs: {
-      label: {
-        refX: 0.5,
-        refY: '100%',
-        refY2: 20,
-        text: label,
-        fill: '#333',
-        fontSize: 13,
-        textAnchor: 'middle',
-        textVerticalAnchor: 'middle',
-        textWrap: {
-          width: 80,
-          height: 32,
-          ellipsis: true,
-          breakWord: true,
+function registerNodes(compGroups: Array<[string, NodeComp[]]>) {
+  const allComps = [Start, End, Common, MultipleEnd, MultiplePlaceholder];
+  compGroups.forEach((g) => {
+    allComps.push(...g[1]);
+  });
+
+  allComps.forEach((nodeComp) => {
+    // 注册AntV X6节点
+    const { type, label, icon } = nodeComp.metadata;
+    Graph.registerNode(type, {
+      primer: 'circle',
+      inherit: 'react-shape',
+      component(node: any) {
+        return <NodeView node={node} icon={icon} />;
+      },
+      width: NODE_WIDTH,
+      height: NODE_HEIGHT,
+      attrs: {
+        label: {
+          refX: 0.5,
+          refY: '100%',
+          refY2: 20,
+          text: label,
+          fill: '#333',
+          fontSize: 13,
+          textAnchor: 'middle',
+          textVerticalAnchor: 'middle',
+          textWrap: {
+            width: 80,
+            height: 32,
+            ellipsis: true,
+            breakWord: true,
+          },
         },
       },
-    },
-    // ...node,
+      // ...node,
+    });
+
+    Graph.registerReactComponent(type, function component(node: any) {
+      return <NodeView node={node} icon={icon} />;
+    });
+
+    NodeCompStore.registerNode(nodeComp);
   });
+}
 
-  Graph.registerReactComponent(type, function component(node: any) {
-    return <NodeView node={node} icon={icon} />;
-  });
-
-  NodeCompStore.registerNode(nodeComp);
-});
-
-const bindKeyboards = (flowGraph: Graph): void => {
+export const bindKeyboards = (grapher: Grapher): void => {
   Object.values(shortcuts).forEach((shortcut) => {
     const { keys, handler } = shortcut;
-    flowGraph.bindKey(keys, () => handler(flowGraph));
+    grapher.flowGraph.bindKey(keys, () => handler(grapher));
   });
 };
 
 const createFlowChart = (
   container: HTMLDivElement,
   miniMapContainer: HTMLDivElement,
-  store: Store,
+  compGroups?: Array<[string, NodeComp[]]>,
 ): Graph => {
+  registerNodes(compGroups || []);
   const flowGraph = new Graph({
     autoResize: true,
     container,
@@ -251,8 +258,6 @@ const createFlowChart = (
     // },
     interacting: true,
   });
-  registerEvents(flowGraph);
-  bindKeyboards(flowGraph);
 
   return flowGraph;
 };

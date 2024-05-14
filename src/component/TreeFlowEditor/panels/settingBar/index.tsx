@@ -3,15 +3,14 @@ import { Graph } from '@antv/x6';
 import { Tabs } from 'antd';
 import Basic from './basic';
 import styles from './index.module.less';
+import { useGraph } from '../../hooks';
 
 const { TabPane } = Tabs;
 
-interface IProps {
-  flowGraph: Graph;
-}
+interface IProps {}
 
 const SettingBar: React.FC<IProps> = (props) => {
-  const { flowGraph } = props;
+  const flowGraph = useGraph();
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
 
   useEffect(() => {

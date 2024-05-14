@@ -1,13 +1,15 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Graph, Edge } from '@antv/x6';
-// import createFlowChart from './graph/createFlowChart';
+import { Graph } from '@antv/x6';
+import { Portal } from '@antv/x6-react-shape';
+import React, { useEffect, useRef, useState } from 'react';
+
+import '@antv/x6/dist/x6.css';
 import './buildinNodes';
 import GraphContext, { Grapher } from './context/GraphContext';
-import Layout from './panels/layout';
 import styles from './index.module.less';
-import '@antv/x6/dist/x6.css';
+import Layout from './panels/layout';
 import { NodeComp, NodeData } from './types/node';
-// import { Store, createStore } from './store/Store';
+
+const X6ReactPortalProvider = Portal.getProvider();
 
 interface IProps {
   initSchema?: NodeData;
@@ -17,16 +19,13 @@ interface IProps {
 }
 
 const defaultSchema = {
-  type: 'buildin/start',
-  children: [
-    { type: 'buildin/common', props: { node: 'a' } },
-    { type: 'buildin/common', props: { node: 'b' } },
-    { type: 'buildin/common', props: { node: 'c' } },
-  ],
+  id: 'start',
+  type: 'BUILDIN/START',
+  children: [],
 };
 
 const LiteFlowEditor: React.FC<IProps> = (props) => {
-  const { onReady, initSchema = defaultSchema, onSave } = props;
+  const { onReady, initSchema = defaultSchema, onSave, compGroups } = props;
   const wrapperRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);
   const miniMapRef = useRef<HTMLDivElement>(null);
@@ -39,6 +38,7 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
         miniMapContainer: miniMapRef.current,
         initSchema,
         onSave,
+        compGroups,
       });
       setGrapher(grapher);
       onReady?.(grapher.flowGraph!);
@@ -66,7 +66,8 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
 
   return (
     <GraphContext.Provider value={grapher}>
-      <Layout>
+      <X6ReactPortalProvider />
+      <Layout compGroups={compGroups}>
         <div className={styles.liteflowEditorContainer} ref={wrapperRef}>
           <div className={styles.liteflowEditorGraph} ref={graphRef} />
           <div className={styles.liteflowEditorMiniMap} ref={miniMapRef} />

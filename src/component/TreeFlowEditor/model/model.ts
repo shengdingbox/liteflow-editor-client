@@ -12,7 +12,7 @@ function nodeToCells(
 ): string {
   let preNodeId = pre?.nodeId;
   const comp = NodeCompStore.getNode(node.type);
-  const curNode = pre ? createNode(node) : createVirtualNode('buildin/start');
+  const curNode = pre ? createNode(node) : createVirtualNode('BUILDIN/START');
   cells.push(curNode);
   if (pre?.nodeId) {
     cells.push(
@@ -79,7 +79,7 @@ function nodeToCells(
 export function toGraphJson(node: NodeData): any {
   const cells: Array<Record<string, any>> = [];
   const lastNodeId = nodeToCells(node, cells);
-  const endNode = createVirtualNode('buildin/end');
+  const endNode = createVirtualNode('BUILDIN/END');
   cells.push(endNode);
   cells.push(createEdge(lastNodeId, 'out', endNode.id, 'in'));
 

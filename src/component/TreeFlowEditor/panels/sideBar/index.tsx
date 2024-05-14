@@ -4,22 +4,18 @@ import { Addon, Edge, Graph, Node } from '@antv/x6';
 import classNames from 'classnames';
 import { findViewsFromPoint } from '../../common/events';
 import styles from './index.module.less';
-import { NodeComp } from '../../types/node';
+import { NodeComp, NodeData } from '../../types/node';
 import { useGraph } from '../../hooks';
+import commonIcon from '../../assets/common-icon.svg';
 
-const { Panel } = Collapse;
-
-interface IGroupItem {
-  key: string;
-  name: string;
-  cellTypes: LiteFlowNode[];
+interface ISideBarProps {
+  compGroups?: Array<[string, NodeComp[]]>;
 }
 
-interface ISideBarProps {}
-
 const SideBar: React.FC<ISideBarProps> = (props) => {
+  const { compGroups } = props;
   const flowGraph = useGraph();
-  const [groups, setGroups] = useState<IGroupItem[]>([]);
+  // const [groups, setGroups] = useState<IGroupItem[]>([]);
   const dnd = useMemo(() => {
     if (!flowGraph) {
       // throw new Error('flowGraph is null');
@@ -56,7 +52,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
   // useEffect(() => {
   //   setGroups([NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP]);
   // }, []);
-  if (!dnd) {
+  if (!dnd || !compGroups) {
     return null;
   }
 
@@ -64,12 +60,12 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
     <div className={styles.liteflowEditorSideBarContainer}>
       <Collapse
         className={styles.liteflowEditorSideBarCollapse}
-        defaultActiveKey={['node', 'sequence', 'branch', 'control']}
+        defaultActiveKey={compGroups.map((g, i) => i)}
       >
-        {groups.map((group) => (
-          <Panel key={group.key} header={group.name}>
-            <PanelContent dnd={dnd} cellTypes={group.cellTypes} />
-          </Panel>
+        {compGroups.map((group, i) => (
+          <Collapse.Panel key={i} header={group[0]}>
+            <PanelContent dnd={dnd} nodeComps={group[1]} />
+          </Collapse.Panel>
         ))}
       </Collapse>
     </div>
@@ -87,36 +83,32 @@ const View: React.FC<any> = (props) => {
 
 interface IPanelContentProps {
   dnd: Addon.Dnd;
-  cellTypes: LiteFlowNode[];
+  nodeComps: NodeComp[];
 }
 
 const PanelContent: React.FC<IPanelContentProps> = (props) => {
-  const { dnd, cellTypes } = props;
-  const onMouseDown = (evt: any, cellType: string) => {
-    dnd.start(Node.create({ shape: cellType }), evt);
+  const { dnd, nodeComps } = props;
+  const onMouseDown = (evt: any, node: NodeComp) => {
+    dnd.start(Node.create({ data: { node } }), evt);
   };
   return (
     <div className={styles.liteflowEditorSideBarPanelContent}>
-      {cellTypes.map((cellType, index) => {
+      {nodeComps.map((comp, index) => {
         return (
           <div
             key={index}
-            className={classNames(styles.liteflowEditorSideBarCellContainer, {
-              [styles.disabled]: cellType.disabled,
-            })}
+            className={styles.liteflowEditorSideBarCellContainer}
           >
             <div className={styles.liteflowEditorSideBarCellWrapper}>
               <View
-                icon={cellType.icon}
+                icon={comp.metadata.icon || commonIcon}
                 onMouseDown={(evt: any) => {
-                  if (!cellType.disabled) {
-                    onMouseDown(evt, cellType.type);
-                  }
+                  onMouseDown(evt, comp);
                 }}
               />
             </div>
             <p className={styles.liteflowEditorSideBarCellTitle}>
-              {cellType.label}
+              {comp.metadata.label}
             </p>
           </div>
         );

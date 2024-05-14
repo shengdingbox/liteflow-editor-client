@@ -1,7 +1,7 @@
 import { makeObservable, action, transaction, autorun } from 'mobx';
 import { HistoryStore } from './HistoryStore';
-import { NodeData } from '../types/node';
-import { travelNode } from './travel';
+import { NodeComp, NodeData } from '../types/node';
+import { deleteNodeById, insertNode, travelNode, travelNode2 } from './travel';
 
 interface DocumentModel {
   data: NodeData;
@@ -9,9 +9,9 @@ interface DocumentModel {
 
 export class Store extends HistoryStore<DocumentModel> {
   constructor(initData: NodeData) {
-    for (const node of travelNode(initData)) {
-      if (!node.id) {
-        node.id = generateNewId();
+    for (const nodeInfo of travelNode(initData)) {
+      if (!nodeInfo.current.id) {
+        nodeInfo.current.id = generateNewId();
       }
     }
     super({
@@ -22,7 +22,11 @@ export class Store extends HistoryStore<DocumentModel> {
 
   // just for this example
   @action removeNode(id: string) {
-    this.document.data.children?.splice(0, 1);
+    deleteNodeById(this.document.data, id);
+  }
+
+  @action insertNode(sourceId: string, targetId: string, node: NodeComp) {
+    insertNode(this.document.data, sourceId, targetId, node);
   }
 }
 

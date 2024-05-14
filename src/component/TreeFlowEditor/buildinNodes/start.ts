@@ -4,7 +4,7 @@ import { NodeComp } from '../types/node';
 const config: NodeComp = {
   metadata: {
     label: '开始',
-    type: 'buildin/start',
+    type: 'BUILDIN/START',
     icon,
     childrenType: 'then',
   },
