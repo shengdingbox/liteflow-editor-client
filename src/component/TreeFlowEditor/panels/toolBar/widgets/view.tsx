@@ -3,16 +3,16 @@ import { Graph } from '@antv/x6';
 import React from 'react';
 import { Modal } from 'antd';
 import JsonView from 'react-json-view';
-
+import { Grapher } from '../../../context/GraphContext';
 import makeBtnWidget from './common/makeBtnWidget';
 
 interface IProps {
-  flowGraph: Graph;
+  grapher: Grapher;
 }
 
 const View: React.FC<IProps> = makeBtnWidget({
   tooltip: '查看DSL',
-  handler(flowGraph: Graph) {
+  handler(grapher: Grapher) {
     Modal.info({
       title: '查看DSL',
       width: 1000,
@@ -25,16 +25,15 @@ const View: React.FC<IProps> = makeBtnWidget({
           enableClipboard={true}
           displayDataTypes={false}
           displayObjectSize={false}
-          src={flowGraph.toJSON()}
+          src={grapher.store.document.data}
         />
       ),
     });
-    console.log(JSON.stringify(flowGraph.toJSON(), null, 2));
   },
   getIcon() {
     return <EyeOutlined />;
   },
-  disabled(flowGraph: Graph) {
+  disabled(grapher: Grapher) {
     return false;
   },
 });

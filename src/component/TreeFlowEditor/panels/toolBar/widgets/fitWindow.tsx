@@ -2,10 +2,11 @@ import React from 'react';
 
 import { Graph } from '@antv/x6';
 import makeBtnWidget from './common/makeBtnWidget';
+import { Grapher } from '../../../context/GraphContext';
 import { FullscreenExitOutlined } from '@ant-design/icons';
 
 interface IProps {
-  flowGraph: Graph;
+  grapher: Grapher;
 }
 
 const FitWindow: React.FC<IProps> = makeBtnWidget({
@@ -13,8 +14,8 @@ const FitWindow: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <FullscreenExitOutlined />;
   },
-  handler(flowGraph: Graph) {
-    flowGraph.zoomToFit({ minScale: 0.5, maxScale: 1 });
+  handler(grapher: Grapher) {
+    grapher.flowGraph.zoomToFit({ minScale: 0.5, maxScale: 1 });
   },
 });
 

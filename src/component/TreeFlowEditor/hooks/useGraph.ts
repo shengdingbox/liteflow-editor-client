@@ -5,3 +5,7 @@ export const useGraph = () => {
   const grapher = useContext(GraphContext);
   return grapher.flowGraph;
 };
+
+export const useGrapher = () => {
+  return useContext(GraphContext);
+};

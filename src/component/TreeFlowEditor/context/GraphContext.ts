@@ -7,26 +7,29 @@ import { autorun } from 'mobx';
 import { toGraphJson } from '../model/model';
 import { forceLayout } from '../common/layout';
 
+interface GrapherOpts {
+  container: HTMLDivElement;
+  miniMapContainer: HTMLDivElement;
+  initSchema: NodeData;
+  onSave?: (data: NodeData) => Promise<void>;
+}
+
 export class Grapher {
   flowGraph!: Graph;
   store!: Store;
+  onSave?: (data: NodeData) => Promise<void>;
 
-  constructor();
-  constructor(
-    container: HTMLDivElement,
-    miniMapContainer: HTMLDivElement,
-    initSchema: NodeData,
-  );
-  constructor(
-    container?: HTMLDivElement,
-    miniMapContainer?: HTMLDivElement,
-    initSchema?: NodeData,
-  ) {
-    if (!container || !miniMapContainer || !initSchema) {
+  constructor(opts?: GrapherOpts) {
+    if (!opts) {
       return;
     }
-    this.store = new Store(initSchema);
-    this.flowGraph = createFlowChart(container, miniMapContainer, this.store);
+    this.store = new Store(opts.initSchema);
+    this.flowGraph = createFlowChart(
+      opts.container,
+      opts.miniMapContainer,
+      this.store,
+    );
+    this.onSave = opts.onSave;
     autorun(() => {
       if (!this.store) {
         return;

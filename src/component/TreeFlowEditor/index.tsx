@@ -1,19 +1,19 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Graph, Edge } from '@antv/x6';
-import createFlowChart from './graph/createFlowChart';
+// import createFlowChart from './graph/createFlowChart';
 import './buildinNodes';
 import GraphContext, { Grapher } from './context/GraphContext';
 import Layout from './panels/layout';
 import styles from './index.module.less';
 import '@antv/x6/dist/x6.css';
 import { NodeComp, NodeData } from './types/node';
-import { Store, createStore } from './store/Store';
+// import { Store, createStore } from './store/Store';
 
 interface IProps {
-  onReady?: (graph: Graph) => void;
   initSchema?: NodeData;
-  saveSchema?: (data: NodeData) => Promise<void>;
-  compGroups: Array<[string, NodeComp[]]>;
+  onReady?: (graph: Graph) => void;
+  onSave?: (data: NodeData) => Promise<void>;
+  compGroups?: Array<[string, NodeComp[]]>;
 }
 
 const defaultSchema = {
@@ -26,26 +26,22 @@ const defaultSchema = {
 };
 
 const LiteFlowEditor: React.FC<IProps> = (props) => {
-  const { onReady, initSchema = defaultSchema } = props;
+  const { onReady, initSchema = defaultSchema, onSave } = props;
   const wrapperRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);
   const miniMapRef = useRef<HTMLDivElement>(null);
   const [grapher, setGrapher] = useState<Grapher>(new Grapher());
-  // const [store, setStore] = useState<Store>();
-  // const store = createStore(initSchema);
 
   useEffect(() => {
     if (graphRef.current && miniMapRef.current) {
-      const grapher = new Grapher(
-        graphRef.current,
-        miniMapRef.current,
+      const grapher = new Grapher({
+        container: graphRef.current,
+        miniMapContainer: miniMapRef.current,
         initSchema,
-      );
+        onSave,
+      });
       setGrapher(grapher);
       onReady?.(grapher.flowGraph!);
-      // fetchData(flowGraph);
-      // setFlowChart(flowGraph);
-      // setStore(createStore(initSchema));
     }
   }, []);
 
@@ -67,10 +63,6 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
       window.removeEventListener('resize', handler);
     };
   }, [grapher, wrapperRef]);
-
-  // const fetchData = (flowGraph: Graph) => {
-  //   flowGraph.fromJSON({ cells: [] });
-  // };
 
   return (
     <GraphContext.Provider value={grapher}>

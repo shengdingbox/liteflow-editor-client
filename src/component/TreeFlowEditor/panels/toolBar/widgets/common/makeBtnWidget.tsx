@@ -2,43 +2,48 @@ import React, { ReactElement } from 'react';
 import { Tooltip } from 'antd';
 import { Graph } from '@antv/x6';
 import styles from '../index.module.less';
-import { useGraph } from '../../../../hooks';
+import { Grapher } from '../../../../context/GraphContext';
 
 interface IOptions {
   tooltip: string;
   getIcon: (flowGraph: Graph) => ReactElement;
-  handler: (flowGraph: Graph) => void;
-  disabled?: (flowGraph: Graph) => boolean;
-  selected?: (flowGraph: Graph) => boolean;
+  handler: (grapher: Grapher) => void;
+  disabled?: (grapher: Grapher) => boolean;
+  selected?: (grapher: Grapher) => boolean;
 }
 
 interface IBtnWidgetProps {
-  flowGraph: Graph;
+  grapher: Grapher;
 }
 
 const makeBtnWidget = (options: IOptions) => {
   const Widget: React.FC<IBtnWidgetProps> = (props) => {
-    const { flowGraph } = props;
+    const grapher = props.grapher;
+
+    // if (!grapher.isReady()) {
+    //   return null;
+    // }
+
     const { tooltip, getIcon, handler } = options;
     const iconWrapperCls = [styles.btnWidget];
     let { disabled = false, selected = false } = options;
     if (typeof disabled === 'function') {
-      disabled = disabled(flowGraph);
+      disabled = disabled(grapher);
       disabled && iconWrapperCls.push(styles.disabled);
     }
     if (typeof selected === 'function') {
-      selected = selected(flowGraph);
+      selected = selected(grapher);
       selected && iconWrapperCls.push(styles.selected);
     }
     const onClick = (): void => {
       if (disabled) return;
-      handler(flowGraph);
-      flowGraph.trigger('toolBar:forceUpdate');
+      handler(grapher);
+      grapher.flowGraph.trigger('toolBar:forceUpdate');
     };
     return (
       <Tooltip title={tooltip}>
         <div className={iconWrapperCls.join(' ')} onClick={onClick}>
-          {getIcon(flowGraph)}
+          {getIcon(grapher.flowGraph)}
         </div>
       </Tooltip>
     );

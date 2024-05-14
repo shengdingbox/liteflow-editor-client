@@ -1,6 +1,7 @@
 import { makeObservable, action, transaction, autorun } from 'mobx';
 import { HistoryStore } from './HistoryStore';
 import { NodeData } from '../types/node';
+import { travelNode } from './travel';
 
 interface DocumentModel {
   data: NodeData;
@@ -8,6 +9,11 @@ interface DocumentModel {
 
 export class Store extends HistoryStore<DocumentModel> {
   constructor(initData: NodeData) {
+    for (const node of travelNode(initData)) {
+      if (!node.id) {
+        node.id = generateNewId();
+      }
+    }
     super({
       data: initData,
     });
@@ -26,4 +32,8 @@ export function createStore(initData: NodeData) {
     console.log(store.document.data);
   });
   return store;
+}
+
+export function generateNewId(): string {
+  return Math.random().toString(36).substring(2);
 }

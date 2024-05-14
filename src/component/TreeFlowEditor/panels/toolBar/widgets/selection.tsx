@@ -3,9 +3,10 @@ import React from 'react';
 import { Graph } from '@antv/x6';
 import makeBtnWidget from './common/makeBtnWidget';
 import { GatewayOutlined } from '@ant-design/icons';
+import { Grapher } from '../../../context/GraphContext';
 
 interface IProps {
-  flowGraph: Graph;
+  grapher: Grapher;
 }
 
 const ToggleSelection: React.FC<IProps> = makeBtnWidget({
@@ -13,18 +14,19 @@ const ToggleSelection: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <GatewayOutlined />;
   },
-  handler(flowGraph: Graph) {
-    const needEnableRubberBand: boolean = !flowGraph.isRubberbandEnabled();
+  handler(grapher: Grapher) {
+    const needEnableRubberBand: boolean =
+      !grapher.flowGraph.isRubberbandEnabled();
     if (needEnableRubberBand) {
-      flowGraph.disablePanning();
-      flowGraph.enableRubberband();
+      grapher.flowGraph.disablePanning();
+      grapher.flowGraph.enableRubberband();
     } else {
-      flowGraph.enablePanning();
-      flowGraph.disableRubberband();
+      grapher.flowGraph.enablePanning();
+      grapher.flowGraph.disableRubberband();
     }
   },
-  selected(flowGraph: Graph) {
-    return flowGraph.isRubberbandEnabled();
+  selected(grapher: Grapher) {
+    return grapher.flowGraph.isRubberbandEnabled();
   },
 });
 

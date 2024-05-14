@@ -3,22 +3,26 @@ import { Graph } from '@antv/x6';
 import widgets from './widgets';
 import { useGraph } from '../../hooks';
 import styles from './index.module.less';
+import { useGrapher } from '../../hooks/useGraph';
 
 interface IProps {}
 
 const ToolBar: React.FC<IProps> = () => {
-  const flowGraph = useGraph();
+  const grapher = useGrapher();
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
-  console.log('===flowGraph', flowGraph);
+  // console.log('===flowGraph', flowGraph);
 
   useEffect(() => {
-    flowGraph?.on('toolBar:forceUpdate', forceUpdate);
+    if (!grapher.isReady()) {
+      return;
+    }
+    grapher.flowGraph.on('toolBar:forceUpdate', forceUpdate);
     return () => {
-      flowGraph?.off('toolBar:forceUpdate');
+      grapher.flowGraph.off('toolBar:forceUpdate');
     };
-  }, [flowGraph]);
+  }, [grapher]);
 
-  if (!flowGraph) {
+  if (!grapher.isReady()) {
     return null;
   }
 
@@ -27,7 +31,7 @@ const ToolBar: React.FC<IProps> = () => {
       {widgets.map((group, index) => (
         <div key={index} className={styles.liteflowEditorToolBarGroup}>
           {group.map((ToolItem, index) => {
-            return <ToolItem key={index} flowGraph={flowGraph} />;
+            return <ToolItem key={index} grapher={grapher} />;
           })}
         </div>
       ))}

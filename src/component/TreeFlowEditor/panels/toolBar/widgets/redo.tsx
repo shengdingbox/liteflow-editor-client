@@ -1,12 +1,12 @@
+import { RedoOutlined } from '@ant-design/icons';
 import React from 'react';
 
-import { Graph } from '@antv/x6';
-import { RedoOutlined } from '@ant-design/icons';
 import shortcuts from '../../../common/shortcuts';
+import { Grapher } from '../../../context/GraphContext';
 import makeBtnWidget from './common/makeBtnWidget';
 
 interface IProps {
-  flowGraph: Graph;
+  grapher: Grapher;
 }
 
 const Save: React.FC<IProps> = makeBtnWidget({
@@ -15,8 +15,9 @@ const Save: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <RedoOutlined />;
   },
-  disabled(flowGraph: Graph) {
-    return !flowGraph.canRedo();
+  disabled(grapher: Grapher) {
+    const store = grapher.store;
+    return store.stack.length === store.pointer + 1;
   },
 });
 

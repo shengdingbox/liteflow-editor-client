@@ -13,7 +13,7 @@ export interface NodeComp {
 }
 
 export interface NodeData {
-  id?: string;
+  id: string;
   type: string;
   label?: string;
   props?: Record<string, any>;

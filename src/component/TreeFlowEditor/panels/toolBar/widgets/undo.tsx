@@ -4,9 +4,10 @@ import { Graph } from '@antv/x6';
 import { UndoOutlined } from '@ant-design/icons';
 import shortcuts from '../../../common/shortcuts';
 import makeBtnWidget from './common/makeBtnWidget';
+import { Grapher } from '../../../context/GraphContext';
 
 interface IProps {
-  flowGraph: Graph;
+  grapher: Grapher;
 }
 
 const Save: React.FC<IProps> = makeBtnWidget({
@@ -15,8 +16,8 @@ const Save: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <UndoOutlined />;
   },
-  disabled(flowGraph: Graph) {
-    return !flowGraph.canUndo();
+  disabled(grapher: Grapher) {
+    return grapher.store.pointer === -1;
   },
 });
 

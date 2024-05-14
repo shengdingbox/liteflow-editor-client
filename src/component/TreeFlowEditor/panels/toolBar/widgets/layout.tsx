@@ -1,25 +1,25 @@
 import { LayoutOutlined } from '@ant-design/icons';
 import { Graph } from '@antv/x6';
 import React from 'react';
-
+import { Grapher } from '../../../context/GraphContext';
 import makeBtnWidget from './common/makeBtnWidget';
 import { forceLayout } from '../../../common/layout';
 
 interface IProps {
-  flowGraph: Graph;
+  grapher: Grapher;
 }
 
 const Edit: React.FC<IProps> = makeBtnWidget({
   tooltip: '自动布局',
-  handler(flowGraph: Graph) {
-    flowGraph.startBatch('layout');
-    forceLayout(flowGraph);
-    flowGraph.stopBatch('layout');
+  handler(grapher: Grapher) {
+    grapher.flowGraph.startBatch('layout');
+    forceLayout(grapher.flowGraph);
+    grapher.flowGraph.stopBatch('layout');
   },
   getIcon() {
     return <LayoutOutlined />;
   },
-  disabled(flowGraph: Graph) {
+  disabled(grapher: Grapher) {
     return false;
   },
 });

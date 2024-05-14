@@ -6,9 +6,10 @@ import shortcuts from '../../../common/shortcuts';
 import makeBtnWidget from './common/makeBtnWidget';
 import { useGraph } from '../../../hooks';
 import styles from './index.module.less';
+import { Grapher } from '../../../context/GraphContext';
 
 interface IProps {
-  flowGraph: Graph;
+  grapher: Grapher;
 }
 
 const ZoomOut: React.FC<IProps> = makeBtnWidget({
@@ -17,8 +18,8 @@ const ZoomOut: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <ZoomOutOutlined />;
   },
-  disabled(flowGraph: Graph) {
-    return flowGraph.zoom() <= MIN_ZOOM;
+  disabled(grapher: Grapher) {
+    return grapher.flowGraph.zoom() <= MIN_ZOOM;
   },
 });
 
@@ -28,14 +29,14 @@ const ZoomIn: React.FC<IProps> = makeBtnWidget({
   getIcon() {
     return <ZoomInOutlined />;
   },
-  disabled(flowGraph: Graph) {
-    return flowGraph.zoom() >= MAX_ZOOM;
+  disabled(grapher: Grapher) {
+    return grapher.flowGraph.zoom() >= MAX_ZOOM;
   },
 });
 
 const Zoom: React.FC<IProps> = (props) => {
   const flowGraph = useGraph();
-  const [scale, setScale] = useState<number>(flowGraph.zoom());
+  const [scale, setScale] = useState<number>(flowGraph ? flowGraph.zoom() : 1);
   useEffect(() => {
     const handleScale = () => {
       setScale(flowGraph.zoom());

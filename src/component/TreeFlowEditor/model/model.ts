@@ -83,7 +83,7 @@ export function toGraphJson(node: NodeData): any {
   cells.push(endNode);
   cells.push(createEdge(lastNodeId, 'out', endNode.id, 'in'));
 
-  console.log('===cells', cells);
+  // console.log('===cells', cells);
   return cells;
 }
 
@@ -180,7 +180,7 @@ function createNode(node: NodeData) {
     view: 'react-shape-view',
     attrs: { label: { text: node.props?.node } },
     shape: comp.metadata.type,
-    id: generateNewId(),
+    id: node.id || generateNewId(),
     data: { toolbar: { delete: true } },
     zIndex: 1,
     ports,

@@ -38,7 +38,7 @@ const forceLDagreayout = (flowGraph: Graph, cfg: any = {}): void => {
     }), // @ts-ignore
     edges: flowGraph.getEdges().map((edge) => {
       edge.setZIndex(0);
-      console.log('===old', edge.toJSON());
+      // console.log('===old', edge.toJSON());
       return edge.toJSON();
     }),
   });
@@ -63,7 +63,7 @@ export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
     }), // @ts-ignore
     edges: flowGraph.getEdges().map((edge) => {
       edge.setZIndex(0);
-      console.log('===old', edge.toJSON());
+      // console.log('===old', edge.toJSON());
       return edge.toJSON();
     }),
   });

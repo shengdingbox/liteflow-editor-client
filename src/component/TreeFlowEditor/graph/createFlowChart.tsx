@@ -100,13 +100,7 @@ const createFlowChart = (
         if (label?.attrs?.label.text === '+') {
           ReactDOM.render(
             // @ts-ignore
-            <Button
-              size="small"
-              className="liteflow-edge-add-button"
-              onClick={() => {
-                store.removeNode('');
-              }}
-            >
+            <Button size="small" className="liteflow-edge-add-button">
               +
             </Button>,
             content,
