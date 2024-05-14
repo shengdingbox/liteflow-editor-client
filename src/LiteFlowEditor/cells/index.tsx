@@ -1,6 +1,11 @@
 import { Graph, Node } from '@antv/x6';
 import '@antv/x6-react-shape';
-import { NODE_WIDTH, NODE_HEIGHT } from '../constant';
+import {
+  NODE_WIDTH,
+  NODE_HEIGHT,
+  ConditionTypeEnum,
+  NodeTypeEnum,
+} from '../constant';
 /** AntV X6自定义节点 */
 // 开始 & 结束
 import { default as Start } from './start';
@@ -88,23 +93,32 @@ export interface IGroupItem {
 export const NODE_GROUP: IGroupItem = {
   key: 'node',
   name: '节点类',
-  cellTypes: [Virtual],
+  cellTypes: [{ ...Virtual, type: NodeTypeEnum.COMMON, shape: Virtual.type }],
 };
 
 export const SEQUENCE_GROUP: IGroupItem = {
   key: 'sequence',
   name: '顺序类',
-  cellTypes: [Common, When],
+  cellTypes: [
+    { ...Common, type: ConditionTypeEnum.THEN, shape: Common.type },
+    { ...When, type: ConditionTypeEnum.WHEN, shape: When.type },
+  ],
 };
 
 export const BRANCH_GROUP: IGroupItem = {
   key: 'branch',
   name: '分支类',
-  cellTypes: [Switch, If],
+  cellTypes: [
+    { ...Switch, type: ConditionTypeEnum.SWITCH, shape: Switch.type },
+    { ...If, type: ConditionTypeEnum.IF, shape: If.type },
+  ],
 };
 
 export const CONTROL_GROUP: IGroupItem = {
   key: 'control',
   name: '循环类',
-  cellTypes: [For, While],
+  cellTypes: [
+    { ...For, type: ConditionTypeEnum.FOR, shape: For.type },
+    { ...While, type: ConditionTypeEnum.WHILE, shape: While.type },
+  ],
 };

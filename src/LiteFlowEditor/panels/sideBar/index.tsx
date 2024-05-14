@@ -32,6 +32,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
         validateNode: (droppingNode: Node) => {
           const position = droppingNode.getPosition();
           const size = droppingNode.getSize();
+          const { node } = droppingNode.getData();
           const cellViewsFromPoint = findViewsFromPoint(
             flowGraph,
             position.x + size.width / 2,
@@ -46,7 +47,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             ) as Edge;
             flowGraph.trigger('graph:addNodeOnEdge', {
               edge: currentEdge,
-              node: droppingNode,
+              node: { shape: node.type },
             });
           }
           cellViews =
@@ -57,7 +58,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
               cellViews[0].cell.id,
             ) as Node;
             let { model } = currentNode.getData<INodeData>() || {};
-            model?.replace(ELBuilder.createELNode(droppingNode.shape as any));
+            model?.replace(ELBuilder.createELNode(node.type as any));
             history.push();
           }
           return false;
@@ -103,8 +104,8 @@ interface IPanelContentProps {
 
 const PanelContent: React.FC<IPanelContentProps> = (props) => {
   const { dnd, cellTypes } = props;
-  const onMouseDown = (evt: any, cellType: string) => {
-    dnd.start(Node.create({ shape: cellType }), evt);
+  const onMouseDown = (evt: any, node: LiteFlowNode) => {
+    dnd.start(Node.create({ shape: node.shape, data: { node } }), evt);
   };
   return (
     <div className={styles.liteflowEditorSideBarPanelContent}>
@@ -121,7 +122,7 @@ const PanelContent: React.FC<IPanelContentProps> = (props) => {
                 icon={cellType.icon}
                 onMouseDown={(evt: any) => {
                   if (!cellType.disabled) {
-                    onMouseDown(evt, cellType.type);
+                    onMouseDown(evt, cellType);
                   }
                 }}
               />

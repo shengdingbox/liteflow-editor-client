@@ -52,25 +52,26 @@ export default class ELBuilder {
   public static createELNode(
     type: ConditionTypeEnum | NodeTypeEnum,
     parent?: ELNode,
+    id?: string,
   ): ELNode {
     switch (type) {
       // 1. 编排类型
-      case NodeTypeEnum.COMMON:
+      case ConditionTypeEnum.THEN:
         return ThenOperator.create(parent);
       case ConditionTypeEnum.WHEN:
         return WhenOperator.create(parent);
-      case NodeTypeEnum.SWITCH:
+      case ConditionTypeEnum.SWITCH:
         return SwitchOperator.create(parent);
-      case NodeTypeEnum.IF:
+      case ConditionTypeEnum.IF:
         return IfOperator.create(parent);
-      case NodeTypeEnum.FOR:
+      case ConditionTypeEnum.FOR:
         return ForOperator.create(parent);
-      case NodeTypeEnum.WHILE:
+      case ConditionTypeEnum.WHILE:
         return WhileOperator.create(parent);
       // 2. 节点类型
       default:
         // return NodeOperator.create(parent, type as NodeTypeEnum);
-        return NodeOperator.create(parent, NodeTypeEnum.COMMON);
+        return NodeOperator.create(parent, NodeTypeEnum.COMMON, id);
     }
   }
 }

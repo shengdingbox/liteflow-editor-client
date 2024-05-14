@@ -13,6 +13,7 @@ declare interface LiteFlowNode {
   type: string;
   label: string;
   icon: string;
+  shape?: string;
   node?: any;
   disabled?: boolean;
 }
