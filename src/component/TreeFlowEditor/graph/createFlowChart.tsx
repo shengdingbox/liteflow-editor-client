@@ -24,7 +24,7 @@ import End from '../buildinNodes/end';
 import MultipleEnd from '../buildinNodes/multiple-end';
 import MultiplePlaceholder from '../buildinNodes/multiple-placeholder';
 import Start from '../buildinNodes/start';
-import { NodeCompStore } from '../constant/Comp';
+import { NodeCompStore } from '../store/CompStore';
 import { Grapher } from '../context/GraphContext';
 import { Store } from '../store/Store';
 import { NodeComp } from '../types/node';

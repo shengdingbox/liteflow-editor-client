@@ -1,6 +1,8 @@
 import React, { ReactElement } from 'react';
 import { Tooltip } from 'antd';
 import { Graph } from '@antv/x6';
+import { observer } from 'mobx-react-lite';
+import { toJS } from 'mobx';
 import styles from '../index.module.less';
 import { Grapher } from '../../../../context/GraphContext';
 
@@ -17,14 +19,10 @@ interface IBtnWidgetProps {
 }
 
 const makeBtnWidget = (options: IOptions) => {
+  const { tooltip, getIcon, handler } = options;
   const Widget: React.FC<IBtnWidgetProps> = (props) => {
     const grapher = props.grapher;
-
-    // if (!grapher.isReady()) {
-    //   return null;
-    // }
-
-    const { tooltip, getIcon, handler } = options;
+    toJS(grapher.store.document.data);
     const iconWrapperCls = [styles.btnWidget];
     let { disabled = false, selected = false } = options;
     if (typeof disabled === 'function') {
@@ -48,7 +46,7 @@ const makeBtnWidget = (options: IOptions) => {
       </Tooltip>
     );
   };
-  return Widget;
+  return observer(Widget);
 };
 
 export default makeBtnWidget;

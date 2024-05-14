@@ -1,7 +1,7 @@
 import { makeObservable, action, transaction, autorun } from 'mobx';
 import { HistoryStore } from './HistoryStore';
-import { NodeComp, NodeData } from '../types/node';
-import { deleteNodeById, insertNode, travelNode, travelNode2 } from './travel';
+import { NodeComp, NodeData, CellPosition } from '../types/node';
+import { deleteNodeById, insertNode, travelNode } from './travel';
 
 interface DocumentModel {
   data: NodeData;
@@ -25,8 +25,8 @@ export class Store extends HistoryStore<DocumentModel> {
     deleteNodeById(this.document.data, id);
   }
 
-  @action insertNode(sourceId: string, targetId: string, node: NodeComp) {
-    insertNode(this.document.data, sourceId, targetId, node);
+  @action insertNode(position: CellPosition, node: NodeComp) {
+    insertNode(this.document.data, position, node);
   }
 }
 

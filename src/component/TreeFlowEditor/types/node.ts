@@ -23,3 +23,9 @@ export interface NodeData {
     children: NodeData[];
   }>;
 }
+
+export interface CellPosition {
+  parent?: NodeData;
+  multiIndex?: number;
+  childrenIndex?: number;
+}

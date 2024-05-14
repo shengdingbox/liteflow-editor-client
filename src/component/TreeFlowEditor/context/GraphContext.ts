@@ -4,7 +4,7 @@ import { Store } from '../store/Store';
 import createFlowChart, { bindKeyboards } from '../graph/createFlowChart';
 import { NodeComp, NodeData } from '../types/node';
 import { autorun } from 'mobx';
-import { toGraphJson } from '../model/model';
+import { toGraphJson } from '../store/toGraph';
 import { forceLayout } from '../common/layout';
 import registerEvents from '../common/events';
 

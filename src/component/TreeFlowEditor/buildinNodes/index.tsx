@@ -12,4 +12,4 @@ import { default as MultipleEnd } from './multiple-end';
 import { default as MultiplePlaceholder } from './multiple-placeholder';
 
 import NodeView from '../components/NodeView';
-import { NodeCompStore } from '../constant/Comp';
+import { NodeCompStore } from '../store/CompStore';

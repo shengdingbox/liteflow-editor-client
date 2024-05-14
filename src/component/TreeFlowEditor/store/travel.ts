@@ -1,4 +1,4 @@
-import { NodeComp, NodeData } from '../types/node';
+import { CellPosition, NodeComp, NodeData } from '../types/node';
 
 interface NodeDataInfo {
   current: NodeData;
@@ -77,27 +77,29 @@ export function deleteNodeById(root: NodeData, id: string) {
 
 export function insertNode(
   root: NodeData,
-  sourceId: string,
-  targetId: string,
+  position: CellPosition,
   node: NodeComp,
 ) {
   for (const nodeInfo of travelNode(root)) {
-    if (nodeInfo.current.id === sourceId) {
-      if (nodeInfo.parent?.children && nodeInfo.childrenIndex != null) {
-        nodeInfo.parent.children.splice(nodeInfo.childrenIndex + 1, 0, {
-          type: node.metadata.type,
-          id: generateNewId(),
-          ...node.defaults?.[0],
-        });
-      }
-      break;
-    } else if (nodeInfo.current.id === targetId) {
-      if (nodeInfo.parent?.children && nodeInfo.childrenIndex != null) {
-        nodeInfo.parent.children.splice(nodeInfo.childrenIndex, 0, {
-          type: node.metadata.type,
-          id: generateNewId(),
-          ...node.defaults?.[0],
-        });
+    if (nodeInfo.current.id === position.parent?.id) {
+      console.log('======find', position, node);
+      const newNodeData = {
+        type: node.metadata.type,
+        id: generateNewId(),
+        ...node.defaults?.[0],
+      };
+      if (position.multiIndex != null && position.childrenIndex != null) {
+        nodeInfo.current?.multiple?.[position.multiIndex].children.splice(
+          position.childrenIndex,
+          0,
+          newNodeData,
+        );
+      } else if (position.childrenIndex != null) {
+        nodeInfo.current?.children?.splice(
+          position.childrenIndex,
+          0,
+          newNodeData,
+        );
       }
       break;
     }
