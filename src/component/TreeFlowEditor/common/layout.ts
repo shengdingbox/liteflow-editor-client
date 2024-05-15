@@ -97,6 +97,7 @@ interface ModelCache extends Model {
   inMap: Record<string, NodeAndEdge[]>;
   outMap: Record<string, NodeAndEdge[]>;
   bottom1Map: Record<string, NodeAndEdge>;
+  bottom2Map: Record<string, NodeAndEdge>;
 
   // key: nodeId, value: node
   nodeMap: Record<string, SimpleNode>;
@@ -114,6 +115,9 @@ class FeimaFlowLayout {
 
     // 有哪些节点从此节点底部出来
     const bottom1Map: Record<string, NodeAndEdge> = {};
+
+    // 有哪些节点连到从此节点底部
+    const bottom2Map: Record<string, NodeAndEdge> = {};
 
     // key: nodeId, value: node
     const nodeMap: Record<string, SimpleNode> = {};
@@ -135,6 +139,8 @@ class FeimaFlowLayout {
         }
       } else if (e.source.port === 'bottom1') {
         bottom1Map[e.source.cell] = [e.target.cell, e.id];
+      } else if (e.target.port === 'bottom2') {
+        bottom2Map[e.target.cell] = [e.source.cell, e.id];
       }
 
       if (e.target.port === 'in') {
@@ -151,6 +157,7 @@ class FeimaFlowLayout {
       inMap,
       outMap,
       bottom1Map,
+      bottom2Map,
       nodeMap,
       edgeMap,
     };
@@ -211,17 +218,6 @@ class FeimaFlowLayout {
       }
     }
 
-    // bottom1
-    const bottom1Info = this.findBottom1(node.id, cache);
-    if (bottom1Info) {
-      const [n, e] = bottom1Info;
-      n.x = node.x + X_STEP / 2;
-      n.y = node.y + Y_STEP * 1.2;
-      this.setNodePosition(n, cache);
-
-      e.vertices = [{ x: node.x, y: n.y + nodeSize / 2 }];
-    }
-
     // out
     const outInfos = this.findOuts(node.id, cache);
     if (outInfos.length > 0) {
@@ -236,6 +232,29 @@ class FeimaFlowLayout {
         }
         this.setNodePosition(outNode, cache);
       }
+    }
+
+    // bottom1
+    const bottom1Info = this.findBottom1(node.id, cache);
+    if (bottom1Info) {
+      const [n, e] = bottom1Info;
+      n.x = node.x + X_STEP / 2;
+      n.y = node.y + Y_STEP * 1.2;
+      this.setNodePosition(n, cache);
+
+      e.vertices = [{ x: node.x, y: n.y + nodeSize / 2 }];
+    }
+
+    // bottom2
+    const bottom2Info = this.findBottom2(node.id, cache);
+    if (bottom2Info) {
+      const [n, e] = bottom2Info;
+
+      e.vertices = [
+        { x: n.x + nodeSize * 2, y: n.y + nodeSize / 2 },
+        { x: n.x + nodeSize * 2, y: n.y - nodeSize },
+        { x: node.x + nodeSize, y: n.y - nodeSize },
+      ];
     }
   }
 
@@ -273,6 +292,17 @@ class FeimaFlowLayout {
       return undefined;
     }
     const [_nodeId, _edgeId] = bottom1Map[nodeId];
+    return [nodeMap[_nodeId], edgeMap[_edgeId]];
+  }
+
+  findBottom2(
+    nodeId: string,
+    { bottom2Map, nodeMap, edgeMap }: ModelCache,
+  ): [SimpleNode, SimpleEdge] | undefined {
+    if (!bottom2Map[nodeId]) {
+      return undefined;
+    }
+    const [_nodeId, _edgeId] = bottom2Map[nodeId];
     return [nodeMap[_nodeId], edgeMap[_edgeId]];
   }
 }
