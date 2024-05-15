@@ -143,6 +143,8 @@ function nodeToCells(opts: NodeToCellsOpts): string {
         );
         preNodeId = emptyNode.id;
       }
+      const childrenIndex =
+        line.children && line.children.length > 0 ? line.children.length : 0;
       cells.push(
         createEdge({
           from: preNodeId,
@@ -152,10 +154,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
           position: {
             parent: node,
             multiIndex,
-            childrenIndex:
-              line.children && line.children.length > 0
-                ? line.children.length
-                : 0,
+            childrenIndex,
           },
           withoutArrow: true,
         }),

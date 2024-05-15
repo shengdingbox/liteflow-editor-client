@@ -28,6 +28,12 @@ export function findViewsFromPoint(flowGraph: Graph, x: number, y: number) {
 const registerEvents = (grapher: Grapher): void => {
   const flowGraph = grapher.flowGraph;
   const store = grapher.store;
+  flowGraph.on('edge:mouseenter', ({ edge }) => {
+    store.currentEdge = edge;
+  });
+  flowGraph.on('edge:mouseleave', (e) => {
+    store.currentEdge = undefined;
+  });
   flowGraph.on('selection:changed', () => {
     flowGraph.trigger('toolBar:forceUpdate');
     flowGraph.trigger('settingBar:forceUpdate');
@@ -64,9 +70,6 @@ const registerEvents = (grapher: Grapher): void => {
   });
   flowGraph.on('graph:addNodeOnEdge', (args: any) => {
     const { edge: currentEdge, node: droppingNode } = args;
-    // console.log('===currentEdge.data', currentEdge.data.position);
-    // const sourceNodeId = currentEdge.getSourceNode()?.id;
-    // const targetNodeId = currentEdge.getTargetNode()?.id;
     store.insertNode(currentEdge.data.position, droppingNode.data.node);
   });
 };

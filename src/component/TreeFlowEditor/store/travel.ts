@@ -94,28 +94,21 @@ export function insertNode(
   position: CellPosition,
   node: NodeComp,
 ) {
-  for (const nodeInfo of travelNode(root)) {
-    if (nodeInfo.current.id === position.parent?.id) {
-      console.log('======find', position, node);
-      const newNodeData = {
-        type: node.metadata.type,
-        id: generateNewId(),
-        ...node.defaults?.[0],
-      };
-      if (position.multiIndex != null && position.childrenIndex != null) {
-        nodeInfo.current?.multiple?.[position.multiIndex].children.splice(
-          position.childrenIndex,
-          0,
-          newNodeData,
-        );
-      } else if (position.childrenIndex != null) {
-        nodeInfo.current?.children?.splice(
-          position.childrenIndex,
-          0,
-          newNodeData,
-        );
-      }
-      break;
+  const parentNode = findNode(root, position.parent?.id!)?.current;
+  if (parentNode) {
+    const newNodeData = {
+      type: node.metadata.type,
+      id: generateNewId(),
+      ...node.defaults?.[0],
+    };
+    if (position.multiIndex != null && position.childrenIndex != null) {
+      parentNode.multiple?.[position.multiIndex].children.splice(
+        position.childrenIndex,
+        0,
+        newNodeData,
+      );
+    } else if (position.childrenIndex != null) {
+      parentNode.children?.splice(position.childrenIndex, 0, newNodeData);
     }
   }
 }

@@ -2,12 +2,15 @@ import { makeObservable, action, transaction, autorun } from 'mobx';
 import { HistoryStore } from './HistoryStore';
 import { NodeComp, NodeData, CellPosition } from '../types/node';
 import { deleteNode, findNode, insertNode, travelNode } from './travel';
+import { Edge } from '@antv/x6';
 
 interface DocumentModel {
   data: NodeData;
 }
 
 export class Store extends HistoryStore<DocumentModel> {
+  currentEdge?: Edge;
+
   constructor(initData: NodeData) {
     for (const nodeInfo of travelNode(initData)) {
       if (!nodeInfo.current.id) {

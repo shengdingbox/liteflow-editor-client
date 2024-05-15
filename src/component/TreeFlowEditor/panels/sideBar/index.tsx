@@ -7,6 +7,7 @@ import styles from './index.module.less';
 import { NodeComp, NodeData } from '../../types/node';
 import { useGraph } from '../../hooks';
 import commonIcon from '../../assets/common-icon.svg';
+import { useGrapher } from '../../hooks/useGraph';
 
 interface ISideBarProps {
   compGroups?: Array<[string, NodeComp[]]>;
@@ -14,39 +15,27 @@ interface ISideBarProps {
 
 const SideBar: React.FC<ISideBarProps> = (props) => {
   const { compGroups } = props;
-  const flowGraph = useGraph();
+  const grapher = useGrapher();
   // const [groups, setGroups] = useState<IGroupItem[]>([]);
   const dnd = useMemo(() => {
-    if (!flowGraph) {
+    if (!grapher.isReady()) {
       // throw new Error('flowGraph is null');
       return null;
     }
     return new Addon.Dnd({
-      target: flowGraph,
+      target: grapher.flowGraph,
       scaled: true,
       validateNode: (droppingNode: Node) => {
-        const position = droppingNode.getPosition();
-        const size = droppingNode.getSize();
-        const cellViewsFromPoint = findViewsFromPoint(
-          flowGraph,
-          position.x + size.width / 2,
-          position.y + size.height / 2,
-        );
-        const edgeViews =
-          cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) || [];
-        if (edgeViews && edgeViews.length) {
-          const currentEdge: Edge = flowGraph.getCellById(
-            edgeViews[0].cell.id,
-          ) as Edge;
-          flowGraph.trigger('graph:addNodeOnEdge', {
-            edge: currentEdge,
+        if (grapher.store.currentEdge) {
+          grapher.flowGraph.trigger('graph:addNodeOnEdge', {
+            edge: grapher.store.currentEdge,
             node: droppingNode,
           });
         }
         return false;
       },
     });
-  }, [flowGraph]);
+  }, [grapher]);
 
   // life
   // useEffect(() => {
