@@ -1,4 +1,3 @@
-import { NODE_TYPE_END } from '../constant';
 import icon from '../assets/end-icon.svg';
 import { NodeComp } from '../types/node';
 

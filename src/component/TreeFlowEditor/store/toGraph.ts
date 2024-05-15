@@ -379,7 +379,7 @@ interface EdgeOpts {
 function createEdge(opts: EdgeOpts) {
   const { from, fromPort, to, toPort, label, position, withoutArrow } = opts;
   return {
-    shape: withoutArrow ? 'TREEFLOW_EDGE_NOARROW' : 'TREEFLOW_EDGE',
+    shape: withoutArrow ? 'FLOW_EDGE_NOARROW' : 'FLOW_EDGE',
     labels: [{ attrs: { label: { text: label, color: '#666' } } }],
     id: generateNewId(),
     source: { cell: from, port: fromPort },

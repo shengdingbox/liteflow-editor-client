@@ -1,7 +1,6 @@
 import { Dom, Graph, Rectangle } from '@antv/x6';
-import { NodeTypeEnum, ConditionTypeEnum } from '../constant';
-import { getSelectedEdges } from '../utils/flowChartUtils';
 import { Grapher } from '../context/GraphContext';
+import { getSelectedEdges } from '../utils/flowChartUtils';
 
 export function findViewsFromPoint(flowGraph: Graph, x: number, y: number) {
   return flowGraph
@@ -54,14 +53,14 @@ const registerEvents = (grapher: Grapher): void => {
   });
   flowGraph.on('node:click', (args) => {
     const targetNode = args.node;
-    if (targetNode.shape === ConditionTypeEnum.WHEN) {
-      const targetNodeData = targetNode.getData().model;
-      targetNodeData.children.push({
-        type: NodeTypeEnum.COMMON,
-        id: `xxx${Math.ceil(Math.random() * 100)}`,
-      });
-      flowGraph.trigger('model:change');
-    }
+    // if (targetNode.shape === ConditionTypeEnum.WHEN) {
+    //   const targetNodeData = targetNode.getData().model;
+    //   targetNodeData.children.push({
+    //     type: NodeTypeEnum.COMMON,
+    //     id: `xxx${Math.ceil(Math.random() * 100)}`,
+    //   });
+    //   flowGraph.trigger('model:change');
+    // }
   });
   flowGraph.on('graph:addNodeOnEdge', (args: any) => {
     const { edge: currentEdge, node: droppingNode } = args;

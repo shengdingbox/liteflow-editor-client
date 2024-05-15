@@ -8,15 +8,7 @@ import liteflowEdge from '../common/edge';
 import liteflowRouter from '../common/router';
 import shortcuts from '../common/shortcuts';
 import NodeView from '../components/NodeView';
-import {
-  LITEFLOW_ANCHOR,
-  LITEFLOW_ROUTER,
-  MAX_ZOOM,
-  MIN_ZOOM,
-  NODE_HEIGHT,
-  NODE_WIDTH,
-  TREEFLOW_EDGE,
-} from '../constant';
+import { MAX_ZOOM, MIN_ZOOM, NODE_HEIGHT, NODE_WIDTH } from '../constant';
 import MiniMapSimpleNode from '../panels/flowGraph/miniMapSimpleNode';
 
 import Common from '../buildinNodes/common';
@@ -27,10 +19,10 @@ import { Grapher } from '../context/GraphContext';
 import { NodeCompStore } from '../store/CompStore';
 import { NodeComp } from '../types/node';
 
-Graph.registerEdge(TREEFLOW_EDGE, liteflowEdge());
-Graph.registerEdge('TREEFLOW_EDGE_NOARROW', liteflowEdge('withoutArrow'));
-Graph.registerRouter(LITEFLOW_ROUTER, liteflowRouter);
-Graph.registerAnchor(LITEFLOW_ANCHOR, liteflowAnchor);
+Graph.registerEdge('FLOW_EDGE', liteflowEdge());
+Graph.registerEdge('FLOW_EDGE_NOARROW', liteflowEdge('withoutArrow'));
+Graph.registerRouter('FLOW_ROUTER', liteflowRouter);
+Graph.registerAnchor('FLOW_ANCHOR', liteflowAnchor);
 
 function registerNodes(compGroups: Array<[string, NodeComp[]]>) {
   const allComps = [Start, End, Common, MultiplePlaceholder];
@@ -141,13 +133,13 @@ const createFlowChart = (
       allowEdge: false,
       dangling: true,
       highlight: true,
-      // anchor: LITEFLOW_ANCHOR, // 'center',
+      // anchor: FLOW_ANCHOR, // 'center',
       anchor: 'center',
       connectionPoint: 'bbox',
       // connector: {
       //   name: 'jumpover', //两条线交叉时，出现线桥。
       // },
-      router: 'normal', // LITEFLOW_ROUTER, // 'normal',
+      router: 'normal', // FLOW_ROUTER, // 'normal',
       validateEdge: (args) => {
         const { edge } = args;
         return !!(edge?.target as any)?.port;
