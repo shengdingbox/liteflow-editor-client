@@ -24,7 +24,7 @@ const defaultSchema = {
   children: [],
 };
 
-const LiteFlowEditor: React.FC<IProps> = (props) => {
+const TreeFlowEditor: React.FC<IProps> = (props) => {
   const { onReady, initSchema = defaultSchema, onSave, compGroups } = props;
   const wrapperRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);
@@ -77,4 +77,4 @@ const LiteFlowEditor: React.FC<IProps> = (props) => {
   );
 };
 
-export default LiteFlowEditor;
+export default TreeFlowEditor;
