@@ -224,10 +224,33 @@ const portGroups = {
       },
     },
   },
-  bottom: {
-    position: 'bottom', // 链接桩位置
-    label: {
-      position: 'bottom', // 标签位置
+  bottom1: {
+    position: {
+      name: 'absolute',
+      args: {
+        x: 0,
+        y: 30,
+      },
+    },
+    attrs: {
+      circle: {
+        r: 6,
+        stroke: 'transparent',
+        fill: 'transparent',
+        // magnet: true,
+        // stroke: '#31d0c6',
+        // strokeWidth: 2,
+        // fill: '#fff',
+      },
+    },
+  },
+  bottom2: {
+    position: {
+      name: 'absolute',
+      args: {
+        x: 30,
+        y: 30,
+      },
     },
     attrs: {
       circle: {
@@ -284,14 +307,14 @@ function createNode(node: NodeData) {
       },
       {
         id: 'bottom1',
-        group: 'bottom',
+        group: 'bottom1',
         attrs: {
           text: { text: '' },
         },
       },
       {
         id: 'bottom2',
-        group: 'bottom',
+        group: 'bottom2',
         attrs: {
           text: { text: '' },
         },
@@ -304,7 +327,13 @@ function createNode(node: NodeData) {
     attrs: { label: { text: node.props?.node } },
     shape: comp.metadata.type,
     id: node.id || generateNewId(),
-    data: { toolbar: { delete: true, addMultiple: canAddMultiple } },
+    data: {
+      toolbar: {
+        delete: true,
+        addMultiple: canAddMultiple,
+      },
+      nodeComp: comp,
+    },
     zIndex: 1,
     ports,
   };
@@ -385,7 +414,7 @@ function createEdge(opts: EdgeOpts) {
     source: { cell: from, port: fromPort },
     target: { cell: to, port: toPort },
     zIndex: 0,
-    router: 'manhattan',
+    // router: 'manhattan',
     connector: {
       name: 'rounded',
       args: {},
