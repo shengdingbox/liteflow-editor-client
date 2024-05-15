@@ -4,6 +4,7 @@ import { Graph } from '@antv/x6';
 import { MIN_ZOOM, MAX_ZOOM, ZOOM_STEP } from '../constant';
 import { getSelectedNodes } from '../utils/flowChartUtils';
 import { history } from '../hooks/useHistory';
+import { useModel } from '../hooks/useModel';
 
 interface Shortcut {
   keys: string | string[];
@@ -12,29 +13,29 @@ interface Shortcut {
 
 export const shortcuts: { [key: string]: Shortcut } = {
   save: {
-    keys: 'meta + s',
-    handler(flowGraph: Graph) {
+    keys: ['meta + s', 'ctrl + s'],
+    handler() {
       console.log('save');
-      console.log(flowGraph.toJSON());
+      console.log(useModel().toJSON());
       return false;
     },
   },
   undo: {
-    keys: 'meta + z',
+    keys: ['meta + z', 'ctrl + z'],
     handler() {
       history.undo();
       return false;
     },
   },
   redo: {
-    keys: 'meta + shift + z',
+    keys: ['meta + shift + z', 'ctrl + shift + z'],
     handler() {
       history.redo();
       return false;
     },
   },
   zoomIn: {
-    keys: 'meta + shift + +',
+    keys: ['meta + shift + +', 'ctrl + shift + +'],
     handler(flowGraph: Graph) {
       const nextZoom = (flowGraph.zoom() + ZOOM_STEP).toPrecision(2);
       flowGraph.zoomTo(Number(nextZoom), { maxScale: MAX_ZOOM });
@@ -42,7 +43,7 @@ export const shortcuts: { [key: string]: Shortcut } = {
     },
   },
   zoomOut: {
-    keys: 'meta + shift + -',
+    keys: ['meta + shift + -', 'ctrl + shift + -'],
     handler(flowGraph: Graph) {
       const nextZoom = (flowGraph.zoom() - ZOOM_STEP).toPrecision(2);
       flowGraph.zoomTo(Number(nextZoom), { minScale: MIN_ZOOM });
@@ -50,7 +51,7 @@ export const shortcuts: { [key: string]: Shortcut } = {
     },
   },
   copy: {
-    keys: 'meta + c',
+    keys: ['meta + c', 'ctrl + c'],
     handler(flowGraph: Graph) {
       const cells = flowGraph.getSelectedCells();
       if (cells.length > 0) {
@@ -61,7 +62,7 @@ export const shortcuts: { [key: string]: Shortcut } = {
     },
   },
   paste: {
-    keys: 'meta + v',
+    keys: ['meta + v', 'ctrl + v'],
     handler(flowGraph: Graph) {
       if (!flowGraph.isClipboardEmpty()) {
         const cells = flowGraph.paste({ offset: 32 });
@@ -94,14 +95,14 @@ export const shortcuts: { [key: string]: Shortcut } = {
     },
   },
   selectAll: {
-    keys: 'meta + a',
+    keys: ['meta + a', 'ctrl + a'],
     handler(flowGraph: Graph) {
       flowGraph.select(flowGraph.getCells());
       return false;
     },
   },
   bold: {
-    keys: 'meta + b',
+    keys: ['meta + b', 'ctrl + b'],
     handler(flowGraph: Graph) {
       const cells = flowGraph.getSelectedCells();
       if (cells.length > 0) {
@@ -118,7 +119,7 @@ export const shortcuts: { [key: string]: Shortcut } = {
     },
   },
   italic: {
-    keys: 'meta + i',
+    keys: ['meta + i', 'ctrl + i'],
     handler(flowGraph: Graph) {
       const cells = flowGraph.getSelectedCells();
       if (cells.length > 0) {
@@ -135,7 +136,7 @@ export const shortcuts: { [key: string]: Shortcut } = {
     },
   },
   underline: {
-    keys: 'meta + u',
+    keys: ['meta + u', 'ctrl + u'],
     handler(flowGraph: Graph) {
       const cells = flowGraph.getSelectedCells();
       if (cells.length > 0) {
@@ -155,13 +156,13 @@ export const shortcuts: { [key: string]: Shortcut } = {
     },
   },
   bringToTop: {
-    keys: 'meta + ]',
+    keys: ['meta + ]', 'ctrl + ]'],
     handler(flowGraph: Graph) {
       getSelectedNodes(flowGraph).forEach((node) => node.toFront());
     },
   },
   bringToBack: {
-    keys: 'meta + [',
+    keys: ['meta + [', 'ctrl + ['],
     handler(flowGraph: Graph) {
       getSelectedNodes(flowGraph).forEach((node) => node.toBack());
     },
