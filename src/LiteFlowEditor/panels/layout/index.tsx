@@ -38,7 +38,7 @@ const Layout: React.FC<IProps> = (props) => {
         >
           {sideBar}
         </Pane>
-        <SplitPane split={'horizontal'}>
+        <SplitPane split={'vertical'}>
           {props.children}
           <Pane
             className={styles.liteflowEditorSettingBar}
