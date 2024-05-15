@@ -1,7 +1,6 @@
-import { Graph } from '@antv/x6';
 import TreeFlowEditor from '../component/TreeFlowEditor';
-import styles from './index.less';
 import { compGroups } from './comps/groups';
+import styles from './index.less';
 
 const initSchema = {
   id: 'start',
@@ -9,17 +8,17 @@ const initSchema = {
   children: [
     {
       id: 'i1r6iz2qd7d',
-      type: 'BUILDIN/COMMON',
+      type: 'common',
       props: { node: 'a' },
     },
     {
       id: '3xqfj3psj4r',
-      type: 'BUILDIN/COMMON',
+      type: 'common',
       props: { node: 'b' },
     },
     {
       id: '1nq1eu2gl0l',
-      type: 'BUILDIN/COMMON',
+      type: 'common',
       props: { node: 'c' },
     },
   ],
