@@ -1,61 +1,72 @@
 import { Markup } from '@antv/x6';
 import { LINE_COLOR } from '../constant';
 
-export default {
-  inherit: 'edge',
-  markup: [
-    {
-      tagName: 'path',
-      selector: 'wrap',
-      groupSelector: 'lines',
-      attrs: {
+export default function getEdge(type?: 'withoutArrow') {
+  return {
+    inherit: 'edge',
+    markup: [
+      {
+        tagName: 'path',
+        selector: 'wrap',
+        groupSelector: 'lines',
+        attrs: {
+          fill: 'none',
+          cursor: 'pointer',
+          stroke: 'transparent',
+          strokeLinecap: 'round',
+        },
+      },
+      {
+        tagName: 'path',
+        selector: 'line',
+        groupSelector: 'lines',
+        attrs: {
+          fill: 'none',
+          pointerEvents: 'none',
+        },
+      },
+    ],
+    attrs: {
+      wrap: {
         fill: 'none',
         cursor: 'pointer',
         stroke: 'transparent',
         strokeLinecap: 'round',
       },
-    },
-    {
-      tagName: 'path',
-      selector: 'line',
-      groupSelector: 'lines',
-      attrs: {
+      line: {
+        stroke: LINE_COLOR,
+        strokeWidth: 2,
         fill: 'none',
         pointerEvents: 'none',
+        ...(type === 'withoutArrow'
+          ? {
+              targetMarker: {
+                tagName: 'path',
+                fill: 'transparent',
+                stroke: 'transparent',
+              },
+            }
+          : {}),
       },
     },
-  ],
-  attrs: {
-    wrap: {
-      fill: 'none',
-      cursor: 'pointer',
-      stroke: 'transparent',
-      strokeLinecap: 'round',
-    },
-    line: {
-      stroke: LINE_COLOR,
-      strokeWidth: 2,
-      fill: 'none',
-      pointerEvents: 'none',
-    },
-  },
-  label: '+',
-  defaultLabel: {
-    markup: Markup.getForeignObjectMarkup(),
-    attrs: {
-      fo: {
-        width: 30,
-        height: 30,
-        x: -15,
-        y: -15,
+    label: '+',
+    defaultLabel: {
+      markup: Markup.getForeignObjectMarkup(),
+      attrs: {
+        fo: {
+          width: 30,
+          height: 30,
+          x: -15,
+          y: -15,
+        },
+      },
+      position: {
+        distance: 0.5,
+        options: {
+          keepGradient: false,
+          // ensureLegibility: true,
+        },
       },
     },
-    position: {
-      distance: 0.5,
-      options: {
-        keepGradient: false,
-        // ensureLegibility: true,
-      },
-    },
-  },
-};
+  };
+}

@@ -1,5 +1,5 @@
 import { NodeComp } from '../../component/TreeFlowEditor/types/node';
-import icon from './assets/then-icon.svg';
+import icon from './assets/common-icon.svg';
 
 export const CommonNode: NodeComp = {
   metadata: {

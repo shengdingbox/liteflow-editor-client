@@ -1,4 +1,4 @@
-import icon from '../assets/virtual-icon.svg';
+import icon from '../assets/dot-icon.svg';
 import { NodeComp } from '../types/node';
 
 const config: NodeComp = {

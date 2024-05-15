@@ -6,7 +6,7 @@ export const WhenNode: NodeComp = {
     label: 'When 并行',
     type: 'when',
     childrenType: 'multiple',
-    multipleType: 'when',
+    multipleType: 'mutable',
     icon,
   },
 

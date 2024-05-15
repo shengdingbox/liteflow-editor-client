@@ -7,9 +7,8 @@ export const ZOOM_STEP = 0.1;
 
 export const NODE_TYPE_START = 'LITEFLOW_START';
 export const NODE_TYPE_END = 'LITEFLOW_END';
-export const NODE_TYPE_INTERMEDIATE_END = 'LITEFLOW_INTERMEDIATE_END';
 
-export const LITEFLOW_EDGE = 'LITEFLOW_EDGE';
+export const TREEFLOW_EDGE = 'TREEFLOW_EDGE';
 export const LITEFLOW_ANCHOR = 'LITEFLOW_ANCHOR';
 export const LITEFLOW_ROUTER = 'LITEFLOW_ROUTER';
 
@@ -46,8 +45,6 @@ export enum NodeTypeEnum {
   BREAK_SCRIPT = 'ScriptBreakComponent', // break_script, 循环跳出脚本
 
   FALLBACK = 'fallback', // 降级
-
-  VIRTUAL = 'NodeVirtualComponent', // virtual, 虚节点
 }
 
 /** 逻辑编排类型 */

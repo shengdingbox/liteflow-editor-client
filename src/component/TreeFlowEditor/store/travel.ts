@@ -51,27 +51,41 @@ export function* travelNode(nodeData: NodeData): Generator<NodeDataInfo> {
   yield* travelNodePro({ current: nodeData });
 }
 
-export function deleteNodeById(root: NodeData, id: string) {
-  for (const nodeInfo of travelNode(root)) {
+export function findNode(
+  nodeData: NodeData,
+  id: string,
+): NodeDataInfo | undefined {
+  for (const nodeInfo of travelNode(nodeData)) {
     if (nodeInfo.current.id === id) {
-      const parent = nodeInfo.parent;
-      if (parent) {
-        if (
-          parent.multiple &&
-          nodeInfo.multiIndex != null &&
-          nodeInfo.childrenIndex != null
-        ) {
-          parent.multiple[nodeInfo.multiIndex].children.splice(
-            nodeInfo.childrenIndex,
-            1,
-          );
-        }
-        if (parent.children && nodeInfo.childrenIndex != null) {
-          parent.children.splice(nodeInfo.childrenIndex, 1);
-        }
-      }
-      break;
+      return nodeInfo;
     }
+  }
+}
+
+export function deleteNode(root: NodeData, id: string, position: CellPosition) {
+  if (position == null) {
+    // 按照 id 删除
+    const nodeInfo = findNode(root, id);
+    const parent = findNode(root, id)?.parent;
+    if (nodeInfo && parent) {
+      if (
+        parent.multiple &&
+        nodeInfo.multiIndex != null &&
+        nodeInfo.childrenIndex != null
+      ) {
+        parent.multiple[nodeInfo.multiIndex].children.splice(
+          nodeInfo.childrenIndex,
+          1,
+        );
+      }
+      if (parent.children && nodeInfo.childrenIndex != null) {
+        parent.children.splice(nodeInfo.childrenIndex, 1);
+      }
+    }
+  } else if (position.parent && position.multiIndex != null) {
+    // 按位置删除
+    const nodeInfo = findNode(root, position.parent.id);
+    nodeInfo?.current.multiple?.splice(position.multiIndex, 1);
   }
 }
 

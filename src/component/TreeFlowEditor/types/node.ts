@@ -6,7 +6,7 @@ export interface NodeComp {
     label?: string;
     icon?: React.ReactNode;
     childrenType?: 'then' | 'include' | 'multiple';
-    multipleType?: 'if' | 'switch' | 'when';
+    multipleType?: 'two' | 'mutable';
   };
 
   defaults?: Array<Omit<NodeData, 'id' | 'type'>>;

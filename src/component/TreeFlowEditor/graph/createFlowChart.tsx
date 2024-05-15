@@ -10,46 +10,51 @@ import shortcuts from '../common/shortcuts';
 import NodeView from '../components/NodeView';
 import {
   LITEFLOW_ANCHOR,
-  LITEFLOW_EDGE,
   LITEFLOW_ROUTER,
   MAX_ZOOM,
   MIN_ZOOM,
   NODE_HEIGHT,
   NODE_WIDTH,
+  TREEFLOW_EDGE,
 } from '../constant';
 import MiniMapSimpleNode from '../panels/flowGraph/miniMapSimpleNode';
 
 import Common from '../buildinNodes/common';
 import End from '../buildinNodes/end';
-import MultipleEnd from '../buildinNodes/multiple-end';
 import MultiplePlaceholder from '../buildinNodes/multiple-placeholder';
 import Start from '../buildinNodes/start';
-import { NodeCompStore } from '../store/CompStore';
 import { Grapher } from '../context/GraphContext';
-import { Store } from '../store/Store';
+import { NodeCompStore } from '../store/CompStore';
 import { NodeComp } from '../types/node';
 
-Graph.registerEdge(LITEFLOW_EDGE, liteflowEdge);
+Graph.registerEdge(TREEFLOW_EDGE, liteflowEdge());
+Graph.registerEdge('TREEFLOW_EDGE_NOARROW', liteflowEdge('withoutArrow'));
 Graph.registerRouter(LITEFLOW_ROUTER, liteflowRouter);
 Graph.registerAnchor(LITEFLOW_ANCHOR, liteflowAnchor);
 
 function registerNodes(compGroups: Array<[string, NodeComp[]]>) {
-  const allComps = [Start, End, Common, MultipleEnd, MultiplePlaceholder];
+  const allComps = [Start, End, Common, MultiplePlaceholder];
   compGroups.forEach((g) => {
     allComps.push(...g[1]);
   });
-
   allComps.forEach((nodeComp) => {
     // 注册AntV X6节点
     const { type, label, icon } = nodeComp.metadata;
+    let width = NODE_WIDTH;
+    let height = NODE_HEIGHT;
+    // console.log('===type', type);
+    // if (type === 'NodeVirtualComponent') {
+    // width = 5;
+    // height = 5;
+    // }
     Graph.registerNode(type, {
       primer: 'circle',
       inherit: 'react-shape',
       component(node: any) {
         return <NodeView node={node} icon={icon} />;
       },
-      width: NODE_WIDTH,
-      height: NODE_HEIGHT,
+      width,
+      height,
       attrs: {
         label: {
           refX: 0.5,
@@ -68,7 +73,6 @@ function registerNodes(compGroups: Array<[string, NodeComp[]]>) {
           },
         },
       },
-      // ...node,
     });
 
     Graph.registerReactComponent(type, function component(node: any) {

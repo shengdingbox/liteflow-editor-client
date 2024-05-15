@@ -21,7 +21,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
   const { node, cells, pre, position } = opts;
   let preNodeId = pre?.nodeId;
   const comp = NodeCompStore.getNode(node.type);
-  const curNode = pre ? createNode(node) : createVirtualNode('BUILDIN/START');
+  const curNode = pre ? createNode(node) : createStartEndNode('start');
   cells.push(curNode);
   if (pre?.nodeId) {
     cells.push(
@@ -67,7 +67,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
         });
       });
     } else {
-      const emptyNode = createVirtualNode('NodeVirtualComponent');
+      const emptyNode = createVirtualNode();
       cells.push(emptyNode);
       cells.push(
         createEdge({
@@ -79,6 +79,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
             parent: node,
             childrenIndex: 0,
           },
+          withoutArrow: true,
         }),
       );
       preNodeId = emptyNode.id;
@@ -100,7 +101,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
     );
     return curNode.id;
   } else if (comp.metadata.childrenType === 'multiple') {
-    const virtualNode = createVirtualNode('LITEFLOW_INTERMEDIATE_END');
+    const virtualNode = createVirtualNode();
     cells.push(virtualNode);
 
     node.multiple?.forEach((line, multiIndex) => {
@@ -123,7 +124,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
           });
         });
       } else {
-        const emptyNode = createVirtualNode('NodeVirtualComponent');
+        const emptyNode = createVirtualNode({ parent: node, multiIndex });
         cells.push(emptyNode);
         cells.push(
           createEdge({
@@ -137,6 +138,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
               multiIndex,
               childrenIndex: 0,
             },
+            withoutArrow: true,
           }),
         );
         preNodeId = emptyNode.id;
@@ -155,6 +157,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
                 ? line.children.length
                 : 0,
           },
+          withoutArrow: true,
         }),
       );
     });
@@ -167,7 +170,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
 export function toGraphJson(node: NodeData): any {
   const cells: Array<Record<string, any>> = [];
   const lastNodeId = nodeToCells({ node, cells, position: {} });
-  const endNode = createVirtualNode('BUILDIN/END');
+  const endNode = createStartEndNode('end');
   cells.push(endNode);
   cells.push(
     createEdge({
@@ -238,6 +241,26 @@ const portGroups = {
       },
     },
   },
+  center: {
+    position: {
+      name: 'absolute',
+      args: {
+        x: 15,
+        y: 15,
+      },
+    },
+    attrs: {
+      circle: {
+        r: 6,
+        stroke: 'transparent',
+        fill: 'transparent',
+        // magnet: true,
+        // stroke: '#31d0c6',
+        // strokeWidth: 2,
+        // fill: '#fff',
+      },
+    },
+  },
 };
 
 function createNode(node: NodeData) {
@@ -275,41 +298,67 @@ function createNode(node: NodeData) {
       },
     ],
   };
+  const canAddMultiple = comp.metadata.multipleType === 'mutable';
   return {
     view: 'react-shape-view',
     attrs: { label: { text: node.props?.node } },
     shape: comp.metadata.type,
     id: node.id || generateNewId(),
-    data: { toolbar: { delete: true } },
+    data: { toolbar: { delete: true, addMultiple: canAddMultiple } },
     zIndex: 1,
     ports,
   };
 }
 
-function createVirtualNode(shape: string) {
+function createVirtualNode(deletePosition?: CellPosition) {
+  const canDelete = !!(
+    deletePosition?.multiIndex && deletePosition.multiIndex > 1
+  );
   const ports = {
     groups: portGroups,
     items: [
       {
         id: 'in',
-        group: 'in',
-        attrs: {
-          text: { text: '' },
-        },
+        group: 'center',
       },
       {
         id: 'out',
-        group: 'out',
-        attrs: {
-          text: { text: '' },
-        },
+        group: 'center',
       },
     ],
   };
   return {
     view: 'react-shape-view',
     attrs: { label: { text: '' } },
-    shape,
+    shape: 'NodeVirtualComponent',
+    id: generateNewId(),
+    data: {
+      toolbar: { delete: canDelete },
+      position: canDelete ? deletePosition : undefined,
+    },
+    zIndex: 1,
+    ports,
+  };
+}
+
+function createStartEndNode(type: 'start' | 'end') {
+  const ports = {
+    groups: portGroups,
+    items: [
+      {
+        id: 'in',
+        group: 'in',
+      },
+      {
+        id: 'out',
+        group: 'out',
+      },
+    ],
+  };
+  return {
+    view: 'react-shape-view',
+    attrs: { label: { text: '' } },
+    shape: type === 'start' ? 'BUILDIN/START' : 'BUILDIN/END',
     id: generateNewId(),
     data: null,
     zIndex: 1,
@@ -324,12 +373,13 @@ interface EdgeOpts {
   toPort: string;
   label?: string;
   position: CellPosition;
+  withoutArrow?: boolean;
 }
 
 function createEdge(opts: EdgeOpts) {
-  const { from, fromPort, to, toPort, label, position } = opts;
+  const { from, fromPort, to, toPort, label, position, withoutArrow } = opts;
   return {
-    shape: 'LITEFLOW_EDGE',
+    shape: withoutArrow ? 'TREEFLOW_EDGE_NOARROW' : 'TREEFLOW_EDGE',
     labels: [{ attrs: { label: { text: label, color: '#666' } } }],
     id: generateNewId(),
     source: { cell: from, port: fromPort },

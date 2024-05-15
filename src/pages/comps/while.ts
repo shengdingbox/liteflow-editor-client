@@ -8,4 +8,11 @@ export const WhileNode: NodeComp = {
     childrenType: 'include',
     icon,
   },
+
+  defaults: [
+    {
+      props: { test: 1 },
+      children: [],
+    },
+  ],
 };

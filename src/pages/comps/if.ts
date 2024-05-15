@@ -6,7 +6,21 @@ export const IfNode: NodeComp = {
     label: 'IF 条件',
     type: 'if',
     childrenType: 'multiple',
-    multipleType: 'if',
+    multipleType: 'two',
     icon,
   },
+
+  defaults: [
+    {
+      props: { test: 1 },
+      multiple: [
+        {
+          children: [],
+        },
+        {
+          children: [],
+        },
+      ],
+    },
+  ],
 };

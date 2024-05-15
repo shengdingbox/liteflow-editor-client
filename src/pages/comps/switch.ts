@@ -6,7 +6,24 @@ export const SwitchNode: NodeComp = {
     label: 'Switch 选择',
     type: 'switch',
     childrenType: 'multiple',
-    multipleType: 'switch',
+    multipleType: 'mutable',
     icon,
   },
+
+  defaults: [
+    {
+      props: { test: 1 },
+      multiple: [
+        {
+          children: [],
+        },
+        {
+          children: [],
+        },
+        {
+          children: [],
+        },
+      ],
+    },
+  ],
 };

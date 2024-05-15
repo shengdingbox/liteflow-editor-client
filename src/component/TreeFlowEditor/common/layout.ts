@@ -193,7 +193,7 @@ class FeimaFlowLayout {
     const bottom1Node = this.findBottom1(node.id, cache);
     if (bottom1Node) {
       bottom1Node.x = node.x + X_STEP / 2;
-      bottom1Node.y = node.y + Y_STEP;
+      bottom1Node.y = node.y + Y_STEP * 1.2;
       this.setNodePosition(bottom1Node, cache);
     }
 
