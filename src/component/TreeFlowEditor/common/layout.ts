@@ -240,34 +240,6 @@ class FeimaFlowLayout {
         outNode.x = node.x + X_STEP;
         outNode.y = node.y + Y_STEP * i - (Y_STEP * (outInfos.length - 1)) / 2;
 
-        const firstMultipleNode = this.findFirstMultipleNode(outNode, cache);
-        if (firstMultipleNode) {
-          const data = firstMultipleNode.data;
-          console.log(
-            '===firstMultipleNode',
-            firstMultipleNode.id,
-            'maxMultipleY',
-            data.maxMultipleY,
-            '===current',
-            outNode.id,
-            outNode.y,
-          );
-          if (data.maxMultipleY == null) {
-            data.maxMultipleY = outNode.y;
-          } else if (data.maxMultipleY + nodeSize > outNode.y) {
-            outNode.y = data.maxMultipleY + Y_STEP;
-            data.maxMultipleY = outNode.y;
-          }
-        }
-
-        // console.log('====', outNode);
-        // console.log('====cache.minY', cache.minY, outNode.y);
-        // if (i == 0) {
-        //   cache.minY = Math.min(cache.minY, outNode.y);
-        // } else if (outNode.y < cache.minY) {
-        //   outNode.y += Y_STEP;
-        // }
-
         if (outInfos.length > 1) {
           outEdge.vertices = [
             { x: node.x + nodeSize, y: outNode.y + nodeSize / 2 },
@@ -347,37 +319,5 @@ class FeimaFlowLayout {
     }
     const [_nodeId, _edgeId] = bottom2Map[nodeId];
     return [nodeMap[_nodeId], edgeMap[_edgeId]];
-  }
-
-  findFirstMultipleNode(
-    curNode: SimpleNode,
-    { nodeMap }: ModelCache,
-  ): SimpleNode | undefined {
-    let position = curNode.data?.position;
-    let result: SimpleNode | undefined;
-    console.log('===position', position);
-    while (position && position.parent && position.multiIndex != null) {
-      result = nodeMap[position.parent.id];
-      position = nodeMap[position.parent.id].data.position;
-    }
-    return result;
-  }
-
-  findParentPreviousY(
-    curNode: SimpleNode,
-    cache: ModelCache,
-  ): number | undefined {
-    let position = curNode.data.position;
-
-    while (position.parent && position.multiIndex != null) {
-      // 父节点是 multiple 类型
-      if (position.multiIndex > 0) {
-        // 查看上一个
-        const previousMultiple =
-          position.parent.multiple?.[position.multiIndex - 1].children[0];
-      }
-      // node.data.position.
-    }
-    return;
   }
 }

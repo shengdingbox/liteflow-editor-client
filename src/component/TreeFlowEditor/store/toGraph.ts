@@ -127,7 +127,10 @@ function nodeToCells(opts: NodeToCellsOpts): string {
           });
         });
       } else {
-        const emptyNode = createVirtualNode({ parent: node, multiIndex }, true);
+        const emptyNode = createVirtualNode(
+          { parent: node, multiIndex },
+          multiIndex > 1,
+        );
         cells.push(emptyNode);
         cells.push(
           createEdge({
