@@ -1,5 +1,6 @@
 import { Edge, Graph, Node } from '@antv/x6';
 import { DagreLayout, GridLayout, DagreLayoutOptions } from '@antv/layout';
+import { CellPosition, NodeData } from '../types/node';
 
 const rankdir: DagreLayoutOptions['rankdir'] = 'LR';
 const align: DagreLayoutOptions['align'] = undefined;
@@ -8,6 +9,12 @@ const nodeSize: number = 30;
 const ranksep: number = 20;
 const nodesep: number = 20;
 const controlPoints: DagreLayoutOptions['controlPoints'] = false;
+
+const X_STEP = 80;
+const Y_STEP = 80;
+
+const START_X = 80;
+const START_Y = 80;
 
 const forceLDagreayout = (flowGraph: Graph, cfg: any = {}): void => {
   const dagreLayout: DagreLayout = new DagreLayout({
@@ -54,7 +61,7 @@ const forceLDagreayout = (flowGraph: Graph, cfg: any = {}): void => {
 };
 
 export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
-  const feimaFlowLayout = new FeimaFlowLayout();
+  const feimaFlowLayout = new FeimaFlowLayout(flowGraph);
   const newModel = feimaFlowLayout.layout({
     // @ts-ignore
     nodes: flowGraph.getNodes().map((node) => {
@@ -70,14 +77,15 @@ export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
   flowGraph.fromJSON(newModel);
 };
 
-const X_STEP = 80;
-const Y_STEP = 80;
-
 interface SimpleNode {
   id: string;
   x: number;
   y: number;
-  data: any;
+  data: {
+    position: CellPosition;
+    maxMultipleY?: number; // multiple 节点中最大的 Y 坐标
+    [key: string]: any;
+  };
 }
 interface SimpleEdge {
   id: string;
@@ -105,6 +113,12 @@ interface ModelCache extends Model {
 }
 
 class FeimaFlowLayout {
+  flowGraph: Graph;
+
+  constructor(flowGraph: Graph) {
+    this.flowGraph = flowGraph;
+  }
+
   layout(model: Model): Model {
     const { nodes, edges } = model;
     // 有哪些【节点/边】出来后，进入此节点
@@ -168,8 +182,8 @@ class FeimaFlowLayout {
     if (!firstNode) {
       throw new Error('no first node');
     }
-    firstNode.x = X_STEP;
-    firstNode.y = Y_STEP;
+    firstNode.x = START_X;
+    firstNode.y = START_Y;
 
     this.setNodePosition(firstNode, cache);
     return this.adjustPosition(model);
@@ -211,7 +225,7 @@ class FeimaFlowLayout {
       node.y = sumY / inInfos.length;
       for (let i = 0; i < inInfos.length; i++) {
         const [_inNode, inEdge] = inInfos[i];
-        const lineY = node.y + Y_STEP * i - (Y_STEP * (inInfos.length - 1)) / 2;
+        const lineY = _inNode.y;
         inEdge.vertices = [
           { x: node.x + nodeSize / 2, y: lineY + nodeSize / 2 },
         ];
@@ -220,11 +234,40 @@ class FeimaFlowLayout {
 
     // out
     const outInfos = this.findOuts(node.id, cache);
-    if (outInfos.length > 0) {
+    if (outInfos.length > 0 && !isNaN(node.x)) {
       for (let i = 0; i < outInfos.length; i++) {
         const [outNode, outEdge] = outInfos[i];
         outNode.x = node.x + X_STEP;
         outNode.y = node.y + Y_STEP * i - (Y_STEP * (outInfos.length - 1)) / 2;
+
+        const firstMultipleNode = this.findFirstMultipleNode(outNode, cache);
+        if (firstMultipleNode) {
+          const data = firstMultipleNode.data;
+          console.log(
+            '===firstMultipleNode',
+            firstMultipleNode.id,
+            'maxMultipleY',
+            data.maxMultipleY,
+            '===current',
+            outNode.id,
+            outNode.y,
+          );
+          if (data.maxMultipleY == null) {
+            data.maxMultipleY = outNode.y;
+          } else if (data.maxMultipleY + nodeSize > outNode.y) {
+            outNode.y = data.maxMultipleY + Y_STEP;
+            data.maxMultipleY = outNode.y;
+          }
+        }
+
+        // console.log('====', outNode);
+        // console.log('====cache.minY', cache.minY, outNode.y);
+        // if (i == 0) {
+        //   cache.minY = Math.min(cache.minY, outNode.y);
+        // } else if (outNode.y < cache.minY) {
+        //   outNode.y += Y_STEP;
+        // }
+
         if (outInfos.length > 1) {
           outEdge.vertices = [
             { x: node.x + nodeSize, y: outNode.y + nodeSize / 2 },
@@ -304,5 +347,37 @@ class FeimaFlowLayout {
     }
     const [_nodeId, _edgeId] = bottom2Map[nodeId];
     return [nodeMap[_nodeId], edgeMap[_edgeId]];
+  }
+
+  findFirstMultipleNode(
+    curNode: SimpleNode,
+    { nodeMap }: ModelCache,
+  ): SimpleNode | undefined {
+    let position = curNode.data?.position;
+    let result: SimpleNode | undefined;
+    console.log('===position', position);
+    while (position && position.parent && position.multiIndex != null) {
+      result = nodeMap[position.parent.id];
+      position = nodeMap[position.parent.id].data.position;
+    }
+    return result;
+  }
+
+  findParentPreviousY(
+    curNode: SimpleNode,
+    cache: ModelCache,
+  ): number | undefined {
+    let position = curNode.data.position;
+
+    while (position.parent && position.multiIndex != null) {
+      // 父节点是 multiple 类型
+      if (position.multiIndex > 0) {
+        // 查看上一个
+        const previousMultiple =
+          position.parent.multiple?.[position.multiIndex - 1].children[0];
+      }
+      // node.data.position.
+    }
+    return;
   }
 }

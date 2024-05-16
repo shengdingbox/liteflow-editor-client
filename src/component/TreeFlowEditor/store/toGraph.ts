@@ -21,7 +21,9 @@ function nodeToCells(opts: NodeToCellsOpts): string {
   const { node, cells, pre, position } = opts;
   let preNodeId = pre?.nodeId;
   const comp = NodeCompStore.getNode(node.type);
-  const curNode = pre ? createNode(node) : createStartEndNode('start');
+  const curNode = pre
+    ? createNode(node, position)
+    : createStartEndNode('start');
   cells.push(curNode);
   if (pre?.nodeId) {
     cells.push(
@@ -67,7 +69,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
         });
       });
     } else {
-      const emptyNode = createVirtualNode();
+      const emptyNode = createVirtualNode({ parent: node, childrenIndex: 0 });
       cells.push(emptyNode);
       cells.push(
         createEdge({
@@ -101,7 +103,8 @@ function nodeToCells(opts: NodeToCellsOpts): string {
     );
     return curNode.id;
   } else if (comp.metadata.childrenType === 'multiple') {
-    const virtualNode = createVirtualNode();
+    // 最后的汇合点
+    const virtualNode = createVirtualNode({ parent: node });
     cells.push(virtualNode);
 
     node.multiple?.forEach((line, multiIndex) => {
@@ -124,7 +127,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
           });
         });
       } else {
-        const emptyNode = createVirtualNode({ parent: node, multiIndex });
+        const emptyNode = createVirtualNode({ parent: node, multiIndex }, true);
         cells.push(emptyNode);
         cells.push(
           createEdge({
@@ -285,7 +288,7 @@ const portGroups = {
   },
 };
 
-function createNode(node: NodeData) {
+function createNode(node: NodeData, position: CellPosition) {
   const comp = NodeCompStore.getNode(node.type);
   const ports = {
     groups: portGroups,
@@ -332,16 +335,17 @@ function createNode(node: NodeData) {
         addMultiple: canAddMultiple,
       },
       nodeComp: comp,
+      position,
     },
     zIndex: 1,
     ports,
   };
 }
 
-function createVirtualNode(deletePosition?: CellPosition) {
-  const canDelete = !!(
-    deletePosition?.multiIndex && deletePosition.multiIndex > 1
-  );
+function createVirtualNode(position: CellPosition, canDelete?: boolean) {
+  // const canDelete = !!(
+  //   deletePosition?.multiIndex && deletePosition.multiIndex > 1
+  // );
   const ports = {
     groups: portGroups,
     items: [
@@ -362,7 +366,7 @@ function createVirtualNode(deletePosition?: CellPosition) {
     id: generateNewId(),
     data: {
       toolbar: { delete: canDelete },
-      position: canDelete ? deletePosition : undefined,
+      position,
     },
     zIndex: 1,
     ports,

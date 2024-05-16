@@ -1,7 +1,7 @@
 import { makeObservable, action, transaction, autorun } from 'mobx';
 import { HistoryStore } from './HistoryStore';
 import { NodeComp, NodeData, CellPosition } from '../types/node';
-import { deleteNode, findNode, insertNode, travelNode } from './travel';
+import { removeNode, findNode, insertNode, travelNode } from './travel';
 import { Edge } from '@antv/x6';
 
 interface DocumentModel {
@@ -25,7 +25,7 @@ export class Store extends HistoryStore<DocumentModel> {
 
   // just for this example
   @action removeNode(id: string, position: CellPosition) {
-    deleteNode(this.document.data, id, position);
+    removeNode(this.document.data, id, position);
   }
 
   @action insertNode(position: CellPosition, node: NodeComp) {

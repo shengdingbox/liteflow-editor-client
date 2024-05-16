@@ -62,30 +62,24 @@ export function findNode(
   }
 }
 
-export function deleteNode(root: NodeData, id: string, position: CellPosition) {
-  if (position == null) {
-    // 按照 id 删除
-    const nodeInfo = findNode(root, id);
-    const parent = findNode(root, id)?.parent;
-    if (nodeInfo && parent) {
-      if (
-        parent.multiple &&
-        nodeInfo.multiIndex != null &&
-        nodeInfo.childrenIndex != null
-      ) {
-        parent.multiple[nodeInfo.multiIndex].children.splice(
-          nodeInfo.childrenIndex,
+export function removeNode(root: NodeData, id: string, position: CellPosition) {
+  if (position.parent) {
+    // 按位置删除
+    const nodeInfo = findNode(root, position.parent.id);
+    if (position.multiIndex == null) {
+      if (position.childrenIndex != null) {
+        nodeInfo?.current.children?.splice(position.childrenIndex, 1);
+      }
+    } else if (position.multiIndex != null) {
+      if (position.childrenIndex == null) {
+        nodeInfo?.current.multiple?.splice(position.multiIndex, 1);
+      } else {
+        nodeInfo?.current.multiple?.[position.multiIndex].children?.splice(
+          position.childrenIndex,
           1,
         );
       }
-      if (parent.children && nodeInfo.childrenIndex != null) {
-        parent.children.splice(nodeInfo.childrenIndex, 1);
-      }
     }
-  } else if (position.parent && position.multiIndex != null) {
-    // 按位置删除
-    const nodeInfo = findNode(root, position.parent.id);
-    nodeInfo?.current.multiple?.splice(position.multiIndex, 1);
   }
 }
 
