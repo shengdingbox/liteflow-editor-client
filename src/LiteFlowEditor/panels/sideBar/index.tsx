@@ -42,24 +42,28 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) ||
             [];
           if (cellViews && cellViews.length) {
-            const currentEdge: Edge = flowGraph.getCellById(
+            const currentEdge = flowGraph.getCellById(
               cellViews[0].cell.id,
-            ) as Edge;
-            flowGraph.trigger('graph:addNodeOnEdge', {
-              edge: currentEdge,
-              node: { shape: node.type },
-            });
+            ) as Edge | null;
+            if (currentEdge) {
+              flowGraph.trigger('graph:addNodeOnEdge', {
+                edge: currentEdge,
+                node: { shape: node.type },
+              });
+            }
           }
           cellViews =
             cellViewsFromPoint.filter((cellView) => cellView.isNodeView()) ||
             [];
           if (cellViews && cellViews.length) {
-            const currentNode: Node = flowGraph.getCellById(
+            const currentNode = flowGraph.getCellById(
               cellViews[0].cell.id,
-            ) as Node;
-            let { model } = currentNode.getData<INodeData>() || {};
-            model?.replace(ELBuilder.createELNode(node.type as any));
-            history.push();
+            ) as Node | null;
+            if (currentNode) {
+              let { model } = currentNode.getData<INodeData>();
+              model?.replace(ELBuilder.createELNode(node.type as any));
+              history.push();
+            }
           }
           return false;
         },
