@@ -84,7 +84,7 @@ export default class SwitchOperator extends ELNode {
     this.resetCells(cells);
     const { condition, children } = this;
     const start = Node.create({
-      shape: condition.type,
+      shape: NodeTypeEnum.SWITCH,
       attrs: {
         label: { text: condition.id },
       },

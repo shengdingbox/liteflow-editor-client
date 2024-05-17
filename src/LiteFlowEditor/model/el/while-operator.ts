@@ -85,7 +85,7 @@ export default class WhileOperator extends ELNode {
 
     const { condition, children } = this;
     const start = Node.create({
-      shape: condition.type,
+      shape: NodeTypeEnum.WHILE,
       attrs: {
         label: { text: condition.id },
       },

@@ -76,7 +76,7 @@ export default class IfOperator extends ELNode {
     this.resetCells(cells);
     const { condition, children = [] } = this;
     const start = Node.create({
-      shape: condition.type,
+      shape: NodeTypeEnum.IF,
       attrs: {
         label: { text: condition.id },
       },

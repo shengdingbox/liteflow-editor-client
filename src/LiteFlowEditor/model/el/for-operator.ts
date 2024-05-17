@@ -84,7 +84,7 @@ export default class ForOperator extends ELNode {
     this.resetCells(cells);
     const { condition, children } = this;
     const start = Node.create({
-      shape: condition.type,
+      shape: NodeTypeEnum.FOR,
       attrs: {
         label: { text: condition.id },
       },
