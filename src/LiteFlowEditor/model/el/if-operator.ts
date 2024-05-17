@@ -169,10 +169,10 @@ export default class IfOperator extends ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(): string {
+  public toEL(prefix: string): string {
     return `IF(${[
-      this.condition.toEL(),
-      ...this.children.map((x) => x.toEL()),
+      this.condition.toEL(prefix),
+      ...this.children.map((x) => x.toEL(prefix)),
     ].join(', ')})${this.propertiesToEL()}`;
   }
 

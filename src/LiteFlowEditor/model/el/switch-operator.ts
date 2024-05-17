@@ -153,9 +153,9 @@ export default class SwitchOperator extends ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(): string {
-    return `SWITCH(${this.condition.toEL()}).to(${this.children
-      .map((x) => x.toEL())
+  public toEL(prefix: string): string {
+    return `SWITCH(${this.condition.toEL(prefix)}).to(${this.children
+      .map((x) => x.toEL(prefix))
       .join(', ')})`;
   }
 

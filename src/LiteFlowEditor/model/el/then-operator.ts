@@ -114,10 +114,10 @@ export default class ThenOperator extends ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(): string {
-    return `THEN(${this.children
-      .map((x) => x.toEL())
-      .join(', ')})${this.propertiesToEL()}`;
+  public toEL(prefix: string): string {
+    return `${prefix}THEN(${this.children
+      .map((x) => x.toEL(prefix ? `\n${prefix}  ` : ''))
+      .join(', ')}${prefix ? `\n${prefix}` : ''})${this.propertiesToEL()}`;
   }
 
   /**

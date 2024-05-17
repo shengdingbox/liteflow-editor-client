@@ -173,9 +173,9 @@ export default class WhileOperator extends ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(): string {
-    return `WHILE(${this.condition.toEL()}).DO(${this.children
-      .map((x) => x.toEL())
+  public toEL(prefix: string): string {
+    return `WHILE(${this.condition.toEL(prefix)}).DO(${this.children
+      .map((x) => x.toEL(prefix))
       .join(', ')})`;
   }
 

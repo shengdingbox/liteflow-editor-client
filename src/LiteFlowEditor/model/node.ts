@@ -321,7 +321,7 @@ export default abstract class ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public abstract toEL(): string;
+  public abstract toEL(prefix?: string): string;
 
   /**
    * 转换为JSON格式

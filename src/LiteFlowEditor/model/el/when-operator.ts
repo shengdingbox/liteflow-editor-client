@@ -147,9 +147,9 @@ export default class WhenOperator extends ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(): string {
+  public toEL(prefix: string): string {
     return `WHEN(${this.children
-      .map((x) => x.toEL())
+      .map((x) => x.toEL(prefix))
       .join(', ')})${this.propertiesToEL()}`;
   }
 

@@ -14,7 +14,7 @@ const Basic: React.FC<IProps> = (props) => {
   useEffect(() => {
     const handleModelChange = () => {
       const model = useModel();
-      setELString(model.toEL());
+      setELString(model.toEL(' '));
     };
     flowGraph.on('model:change', handleModelChange);
     return () => {
@@ -24,7 +24,9 @@ const Basic: React.FC<IProps> = (props) => {
 
   return (
     <div className={styles.liteflowEditorBasicContainer}>
-      <div className={styles.elContentWrapper}>{elString}</div>
+      <div className={styles.elContentWrapper}>
+        <pre>{elString}</pre>
+      </div>
     </div>
   );
 };
