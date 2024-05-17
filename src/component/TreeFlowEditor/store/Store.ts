@@ -1,8 +1,9 @@
 import { makeObservable, action, transaction, autorun } from 'mobx';
 import { HistoryStore } from './HistoryStore';
-import { NodeComp, NodeData, CellPosition } from '../types/node';
+import { NodeComp, NodeData, CellPosition, AdvNodeData } from '../types/node';
 import { removeNode, findNode, insertNode, travelNode } from './travel';
 import { Edge } from '@antv/x6';
+import { generateNewId } from '../utils';
 
 interface DocumentModel {
   data: NodeData;
@@ -10,6 +11,7 @@ interface DocumentModel {
 
 export class Store extends HistoryStore<DocumentModel> {
   currentEdge?: Edge;
+  advRootData?: AdvNodeData;
 
   constructor(initData: NodeData) {
     for (const nodeInfo of travelNode(initData)) {
@@ -44,8 +46,4 @@ export function createStore(initData: NodeData) {
     console.log(store.document.data);
   });
   return store;
-}
-
-export function generateNewId(): string {
-  return Math.random().toString(36).substring(2);
 }

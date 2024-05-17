@@ -1,5 +1,6 @@
 import icon from '../assets/end-icon.svg';
-import { NodeComp } from '../types/node';
+import { NodeComp, NodeData } from '../types/node';
+import { generateNewId } from '../utils';
 
 const config: NodeComp = {
   metadata: {
@@ -10,3 +11,10 @@ const config: NodeComp = {
 };
 
 export default config;
+
+export function createEndComp(): NodeData {
+  return {
+    id: generateNewId(),
+    type: 'BUILDIN/END',
+  };
+}

@@ -2,7 +2,7 @@ import { DagreLayoutOptions } from '@antv/layout';
 import { Graph } from '@antv/x6';
 import { toJS } from 'mobx';
 
-import { CellPosition, NodeData } from '../types/node';
+import { AdvNodeData, CellPosition, NodeData } from '../types/node';
 import { NodeCompStore } from '../store/CompStore';
 import { NODE_HEIGHT, NODE_WIDTH } from '../constant';
 import { travelNode } from '../store/travel';
@@ -14,7 +14,7 @@ const Y_STEP = 80;
 
 export const forceLayout = (
   flowGraph: Graph,
-  root: NodeData,
+  root: AdvNodeData,
   cfg: any = {},
 ): void => {
   const model: Model = {
@@ -78,9 +78,9 @@ export function printMoxObj(obj: any) {
 class FeimaFlowLayout {
   flowGraph: Graph;
   cache: ModelCache;
-  root: NodeData;
+  root: AdvNodeData;
 
-  constructor(flowGraph: Graph, model: Model, root: NodeData) {
+  constructor(flowGraph: Graph, model: Model, root: AdvNodeData) {
     this.flowGraph = flowGraph;
     this.root = root;
     const { nodes, edges } = model;

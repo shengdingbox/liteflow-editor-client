@@ -24,6 +24,10 @@ export interface NodeData {
   }>;
 }
 
+export interface AdvNodeData extends NodeData {
+  isVirtual?: boolean;
+}
+
 export interface CellPosition {
   parent?: NodeData;
   multiIndex?: number;

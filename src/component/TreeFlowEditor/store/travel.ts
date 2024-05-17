@@ -1,4 +1,5 @@
 import { CellPosition, NodeComp, NodeData } from '../types/node';
+import { generateNewId } from '../utils';
 
 interface NodeDataInfo {
   current: NodeData;
@@ -105,8 +106,4 @@ export function insertNode(
       parentNode.children?.splice(position.childrenIndex, 0, newNodeData);
     }
   }
-}
-
-export function generateNewId(): string {
-  return Math.random().toString(36).substring(2);
 }

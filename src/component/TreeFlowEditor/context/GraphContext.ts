@@ -2,9 +2,9 @@ import { Context, createContext, RefObject } from 'react';
 import { Graph } from '@antv/x6';
 import { Store } from '../store/Store';
 import createFlowChart, { bindKeyboards } from '../graph/createFlowChart';
-import { NodeComp, NodeData } from '../types/node';
+import { AdvNodeData, NodeComp, NodeData } from '../types/node';
 import { autorun } from 'mobx';
-import { toGraphJson } from '../store/toGraph';
+import { addPlacehoderNodes, toGraphJson } from '../store/toGraph';
 import { forceLayout } from '../common/layout';
 import registerEvents from '../common/events';
 
@@ -40,13 +40,15 @@ export class Grapher {
         return;
       }
 
-      const modelJSON = toGraphJson(this.store.document.data);
+      // const advNodeData = addPlacehoderNodes(this.store.document.data);
+      this.store.advRootData = addPlacehoderNodes(this.store.document.data);
+      const modelJSON = toGraphJson(this.store.advRootData);
 
       // 显示图形
       this.flowGraph.scroller.disableAutoResize();
       this.flowGraph.startBatch('update');
       this.flowGraph.fromJSON(modelJSON);
-      forceLayout(this.flowGraph, this.store.document.data);
+      forceLayout(this.flowGraph, this.store.advRootData);
       this.flowGraph.stopBatch('update');
       this.flowGraph.scroller.enableAutoResize();
     });

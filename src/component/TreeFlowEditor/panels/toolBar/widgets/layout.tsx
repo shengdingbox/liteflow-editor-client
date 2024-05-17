@@ -13,7 +13,7 @@ const Edit: React.FC<IProps> = makeBtnWidget({
   tooltip: '自动布局',
   handler(grapher: Grapher) {
     grapher.flowGraph.startBatch('layout');
-    forceLayout(grapher.flowGraph, grapher.store.document.data);
+    forceLayout(grapher.flowGraph, grapher.store.advRootData!);
     grapher.flowGraph.stopBatch('layout');
   },
   getIcon() {

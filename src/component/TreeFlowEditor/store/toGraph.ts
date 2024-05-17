@@ -1,5 +1,11 @@
+import { autorun, toJS } from 'mobx';
 import { NodeCompStore } from './CompStore';
-import { CellPosition, NodeData } from '../types/node';
+
+import { AdvNodeData, CellPosition, NodeData } from '../types/node';
+import { travelNode } from './travel';
+import { createPlaceholderComp } from '../buildinNodes/multiple-placeholder';
+import { generateNewId } from '../utils';
+import { createEndComp } from '../buildinNodes/end';
 
 interface NodeToCellsOpts {
   node: NodeData;
@@ -172,25 +178,32 @@ function nodeToCells(opts: NodeToCellsOpts): string {
   }
 }
 
-export function toGraphJson(node: NodeData): any {
-  const cells: Array<Record<string, any>> = [];
-  const lastNodeId = nodeToCells({ node, cells, position: {} });
-  const endNode = createStartEndNode('end');
-  cells.push(endNode);
-  cells.push(
-    createEdge({
-      from: lastNodeId,
-      fromPort: 'out',
-      to: endNode.id,
-      toPort: 'in',
-      position: {
-        parent: node,
-        childrenIndex: node.children?.length,
-      },
-    }),
-  );
+export function addPlacehoderNodes(root: NodeData): AdvNodeData {
+  const result: AdvNodeData = toJS(root);
+  for (const n of travelNode(result)) {
+    const cur = n.current as AdvNodeData;
+    const comp = NodeCompStore.getNode(cur.type);
+    cur.isVirtual = true;
+    if (comp.metadata.childrenType === 'multiple') {
+      cur.multiple!.forEach((m) => {
+        if (m.children.length == 0) {
+          m.children.push(createPlaceholderComp());
+        }
+      });
+    } else if (comp.metadata.childrenType === 'include') {
+      if (cur.children!.length == 0) {
+        cur.children!.push(createPlaceholderComp());
+      }
+    }
+  }
+  result.children?.push(createEndComp());
+  return result;
+}
 
-  // console.log('===cells', cells);
+export function toGraphJson(node: AdvNodeData): any {
+  // addPlacehoderNodes(node);
+  const cells: Array<Record<string, any>> = [];
+  nodeToCells({ node, cells, position: {} });
   return cells;
 }
 
@@ -429,8 +442,4 @@ function createEdge(opts: EdgeOpts) {
       position,
     },
   };
-}
-
-export function generateNewId(): string {
-  return Math.random().toString(36).substring(2);
 }

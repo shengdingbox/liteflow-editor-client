@@ -30,3 +30,7 @@ export const executeScript = (code: string, type = 'module') => {
   script.text = code;
   document.body.appendChild(script);
 };
+
+export function generateNewId(): string {
+  return Math.random().toString(36).substring(2);
+}

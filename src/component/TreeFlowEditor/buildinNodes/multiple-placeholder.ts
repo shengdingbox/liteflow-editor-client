@@ -1,5 +1,6 @@
 import icon from '../assets/dot-icon.svg';
-import { NodeComp } from '../types/node';
+import { NodeComp, NodeData } from '../types/node';
+import { generateNewId } from '../utils';
 
 const config: NodeComp = {
   metadata: {
@@ -8,5 +9,12 @@ const config: NodeComp = {
     icon,
   },
 };
+
+export function createPlaceholderComp(): NodeData {
+  return {
+    id: generateNewId(),
+    type: 'NodeVirtualComponent',
+  };
+}
 
 export default config;

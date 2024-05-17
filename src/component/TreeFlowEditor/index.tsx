@@ -3,7 +3,6 @@ import { Portal } from '@antv/x6-react-shape';
 import React, { useEffect, useRef, useState } from 'react';
 
 import '@antv/x6/dist/x6.css';
-import './buildinNodes';
 import GraphContext, { Grapher } from './context/GraphContext';
 import styles from './index.module.less';
 import Layout from './panels/layout';
