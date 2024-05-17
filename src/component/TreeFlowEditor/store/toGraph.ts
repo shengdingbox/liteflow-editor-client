@@ -23,7 +23,7 @@ function nodeToCells(opts: NodeToCellsOpts): string {
   const comp = NodeCompStore.getNode(node.type);
   const curNode = pre
     ? createNode(node, position)
-    : createStartEndNode('start');
+    : createStartEndNode('start', node.id);
   cells.push(curNode);
   if (pre?.nodeId) {
     cells.push(
@@ -376,7 +376,7 @@ function createVirtualNode(position: CellPosition, canDelete?: boolean) {
   };
 }
 
-function createStartEndNode(type: 'start' | 'end') {
+function createStartEndNode(type: 'start' | 'end', nodeId?: string) {
   const ports = {
     groups: portGroups,
     items: [
@@ -394,7 +394,7 @@ function createStartEndNode(type: 'start' | 'end') {
     view: 'react-shape-view',
     attrs: { label: { text: '' } },
     shape: type === 'start' ? 'BUILDIN/START' : 'BUILDIN/END',
-    id: generateNewId(),
+    id: nodeId || generateNewId(),
     data: null,
     zIndex: 1,
     ports,

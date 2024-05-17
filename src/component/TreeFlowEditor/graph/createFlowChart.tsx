@@ -39,37 +39,45 @@ function registerNodes(compGroups: Array<[string, NodeComp[]]>) {
     // width = 5;
     // height = 5;
     // }
-    Graph.registerNode(type, {
-      primer: 'circle',
-      inherit: 'react-shape',
-      component(node: any) {
-        return <NodeView node={node} icon={icon} />;
-      },
-      width,
-      height,
-      attrs: {
-        label: {
-          refX: 0.5,
-          refY: '100%',
-          refY2: 20,
-          text: label,
-          fill: '#333',
-          fontSize: 13,
-          textAnchor: 'middle',
-          textVerticalAnchor: 'middle',
-          textWrap: {
-            width: 80,
-            height: 32,
-            ellipsis: true,
-            breakWord: true,
+    Graph.registerNode(
+      type,
+      {
+        primer: 'circle',
+        inherit: 'react-shape',
+        component(node: any) {
+          return <NodeView node={node} icon={icon} />;
+        },
+        width,
+        height,
+        attrs: {
+          label: {
+            refX: 0.5,
+            refY: '100%',
+            refY2: 20,
+            text: label,
+            fill: '#333',
+            fontSize: 13,
+            textAnchor: 'middle',
+            textVerticalAnchor: 'middle',
+            textWrap: {
+              width: 80,
+              height: 32,
+              ellipsis: true,
+              breakWord: true,
+            },
           },
         },
       },
-    });
+      true,
+    );
 
-    Graph.registerReactComponent(type, function component(node: any) {
-      return <NodeView node={node} icon={icon} />;
-    });
+    Graph.registerReactComponent(
+      type,
+      function component(node: any) {
+        return <NodeView node={node} icon={icon} />;
+      },
+      true,
+    );
 
     NodeCompStore.registerNode(nodeComp);
   });

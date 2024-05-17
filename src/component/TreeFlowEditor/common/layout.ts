@@ -1,43 +1,23 @@
-import { Edge, Graph, Node } from '@antv/x6';
-import { DagreLayout, GridLayout, DagreLayoutOptions } from '@antv/layout';
-import { CellPosition, NodeData } from '../types/node';
+import { DagreLayoutOptions } from '@antv/layout';
+import { Graph } from '@antv/x6';
+import { toJS } from 'mobx';
 
-const rankdir: DagreLayoutOptions['rankdir'] = 'LR';
-const align: DagreLayoutOptions['align'] = undefined;
-// const align: DagreLayoutOptions['align'] = 'UR';
+import { CellPosition, NodeData } from '../types/node';
+import { NodeCompStore } from '../store/CompStore';
+import { NODE_HEIGHT, NODE_WIDTH } from '../constant';
+import { travelNode } from '../store/travel';
+
 const nodeSize: number = 30;
-const ranksep: number = 20;
-const nodesep: number = 20;
-const controlPoints: DagreLayoutOptions['controlPoints'] = false;
 
 const X_STEP = 80;
 const Y_STEP = 80;
 
-const START_X = 80;
-const START_Y = 80;
-
-const forceLDagreayout = (flowGraph: Graph, cfg: any = {}): void => {
-  const dagreLayout: DagreLayout = new DagreLayout({
-    begin: [40, 40],
-    type: 'dagre',
-    rankdir,
-    align,
-    nodeSize,
-    ranksep,
-    nodesep,
-    controlPoints,
-  });
-
-  dagreLayout.updateCfg({
-    // ranker: 'tight-tree', // 'tight-tree' 'longest-path' 'network-simplex'
-    // nodeOrder,
-    // preset: {
-    //   nodes: model.nodes.filter((node: any) => node._order !== undefined),
-    // },
-    ...cfg,
-  });
-
-  const newModel = dagreLayout.layout({
+export const forceLayout = (
+  flowGraph: Graph,
+  root: NodeData,
+  cfg: any = {},
+): void => {
+  const model: Model = {
     // @ts-ignore
     nodes: flowGraph.getNodes().map((node) => {
       node.setZIndex(1);
@@ -48,32 +28,10 @@ const forceLDagreayout = (flowGraph: Graph, cfg: any = {}): void => {
       // console.log('===old', edge.toJSON());
       return edge.toJSON();
     }),
-  });
-  flowGraph.fromJSON(newModel);
-  // newNodes?.forEach((node: any) => {
-  //   const cell: Node | undefined = flowGraph.getCellById(node.id) as
-  //     | Node
-  //     | undefined;
-  //   if (cell) {
-  //     cell.position(node.x, node.y);
-  //   }
-  // });
-};
-
-export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
-  const feimaFlowLayout = new FeimaFlowLayout(flowGraph);
-  const newModel = feimaFlowLayout.layout({
-    // @ts-ignore
-    nodes: flowGraph.getNodes().map((node) => {
-      node.setZIndex(1);
-      return node.toJSON();
-    }), // @ts-ignore
-    edges: flowGraph.getEdges().map((edge) => {
-      edge.setZIndex(0);
-      // console.log('===old', edge.toJSON());
-      return edge.toJSON();
-    }),
-  });
+  };
+  console.log('===nodes', model.nodes);
+  const feimaFlowLayout = new FeimaFlowLayout(flowGraph, model, root);
+  const newModel = feimaFlowLayout.layout();
   flowGraph.fromJSON(newModel);
 };
 
@@ -84,6 +42,7 @@ interface SimpleNode {
   data: {
     position: CellPosition;
     maxMultipleY?: number; // multiple 节点中最大的 Y 坐标
+    totalHeight?: number;
     [key: string]: any;
   };
 }
@@ -112,14 +71,18 @@ interface ModelCache extends Model {
   edgeMap: Record<string, SimpleEdge>;
 }
 
+export function printMoxObj(obj: any) {
+  console.log(toJS(obj));
+}
+
 class FeimaFlowLayout {
   flowGraph: Graph;
+  cache: ModelCache;
+  root: NodeData;
 
-  constructor(flowGraph: Graph) {
+  constructor(flowGraph: Graph, model: Model, root: NodeData) {
     this.flowGraph = flowGraph;
-  }
-
-  layout(model: Model): Model {
+    this.root = root;
     const { nodes, edges } = model;
     // 有哪些【节点/边】出来后，进入此节点
     const inMap: Record<string, NodeAndEdge[]> = {};
@@ -138,6 +101,9 @@ class FeimaFlowLayout {
     const edgeMap: Record<string, SimpleEdge> = {};
 
     nodes.forEach((n) => {
+      n.x = 0;
+      n.y = 0;
+      console.log('===n.id', n.id);
       nodeMap[n.id] = n;
     });
     edges.forEach((e) => {
@@ -165,7 +131,7 @@ class FeimaFlowLayout {
         }
       }
     });
-    const cache: ModelCache = {
+    this.cache = {
       nodes,
       edges,
       inMap,
@@ -175,39 +141,141 @@ class FeimaFlowLayout {
       nodeMap,
       edgeMap,
     };
+  }
 
-    const firstNode = nodes.find((n) => {
-      return !inMap[n.id];
+  layout(): Model {
+    const firstNode = this.cache.nodes.find((n) => {
+      return !this.cache.inMap[n.id];
     });
     if (!firstNode) {
       throw new Error('no first node');
     }
-    firstNode.x = START_X;
-    firstNode.y = START_Y;
+    // firstNode.x = START_X;
+    // firstNode.y = START_Y;
 
-    this.setNodePosition(firstNode, cache);
-    return this.adjustPosition(model);
+    this.setNodePosition(firstNode, this.cache);
+
+    // 调整高度
+    this.calHeight(this.root);
+    this.setY(this.root);
+    // console.log(this.cache.nodes);
+    // this.root.
+
+    // this.adjustPosition();
+    this.translate(this.root, X_STEP, Y_STEP);
+
+    return { nodes: this.cache.nodes, edges: this.cache.edges };
   }
 
-  adjustPosition(model: Model): Model {
-    // return model;
-    const { nodes, edges } = model;
+  calHeight(node: NodeData): number {
+    let result = 0;
+    const comp = NodeCompStore.getNode(node.type);
+    if (comp.metadata.childrenType === 'multiple') {
+      for (let i = 0; i < node.multiple!.length; i++) {
+        const multiple = node.multiple![i];
+        let multiHeight = NODE_HEIGHT;
+        for (let j = 0; j < multiple.children.length; j++) {
+          const curNode = multiple.children[j];
+          multiHeight = Math.max(multiHeight, this.calHeight(curNode));
+        }
+        result += multiHeight + Y_STEP;
+      }
+      result -= Y_STEP;
+    } else if (comp.metadata.childrenType == 'then' && node.children) {
+      let eachHeight = NODE_HEIGHT;
+      for (let i = 0; i < node.children.length; i++) {
+        eachHeight = Math.max(eachHeight, this.calHeight(node.children[i]));
+      }
+      result = eachHeight;
+    } else {
+      result = nodeSize;
+    }
+    if (this.cache.nodeMap[node.id]?.data) {
+      this.cache.nodeMap[node.id].data.totalHeight = result;
+    }
+    return result;
+  }
+
+  setY(node: NodeData) {
+    const comp = NodeCompStore.getNode(node.type);
+    let totalHeight = 0;
+    if (comp.metadata.childrenType === 'multiple') {
+      let multiHeight = 0;
+      for (let m = 0; m < node.multiple!?.length; m++) {
+        const multiple = node.multiple![m];
+        let childrenTotalHeight = NODE_HEIGHT;
+        for (let i = 0; i < multiple.children!?.length; i++) {
+          const curNode = multiple.children[i];
+          const curHeight = this.cache.nodeMap[curNode.id].data.totalHeight!;
+          childrenTotalHeight = Math.max(childrenTotalHeight, curHeight);
+          this.setY(curNode);
+        }
+        multiHeight += childrenTotalHeight + Y_STEP;
+      }
+      multiHeight -= Y_STEP;
+      totalHeight = multiHeight;
+    } else if (comp.metadata.childrenType === 'then') {
+      let childrenTotalHeight = NODE_HEIGHT;
+      for (let i = 0; i < node.children!?.length; i++) {
+        const curNode = node.children![i];
+        const curHeight = this.cache.nodeMap[curNode.id].data.totalHeight!;
+        childrenTotalHeight = Math.max(childrenTotalHeight, curHeight);
+        this.setY(curNode);
+      }
+      totalHeight = childrenTotalHeight;
+    }
+
+    // const offset = 0;
+    // const nodeY = this.cache.nodeMap[node.id].y;
+    // const offset = nodeY + (nodeSize - childrenHeight) / 2 - first.y;
+    const offset = totalHeight / 2;
+    // this.translate(node, 0, offset);
+  }
+
+  // 移动节点及其子节点
+  translate(node: NodeData, tx: number, ty: number) {
+    if (isNaN(tx) || isNaN(ty)) {
+      return;
+    }
+    console.log('====node', node);
+
+    for (const n of travelNode(node)) {
+      // if (node.id === 'start') {
+      //   console.log('===start', toJS(node));
+      //   console.log('====n', toJS(n));
+      // }
+      const curNodeId = n.current.id;
+      const curNode = this.cache.nodeMap[curNodeId];
+      // console.log('====n', n);
+      console.log('===curNode', curNode);
+      if (curNode) {
+        curNode.x += tx;
+        curNode.y += ty;
+      }
+      // if (this.cache.nodeMap[curNodeId]) {
+      //   this.cache.nodeMap[curNodeId].x += tx;
+      //   this.cache.nodeMap[curNodeId].y += ty;
+      //   console.log('== this.cache.nodeMap', this.cache.nodeMap);
+      // }
+    }
+  }
+
+  adjustPosition() {
     let minY = Infinity;
-    nodes.forEach((n) => {
+    this.cache.nodes.forEach((n) => {
       minY = Math.min(minY, n.y);
     });
     if (minY < Y_STEP) {
       const addY = Y_STEP - minY;
-      nodes.forEach((n) => {
+      this.cache.nodes.forEach((n) => {
         n.y += addY;
       });
-      edges.forEach((e) => {
+      this.cache.edges.forEach((e) => {
         e.vertices?.forEach((v) => {
           v.y += addY;
         });
       });
     }
-    return model;
   }
 
   setNodePosition(node: SimpleNode, cache: ModelCache) {
@@ -215,21 +283,21 @@ class FeimaFlowLayout {
     const inInfos = this.findIns(node.id, cache);
     if (inInfos.length > 1) {
       let maxX = 0;
-      let sumY = 0;
+      // let sumY = 0;
       for (let i = 0; i < inInfos.length; i++) {
         const [inNode] = inInfos[i];
         maxX = Math.max(maxX, inNode.x);
-        sumY = sumY + inNode.y;
+        // sumY = sumY + inNode.y;
       }
       node.x = maxX + X_STEP;
-      node.y = sumY / inInfos.length;
-      for (let i = 0; i < inInfos.length; i++) {
-        const [_inNode, inEdge] = inInfos[i];
-        const lineY = _inNode.y;
-        inEdge.vertices = [
-          { x: node.x + nodeSize / 2, y: lineY + nodeSize / 2 },
-        ];
-      }
+      // node.y = sumY / inInfos.length;
+      // for (let i = 0; i < inInfos.length; i++) {
+      //   const [_inNode, inEdge] = inInfos[i];
+      //   const lineY = _inNode.y;
+      //   inEdge.vertices = [
+      //     { x: node.x + nodeSize / 2, y: lineY + nodeSize / 2 },
+      //   ];
+      // }
     }
 
     // out
@@ -238,13 +306,13 @@ class FeimaFlowLayout {
       for (let i = 0; i < outInfos.length; i++) {
         const [outNode, outEdge] = outInfos[i];
         outNode.x = node.x + X_STEP;
-        outNode.y = node.y + Y_STEP * i - (Y_STEP * (outInfos.length - 1)) / 2;
+        // outNode.y = node.y + Y_STEP * i - (Y_STEP * (outInfos.length - 1)) / 2;
 
-        if (outInfos.length > 1) {
-          outEdge.vertices = [
-            { x: node.x + nodeSize, y: outNode.y + nodeSize / 2 },
-          ];
-        }
+        // if (outInfos.length > 1) {
+        //   outEdge.vertices = [
+        //     { x: node.x + nodeSize, y: outNode.y + nodeSize / 2 },
+        //   ];
+        // }
         this.setNodePosition(outNode, cache);
       }
     }
@@ -254,10 +322,10 @@ class FeimaFlowLayout {
     if (bottom1Info) {
       const [n, e] = bottom1Info;
       n.x = node.x + X_STEP / 2;
-      n.y = node.y + Y_STEP * 1.2;
+      // n.y = node.y + Y_STEP * 1.2;
       this.setNodePosition(n, cache);
 
-      e.vertices = [{ x: node.x, y: n.y + nodeSize / 2 }];
+      // e.vertices = [{ x: node.x, y: n.y + nodeSize / 2 }];
     }
 
     // bottom2
@@ -265,11 +333,11 @@ class FeimaFlowLayout {
     if (bottom2Info) {
       const [n, e] = bottom2Info;
 
-      e.vertices = [
-        { x: n.x + nodeSize * 2, y: n.y + nodeSize / 2 },
-        { x: n.x + nodeSize * 2, y: n.y - nodeSize },
-        { x: node.x + nodeSize, y: n.y - nodeSize },
-      ];
+      // e.vertices = [
+      //   { x: n.x + nodeSize * 2, y: n.y + nodeSize / 2 },
+      //   { x: n.x + nodeSize * 2, y: n.y - nodeSize },
+      //   { x: node.x + nodeSize, y: n.y - nodeSize },
+      // ];
     }
   }
 
@@ -321,3 +389,12 @@ class FeimaFlowLayout {
     return [nodeMap[_nodeId], edgeMap[_edgeId]];
   }
 }
+
+/**
+ * 参考 https://github.com/antvis/hierarchy/blob/master/src/layout/mindmap.js
+ * 思路：
+ * 1. 第一次循环，先计算 x 坐标
+ * 2. 第二次循环 secondWalk ，计算每个节点（含子节点）的总高度
+ * 3. 第三次循环，计算 y 坐标
+ * 4. 第四次循环 thirdWalk ，
+ */

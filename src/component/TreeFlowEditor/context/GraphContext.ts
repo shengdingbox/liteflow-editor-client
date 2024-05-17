@@ -46,7 +46,7 @@ export class Grapher {
       this.flowGraph.scroller.disableAutoResize();
       this.flowGraph.startBatch('update');
       this.flowGraph.fromJSON(modelJSON);
-      forceLayout(this.flowGraph);
+      forceLayout(this.flowGraph, this.store.document.data);
       this.flowGraph.stopBatch('update');
       this.flowGraph.scroller.enableAutoResize();
     });
