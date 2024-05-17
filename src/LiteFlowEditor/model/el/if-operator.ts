@@ -173,7 +173,7 @@ export default class IfOperator extends ELNode {
     return `IF(${[
       this.condition.toEL(),
       ...this.children.map((x) => x.toEL()),
-    ].join(', ')})`;
+    ].join(', ')})${this.propertiesToEL()}`;
   }
 
   /**

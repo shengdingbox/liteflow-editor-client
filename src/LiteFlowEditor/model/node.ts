@@ -293,6 +293,32 @@ export default abstract class ELNode {
   }
 
   /**
+   * 获取属性
+   * @returns 属性
+   */
+  public getProperties(): Properties {
+    return this.properties || {};
+  }
+
+  /**
+   * 设置属性
+   */
+  public setProperties(properties: Properties): void {
+    this.properties = properties;
+  }
+
+  /**
+   * 获取属性的EL表达式
+   * @returns 属性的EL表达式
+   */
+  public propertiesToEL(): string {
+    const properties = this.properties || {};
+    return Object.keys(properties)
+      .map((key) => `.${key}("${properties[key]}")`)
+      .join('');
+  }
+
+  /**
    * 转换为EL表达式字符串
    */
   public abstract toEL(): string;
@@ -399,6 +425,29 @@ export class ELStartNode extends ELNode {
   }
 
   /**
+   * 获取属性
+   * @returns 属性
+   */
+  public getProperties(): Properties {
+    return this.proxy.getProperties();
+  }
+
+  /**
+   * 设置属性
+   */
+  public setProperties(properties: Properties): void {
+    this.proxy.setProperties(properties);
+  }
+
+  /**
+   * 获取属性的EL表达式
+   * @returns 属性的EL表达式
+   */
+  public propertiesToEL(): string {
+    return this.proxy.propertiesToEL();
+  }
+
+  /**
    * 转换为EL表达式字符串
    */
   public toEL(): string {
@@ -495,6 +544,29 @@ export class ELEndNode extends ELNode {
    */
   public getEndNode(): Node {
     return this.proxy.getEndNode();
+  }
+
+  /**
+   * 获取属性
+   * @returns 属性
+   */
+  public getProperties(): Properties {
+    return this.proxy.getProperties();
+  }
+
+  /**
+   * 设置属性
+   */
+  public setProperties(properties: Properties): void {
+    this.proxy.setProperties(properties);
+  }
+
+  /**
+   * 获取属性的EL表达式
+   * @returns 属性的EL表达式
+   */
+  public propertiesToEL(): string {
+    return this.proxy.propertiesToEL();
   }
 
   /**

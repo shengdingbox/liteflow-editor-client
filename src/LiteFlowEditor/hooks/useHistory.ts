@@ -18,7 +18,7 @@ export const history = {
   canUndo() {
     return this.$cursorIndex > 0;
   },
-  push(nextState: ELNode) {
+  push(nextState: ELNode, options: Record<string, any> = { silent: false }) {
     if (this.$historyStack.length > this.$cursorIndex + 1) {
       this.$historyStack.splice(
         this.$cursorIndex + 1,
@@ -32,9 +32,11 @@ export const history = {
       this.$historyStack.push(useModel().toJSON());
     }
     this.$cursorIndex++;
-    this.$graph.trigger('model:change');
-    this.$graph.trigger('toolBar:forceUpdate');
-    this.$graph.trigger('settingBar:forceUpdate');
+    if (!options.silent) {
+      this.$graph.trigger('model:change');
+      this.$graph.trigger('toolBar:forceUpdate');
+      this.$graph.trigger('settingBar:forceUpdate');
+    }
   },
   redo() {
     if (this.canRedo()) {

@@ -115,7 +115,9 @@ export default class ThenOperator extends ELNode {
    * 转换为EL表达式字符串
    */
   public toEL(): string {
-    return `THEN(${this.children.map((x) => x.toEL()).join(', ')})`;
+    return `THEN(${this.children
+      .map((x) => x.toEL())
+      .join(', ')})${this.propertiesToEL()}`;
   }
 
   /**

@@ -123,18 +123,21 @@ function parse({ parent, data }: ParseParameters): ELNode | undefined {
 }
 
 function parseSequence({ parent, data }: ParseParameters): ELNode {
-  const { children = [] } = data;
+  const { children = [], properties } = data;
   children.forEach((child: Record<string, any>) => {
     const childNode = parse({ parent, data: child });
     if (childNode) {
       parent.appendChild(childNode);
     }
   });
+  if (properties) {
+    parent.setProperties(properties);
+  }
   return parent;
 }
 
 function parseControl({ parent, data }: ParseParameters): ELNode {
-  const { condition, children = [] } = data;
+  const { condition, children = [], properties } = data;
   const conditionNode = parse({ parent, data: condition });
   if (conditionNode) {
     parent.condition = conditionNode;
@@ -145,5 +148,8 @@ function parseControl({ parent, data }: ParseParameters): ELNode {
       parent.appendChild(childNode);
     }
   });
+  if (properties) {
+    parent.setProperties(properties);
+  }
   return parent;
 }

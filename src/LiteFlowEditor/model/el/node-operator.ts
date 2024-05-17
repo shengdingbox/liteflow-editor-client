@@ -98,7 +98,7 @@ export default class NodeOperator extends ELNode {
    * 转换为EL表达式字符串
    */
   public toEL(): string {
-    return this.id;
+    return `${this.id}${this.propertiesToEL()}`;
   }
 
   /**
