@@ -118,7 +118,7 @@ function parse({ parent, data }: ParseParameters): ELNode | undefined {
     // 2、组件类：顺序、分支、循环
     case NodeTypeEnum.COMMON:
     default:
-      return new NodeOperator(parent, data.type, data.id);
+      return new NodeOperator(parent, data.type, data.id, data.properties);
   }
 }
 

@@ -1,5 +1,5 @@
 import { Cell, Node } from '@antv/x6';
-import ELNode from '../node';
+import ELNode, { Properties } from '../node';
 import { NodeTypeEnum } from '../../constant';
 
 /**
@@ -37,11 +37,17 @@ export default class NodeOperator extends ELNode {
   id: string;
   node?: Node;
 
-  constructor(parent?: ELNode, type?: NodeTypeEnum, id?: string) {
+  constructor(
+    parent?: ELNode,
+    type?: NodeTypeEnum,
+    id?: string,
+    properties?: Properties,
+  ) {
     super();
     this.parent = parent;
     this.type = type || NodeTypeEnum.COMMON;
     this.id = id || `common${Math.ceil(Math.random() * 100)}`;
+    this.properties = properties;
   }
 
   /**

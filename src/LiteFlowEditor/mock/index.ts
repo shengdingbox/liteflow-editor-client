@@ -4,11 +4,12 @@ export default {
   THEN: {
     type: ConditionTypeEnum.THEN,
     children: [
-      { type: NodeTypeEnum.COMMON, id: 'a' },
+      { type: NodeTypeEnum.COMMON, id: 'a', properties: { tag: 'dog' } },
       { type: NodeTypeEnum.COMMON, id: 'b' },
       { type: NodeTypeEnum.COMMON, id: 'c' },
       { type: NodeTypeEnum.COMMON, id: 'd' },
     ],
+    properties: { id: 'cat' },
   },
   // 并行编排(WHEN)
   WHEN: {
