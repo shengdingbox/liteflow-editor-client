@@ -78,7 +78,7 @@ export default class ForOperator extends ELNode {
    * 转换为X6的图数据格式
    */
   public toCells(
-    cells: Cell[] = this.cells,
+    cells: Cell[] = [],
     options: Record<string, any> = {},
   ): Cell[] {
     this.resetCells(cells);
@@ -104,6 +104,7 @@ export default class ForOperator extends ELNode {
     this.endNode = end;
 
     if (children.length === 1 && children[0].type === ConditionTypeEnum.THEN) {
+      children[0].resetCells();
       children[0].children?.forEach((child) => {
         child.toCells([], options);
         const nextStartNode = child.getStartNode();

@@ -70,7 +70,7 @@ export default class IfOperator extends ELNode {
    * 转换为X6的图数据格式
    */
   public toCells(
-    cells: Cell[] = this.cells,
+    cells: Cell[] = [],
     options: Record<string, any> = {},
   ): Cell[] {
     this.resetCells(cells);
@@ -135,12 +135,14 @@ export default class IfOperator extends ELNode {
     } else {
       last.toCells([], options);
       falseNode = last.getStartNode();
-      Edge.create({
-        shape: LITEFLOW_EDGE,
-        source: start.id,
-        target: falseNode.id,
-        label: 'false',
-      });
+      cells.push(
+        Edge.create({
+          shape: LITEFLOW_EDGE,
+          source: start.id,
+          target: falseNode.id,
+          label: 'false',
+        }),
+      );
     }
     cells.push(
       Edge.create({

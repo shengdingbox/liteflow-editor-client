@@ -54,6 +54,7 @@ const NodeToolBar: React.FC<{ node: Node }> = (props) => {
       content: '点击确认按钮进行删除，点击取消按钮返回',
       onOk() {
         if (model.remove()) {
+          node.model?.graph?.cleanSelection();
           history.push();
         }
       },
