@@ -153,7 +153,12 @@ export default class SwitchOperator extends ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(prefix: string): string {
+  public toEL(prefix: string = ''): string {
+    if (prefix) {
+      return `${prefix}SWITCH(${this.condition.toEL()}).to(\n${this.children
+        .map((x) => x.toEL(`${prefix}  `))
+        .join(', \n')}\n${prefix})`;
+    }
     return `SWITCH(${this.condition.toEL(prefix)}).to(${this.children
       .map((x) => x.toEL(prefix))
       .join(', ')})`;

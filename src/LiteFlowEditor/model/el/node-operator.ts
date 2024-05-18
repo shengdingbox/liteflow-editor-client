@@ -103,7 +103,7 @@ export default class NodeOperator extends ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(prefix: string): string {
+  public toEL(prefix: string = ''): string {
     return `${prefix}${this.id}${this.propertiesToEL()}`;
   }
 
