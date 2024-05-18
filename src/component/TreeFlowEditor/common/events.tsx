@@ -70,6 +70,11 @@ const registerEvents = (grapher: Grapher): void => {
   });
   flowGraph.on('graph:addNodeOnEdge', (args: any) => {
     const { edge: currentEdge, node: droppingNode } = args;
+    console.log(
+      '=====currentEdge.data.position, droppingNode.data.node',
+      currentEdge.data.position,
+      droppingNode.data.node,
+    );
     store.insertNode(currentEdge.data.position, droppingNode.data.node);
   });
 };

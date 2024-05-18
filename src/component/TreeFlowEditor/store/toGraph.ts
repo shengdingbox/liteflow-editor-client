@@ -2,10 +2,12 @@ import { toJS } from 'mobx';
 import { NodeCompStore } from './CompStore';
 
 import { createEndComp } from '../buildinNodes/end';
-import { createPlaceholderComp } from '../buildinNodes/multiple-placeholder';
+import PlaceholderComp, {
+  createPlaceholderComp,
+} from '../buildinNodes/multiple-placeholder';
 import { AdvNodeData, CellPosition } from '../types/node';
 import { generateNewId } from '../utils';
-import { travelNode } from './travel';
+import { insertNode, travelNode } from './travel';
 
 interface NodeToCellsOpts {
   node: AdvNodeData;
@@ -24,12 +26,14 @@ interface NodeToCellsOpts {
  * @returns 返回节点的出口 id
  */
 function nodeToCells(opts: NodeToCellsOpts): string[] {
+  // console.log('===nodeToCells', nodeToCells);
   const { node, cells, pres = [], position } = opts;
   const comp = NodeCompStore.getNode(node.type);
   const curNode = createNode(node, position);
   cells.push(curNode);
   for (const pre of pres)
     if (pre.nodeId) {
+      // console.log('===position', position, node);
       cells.push(
         createEdge({
           from: pre?.nodeId,
@@ -38,6 +42,7 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
           toPort: 'in',
           label: pre?.edgeLabel,
           position,
+          // position: prePosition,
         }),
       );
     }
@@ -134,6 +139,24 @@ export function addPlacehoderNodes(root: AdvNodeData): AdvNodeData {
           });
         }
       });
+      const curParent = n.parent;
+      if (curParent) {
+        const parentComp = NodeCompStore.getNode(curParent.type);
+        if (parentComp.metadata.childrenType === 'multiple') {
+          const children = curParent.multiple![n.multiIndex!]
+            .children as AdvNodeData[];
+          children.splice(n.childrenIndex! + 1, 0, {
+            ...createPlaceholderComp(),
+            isVirtual: true,
+          });
+        } else if (parentComp.metadata.childrenType === 'then') {
+          const children = curParent.children as AdvNodeData[];
+          children.splice(n.childrenIndex! + 1, 0, {
+            ...createPlaceholderComp(),
+            isVirtual: true,
+          });
+        }
+      }
     } else if (comp.metadata.childrenType === 'include') {
       if (cur.children!.length == 0) {
         cur.children!.push(createPlaceholderComp());

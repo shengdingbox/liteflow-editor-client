@@ -51,6 +51,9 @@ interface SimpleEdge {
   source: { cell: string; port: string };
   target: { cell: string; port: string };
   vertices?: Array<{ x: number; y: number }>;
+  data: {
+    position: CellPosition;
+  };
 }
 interface Model {
   nodes: SimpleNode[];
@@ -293,7 +296,8 @@ class FeimaFlowLayout {
       let maxX = 0;
       // let sumY = 0;
       for (let i = 0; i < inInfos.length; i++) {
-        const [inNode] = inInfos[i];
+        const [inNode, inEdge] = inInfos[i];
+        inEdge.data.position = inNode.data.position;
         maxX = Math.max(maxX, inNode.x);
         // sumY = sumY + inNode.y;
       }

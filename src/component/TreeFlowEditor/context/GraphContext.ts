@@ -1,12 +1,12 @@
-import { Context, createContext, RefObject } from 'react';
 import { Graph } from '@antv/x6';
-import { Store } from '../store/Store';
-import createFlowChart, { bindKeyboards } from '../graph/createFlowChart';
-import { AdvNodeData, NodeComp, NodeData } from '../types/node';
 import { autorun } from 'mobx';
-import { addPlacehoderNodes, toGraphJson } from '../store/toGraph';
-import { forceLayout } from '../common/layout';
+import { Context, createContext } from 'react';
 import registerEvents from '../common/events';
+import { forceLayout } from '../common/layout';
+import createFlowChart, { bindKeyboards } from '../graph/createFlowChart';
+import { Store } from '../store/Store';
+import { addPlacehoderNodes, toGraphJson } from '../store/toGraph';
+import { NodeComp, NodeData } from '../types/node';
 
 interface GrapherOpts {
   container: HTMLDivElement;

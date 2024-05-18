@@ -91,14 +91,14 @@ export function removeNode(
 export function insertNode(
   root: NodeData,
   position: CellPosition,
-  node: NodeComp,
+  nodeComp: NodeComp,
 ) {
   const parentNode = findNode(root, position.parent?.id!)?.current;
   if (parentNode) {
     const newNodeData = {
-      type: node.metadata.type,
+      type: nodeComp.metadata.type,
       id: generateNewId(),
-      ...node.defaults?.[0],
+      ...nodeComp.defaults?.[0],
     };
     if (position.multiIndex != null && position.childrenIndex != null) {
       parentNode.multiple?.[position.multiIndex].children.splice(
