@@ -42,7 +42,7 @@ interface SimpleNode {
   data: {
     position: CellPosition;
     totalHeight?: number;
-    // isVirtual?: boolean;
+    isVirtual?: boolean;
     [key: string]: any;
   };
 }

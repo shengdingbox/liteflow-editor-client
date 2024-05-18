@@ -16,9 +16,10 @@ const NodeToolBar: React.FC<any> = (props) => {
       prepend: false,
       addMultiple: false,
     },
+    isVirtual,
   } = node.getData() || {};
   const onDelete = debounce(() => {
-    grapher.store.removeNode(nodeId, position);
+    grapher.store.removeNode(position, isVirtual);
   }, 100);
   const addMultiple = debounce(() => {
     grapher.store.addMultiple(nodeId);

@@ -26,9 +26,9 @@ export class Store extends HistoryStore<DocumentModel> {
   }
 
   // just for this example
-  @action removeNode(id: string, position: CellPosition) {
-    console.log(id, position);
-    removeNode(this.document.data, id, position);
+  @action removeNode(position: CellPosition, isVirtual: boolean) {
+    // console.log(id, position);
+    removeNode(this.document.data, position, isVirtual);
   }
 
   @action insertNode(position: CellPosition, node: NodeComp) {

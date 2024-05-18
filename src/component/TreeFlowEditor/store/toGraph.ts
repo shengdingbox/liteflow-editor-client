@@ -299,6 +299,7 @@ function createNode(node: AdvNodeData, position: CellPosition) {
       },
       nodeComp: comp,
       position,
+      isVirtual: node.isVirtual,
     },
     zIndex: 1,
     ports,

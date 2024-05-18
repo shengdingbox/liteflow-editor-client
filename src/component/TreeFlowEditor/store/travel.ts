@@ -63,7 +63,11 @@ export function findNode(
   }
 }
 
-export function removeNode(root: NodeData, id: string, position: CellPosition) {
+export function removeNode(
+  root: NodeData,
+  position: CellPosition,
+  isVirtual: boolean,
+) {
   if (position.parent) {
     // 按位置删除
     const nodeInfo = findNode(root, position.parent.id);
@@ -72,7 +76,7 @@ export function removeNode(root: NodeData, id: string, position: CellPosition) {
         nodeInfo?.current.children?.splice(position.childrenIndex, 1);
       }
     } else if (position.multiIndex != null) {
-      if (position.childrenIndex == null) {
+      if (position.childrenIndex == null || isVirtual) {
         nodeInfo?.current.multiple?.splice(position.multiIndex, 1);
       } else {
         nodeInfo?.current.multiple?.[position.multiIndex].children?.splice(
