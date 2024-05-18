@@ -1,5 +1,5 @@
 import icon from '../assets/dot-icon.svg';
-import { NodeComp, NodeData } from '../types/node';
+import { AdvNodeData, NodeComp, NodeData } from '../types/node';
 import { generateNewId } from '../utils';
 
 const config: NodeComp = {
@@ -10,10 +10,12 @@ const config: NodeComp = {
   },
 };
 
-export function createPlaceholderComp(): NodeData {
+export function createPlaceholderComp(canDelete?: boolean): AdvNodeData {
   return {
     id: generateNewId(),
     type: 'NodeVirtualComponent',
+    isVirtual: true,
+    canDelete,
   };
 }
 

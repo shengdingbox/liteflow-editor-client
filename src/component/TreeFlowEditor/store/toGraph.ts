@@ -132,34 +132,24 @@ export function addPlacehoderNodes(root: AdvNodeData): AdvNodeData {
       cur.multiple!.forEach((m, i) => {
         if (m.children.length == 0) {
           const children = m.children as AdvNodeData[];
-          children.push({
-            ...createPlaceholderComp(),
-            isVirtual: true,
-            canDelete: i > 1,
-          });
+          children.push(createPlaceholderComp(i > 1));
         }
       });
       const curParent = n.parent;
       if (curParent) {
         const parentComp = NodeCompStore.getNode(curParent.type);
         if (parentComp.metadata.childrenType === 'multiple') {
-          const children = curParent.multiple![n.multiIndex!]
-            .children as AdvNodeData[];
-          children.splice(n.childrenIndex! + 1, 0, {
-            ...createPlaceholderComp(),
-            isVirtual: true,
-          });
+          const children = curParent.multiple![n.multiIndex!].children;
+          children.splice(n.childrenIndex! + 1, 0, createPlaceholderComp());
         } else if (parentComp.metadata.childrenType === 'then') {
-          const children = curParent.children as AdvNodeData[];
-          children.splice(n.childrenIndex! + 1, 0, {
-            ...createPlaceholderComp(),
-            isVirtual: true,
-          });
+          const children = curParent.children!;
+          children.splice(n.childrenIndex! + 1, 0, createPlaceholderComp());
         }
       }
     } else if (comp.metadata.childrenType === 'include') {
       if (cur.children!.length == 0) {
-        cur.children!.push(createPlaceholderComp());
+        const children = cur.children!;
+        children.push(createPlaceholderComp());
       }
     }
   }

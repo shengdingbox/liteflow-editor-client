@@ -281,11 +281,11 @@ class FeimaFlowLayout {
       this.cache.nodes.forEach((n) => {
         n.y += addY;
       });
-      this.cache.edges.forEach((e) => {
-        e.vertices?.forEach((v) => {
-          v.y += addY;
-        });
-      });
+      // this.cache.edges.forEach((e) => {
+      //   e.vertices?.forEach((v) => {
+      //     v.y += addY;
+      //   });
+      // });
     }
   }
 
@@ -297,7 +297,10 @@ class FeimaFlowLayout {
       // let sumY = 0;
       for (let i = 0; i < inInfos.length; i++) {
         const [inNode, inEdge] = inInfos[i];
-        inEdge.data.position = inNode.data.position;
+        inEdge.data.position = {
+          ...inNode.data.position,
+          childrenIndex: inNode.data.position.childrenIndex! + 1,
+        };
         maxX = Math.max(maxX, inNode.x);
         // sumY = sumY + inNode.y;
       }
