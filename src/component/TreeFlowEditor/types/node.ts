@@ -26,6 +26,7 @@ export interface NodeData {
 
 export interface AdvNodeData extends NodeData {
   isVirtual?: boolean;
+  canDelete?: boolean;
 }
 
 export interface CellPosition {

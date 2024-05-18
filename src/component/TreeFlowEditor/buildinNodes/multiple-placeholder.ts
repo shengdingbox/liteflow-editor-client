@@ -4,7 +4,7 @@ import { generateNewId } from '../utils';
 
 const config: NodeComp = {
   metadata: {
-    label: '节点',
+    // label: '节点',
     type: 'NodeVirtualComponent',
     icon,
   },

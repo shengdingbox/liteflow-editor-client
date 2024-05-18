@@ -10,7 +10,7 @@ import { travelNode } from '../store/travel';
 const nodeSize: number = 30;
 
 const X_STEP = 80;
-const Y_STEP = 80;
+const Y_STEP = 50;
 
 export const forceLayout = (
   flowGraph: Graph,
@@ -29,7 +29,7 @@ export const forceLayout = (
       return edge.toJSON();
     }),
   };
-  console.log('===nodes', model.nodes);
+  // console.log('===nodes', model.nodes);
   const feimaFlowLayout = new FeimaFlowLayout(flowGraph, model, root);
   const newModel = feimaFlowLayout.layout();
   flowGraph.fromJSON(newModel);
@@ -41,8 +41,8 @@ interface SimpleNode {
   y: number;
   data: {
     position: CellPosition;
-    maxMultipleY?: number; // multiple 节点中最大的 Y 坐标
     totalHeight?: number;
+    // isVirtual?: boolean;
     [key: string]: any;
   };
 }
@@ -103,7 +103,6 @@ class FeimaFlowLayout {
     nodes.forEach((n) => {
       n.x = 0;
       n.y = 0;
-      console.log('===n.id', n.id);
       nodeMap[n.id] = n;
     });
     edges.forEach((e) => {
@@ -157,7 +156,7 @@ class FeimaFlowLayout {
 
     // 调整高度
     this.calHeight(this.root);
-    this.setY(this.root);
+    this.setY();
     // console.log(this.cache.nodes);
     // this.root.
 
@@ -167,7 +166,7 @@ class FeimaFlowLayout {
     return { nodes: this.cache.nodes, edges: this.cache.edges };
   }
 
-  calHeight(node: NodeData): number {
+  calHeight(node: AdvNodeData): number {
     let result = 0;
     const comp = NodeCompStore.getNode(node.type);
     if (comp.metadata.childrenType === 'multiple') {
@@ -192,71 +191,80 @@ class FeimaFlowLayout {
     }
     if (this.cache.nodeMap[node.id]?.data) {
       this.cache.nodeMap[node.id].data.totalHeight = result;
+      // this.cache.nodeMap[node.id].attrs.label = { text: result };
     }
+    // console.log('====height', node.id, result);
     return result;
   }
 
-  setY(node: NodeData) {
-    const comp = NodeCompStore.getNode(node.type);
-    let totalHeight = 0;
-    if (comp.metadata.childrenType === 'multiple') {
-      let multiHeight = 0;
-      for (let m = 0; m < node.multiple!?.length; m++) {
-        const multiple = node.multiple![m];
-        let childrenTotalHeight = NODE_HEIGHT;
-        for (let i = 0; i < multiple.children!?.length; i++) {
-          const curNode = multiple.children[i];
-          const curHeight = this.cache.nodeMap[curNode.id].data.totalHeight!;
-          childrenTotalHeight = Math.max(childrenTotalHeight, curHeight);
-          this.setY(curNode);
+  setY() {
+    const queue = [this.root];
+    while (queue.length > 0) {
+      const cur = queue.shift()!;
+      const curComp = NodeCompStore.getNode(cur.type);
+      const childrenType = curComp.metadata.childrenType;
+      if (childrenType == null) {
+        // 普通节点，无需处理
+      } else if (childrenType === 'include') {
+        // 暂不处理
+      } else if (childrenType === 'then') {
+        let maxTotalHeight = 0;
+        for (let i = 0; i < cur.children!?.length; i++) {
+          queue.push(cur.children![i]);
+          maxTotalHeight = Math.max(
+            maxTotalHeight,
+            this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
+          );
         }
-        multiHeight += childrenTotalHeight + Y_STEP;
-      }
-      multiHeight -= Y_STEP;
-      totalHeight = multiHeight;
-    } else if (comp.metadata.childrenType === 'then') {
-      let childrenTotalHeight = NODE_HEIGHT;
-      for (let i = 0; i < node.children!?.length; i++) {
-        const curNode = node.children![i];
-        const curHeight = this.cache.nodeMap[curNode.id].data.totalHeight!;
-        childrenTotalHeight = Math.max(childrenTotalHeight, curHeight);
-        this.setY(curNode);
-      }
-      totalHeight = childrenTotalHeight;
-    }
+        const offset = maxTotalHeight / 2;
+        for (let i = 0; i < cur.children!?.length; i++) {
+          const node = cur.children![i];
 
-    // const offset = 0;
-    // const nodeY = this.cache.nodeMap[node.id].y;
-    // const offset = nodeY + (nodeSize - childrenHeight) / 2 - first.y;
-    const offset = totalHeight / 2;
-    // this.translate(node, 0, offset);
+          this.translateOne(node, 0, offset);
+        }
+        this.translateOne(cur, 0, offset);
+      } else if (childrenType === 'multiple') {
+        let multiTotalHeight = 0;
+        for (let m = 0; m < cur.multiple!?.length; m++) {
+          let maxTotalHeight = 0;
+          let mutiCur = cur.multiple![m];
+          for (let i = 0; i < mutiCur.children!?.length; i++) {
+            queue.push(mutiCur.children![i]);
+            maxTotalHeight = Math.max(
+              maxTotalHeight,
+              this.cache.nodeMap[mutiCur.children![i].id].data.totalHeight!,
+            );
+          }
+
+          for (let i = 0; i < mutiCur.children!?.length; i++) {
+            const node = mutiCur.children![i];
+
+            this.translate(node, 0, multiTotalHeight);
+            this.translateOne(node, 0, maxTotalHeight / 2);
+          }
+
+          multiTotalHeight += maxTotalHeight + Y_STEP;
+        }
+      }
+    }
   }
 
   // 移动节点及其子节点
   translate(node: NodeData, tx: number, ty: number) {
+    for (const n of travelNode(node)) {
+      this.translateOne(n.current, tx, ty);
+    }
+  }
+
+  translateOne(node: NodeData, tx: number, ty: number) {
     if (isNaN(tx) || isNaN(ty)) {
       return;
     }
-    console.log('====node', node);
-
-    for (const n of travelNode(node)) {
-      // if (node.id === 'start') {
-      //   console.log('===start', toJS(node));
-      //   console.log('====n', toJS(n));
-      // }
-      const curNodeId = n.current.id;
-      const curNode = this.cache.nodeMap[curNodeId];
-      // console.log('====n', n);
-      console.log('===curNode', curNode);
-      if (curNode) {
-        curNode.x += tx;
-        curNode.y += ty;
-      }
-      // if (this.cache.nodeMap[curNodeId]) {
-      //   this.cache.nodeMap[curNodeId].x += tx;
-      //   this.cache.nodeMap[curNodeId].y += ty;
-      //   console.log('== this.cache.nodeMap', this.cache.nodeMap);
-      // }
+    const curNodeId = node.id;
+    const curNode = this.cache.nodeMap[curNodeId];
+    if (curNode) {
+      curNode.x += tx;
+      curNode.y += ty;
     }
   }
 

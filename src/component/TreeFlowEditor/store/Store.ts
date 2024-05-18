@@ -27,6 +27,7 @@ export class Store extends HistoryStore<DocumentModel> {
 
   // just for this example
   @action removeNode(id: string, position: CellPosition) {
+    console.log(id, position);
     removeNode(this.document.data, id, position);
   }
 

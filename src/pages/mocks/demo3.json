@@ -24,6 +24,13 @@
               "props": {
                 "test": 1
               }
+            },
+            {
+              "type": "common",
+              "id": "c48yeu3bbk",
+              "props": {
+                "test": 1
+              }
             }
           ]
         },
