@@ -105,28 +105,29 @@ export default class WhileOperator extends ELNode {
     cells.push(this.addNode(end));
     this.endNode = end;
 
-    if (children.length === 1 && children[0].type === ConditionTypeEnum.THEN) {
-      children[0].resetCells();
-      children[0].children?.forEach((child) => {
-        child.toCells([], options);
-        const nextStartNode = child.getStartNode();
-        cells.push(
-          Edge.create({
-            shape: LITEFLOW_EDGE,
-            source: start.id,
-            target: nextStartNode.id,
-          }),
-        );
-        const nextEndNode = child.getEndNode();
-        cells.push(
-          Edge.create({
-            shape: LITEFLOW_EDGE,
-            source: nextEndNode.id,
-            target: end.id,
-          }),
-        );
-      });
-    } else if (children.length) {
+    // if (children.length === 1 && children[0].type === ConditionTypeEnum.THEN) {
+    //   children[0].resetCells();
+    //   children[0].children?.forEach((child) => {
+    //     child.toCells([], options);
+    //     const nextStartNode = child.getStartNode();
+    //     cells.push(
+    //       Edge.create({
+    //         shape: LITEFLOW_EDGE,
+    //         source: start.id,
+    //         target: nextStartNode.id,
+    //       }),
+    //     );
+    //     const nextEndNode = child.getEndNode();
+    //     cells.push(
+    //       Edge.create({
+    //         shape: LITEFLOW_EDGE,
+    //         source: nextEndNode.id,
+    //         target: end.id,
+    //       }),
+    //     );
+    //   });
+    // } else
+    if (children.length) {
       children.forEach((child) => {
         child.toCells([], options);
         const nextStartNode = child.getStartNode();
