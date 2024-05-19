@@ -47,7 +47,8 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             ) as Edge | null;
             if (currentEdge) {
               let targetNode = currentEdge.getTargetNode();
-              let { model } = targetNode?.getData<INodeData>() || {};
+              let { model: targetModel } =
+                targetNode?.getData<INodeData>() || {};
               const sourceNode = currentEdge.getSourceNode();
               const { model: sourceModel } =
                 sourceNode?.getData<INodeData>() || {};
@@ -56,11 +57,15 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
               ).length;
               if (
                 inComingEdgesLength > 1 ||
-                (sourceModel && model?.isParentOf(sourceModel))
+                (sourceModel && targetModel?.isParentOf(sourceModel))
               ) {
-                sourceModel?.append(ELBuilder.createELNode(node.type, model));
+                sourceModel?.append(
+                  ELBuilder.createELNode(node.type, targetModel),
+                );
               } else {
-                model?.prepend(ELBuilder.createELNode(node.type, model));
+                targetModel?.prepend(
+                  ELBuilder.createELNode(node.type, targetModel),
+                );
               }
               history.push();
             }

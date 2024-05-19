@@ -49,7 +49,7 @@ const FlowGraphContextPad: React.FC<IProps> = (props) => {
     (cellType) => {
       if (edge) {
         let targetNode = edge.getTargetNode();
-        let { model } = targetNode?.getData<INodeData>() || {};
+        let { model: targetModel } = targetNode?.getData<INodeData>() || {};
         const sourceNode = edge.getSourceNode();
         const { model: sourceModel } = sourceNode?.getData<INodeData>() || {};
         const inComingEdgesLength = (
@@ -57,11 +57,15 @@ const FlowGraphContextPad: React.FC<IProps> = (props) => {
         ).length;
         if (
           inComingEdgesLength > 1 ||
-          (sourceModel && model?.isParentOf(sourceModel))
+          (sourceModel && targetModel?.isParentOf(sourceModel))
         ) {
-          sourceModel?.append(ELBuilder.createELNode(cellType.type, model));
+          sourceModel?.append(
+            ELBuilder.createELNode(cellType.type, targetModel),
+          );
         } else {
-          model?.prepend(ELBuilder.createELNode(cellType.type, model));
+          targetModel?.prepend(
+            ELBuilder.createELNode(cellType.type, targetModel),
+          );
         }
         history.push();
       } else if (node) {
