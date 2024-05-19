@@ -48,18 +48,20 @@ const FlowGraphContextPad: React.FC<IProps> = (props) => {
   const onClickMenu = useCallback(
     (cellType) => {
       if (edge) {
-        let targetNode = edge.getSourceNode();
-        const outgoingEdgesLength = (
-          flowGraph.getOutgoingEdges(targetNode as Node) || []
+        let targetNode = edge.getTargetNode();
+        let { model } = targetNode?.getData<INodeData>() || {};
+        const sourceNode = edge.getSourceNode();
+        const { model: sourceModel } = sourceNode?.getData<INodeData>() || {};
+        const inComingEdgesLength = (
+          flowGraph.getIncomingEdges(targetNode as Node) || []
         ).length;
-        if (outgoingEdgesLength > 1) {
-          targetNode = edge.getTargetNode();
-        }
-        const { model } = targetNode?.getData<INodeData>() || {};
-        if (outgoingEdgesLength > 1) {
-          model?.prepend(ELBuilder.createELNode(cellType.type, model));
+        if (
+          inComingEdgesLength > 1 ||
+          (sourceModel && model?.isParentOf(sourceModel))
+        ) {
+          sourceModel?.append(ELBuilder.createELNode(cellType.type, model));
         } else {
-          model?.append(ELBuilder.createELNode(cellType.type, model));
+          model?.prepend(ELBuilder.createELNode(cellType.type, model));
         }
         history.push();
       } else if (node) {

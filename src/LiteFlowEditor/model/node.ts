@@ -46,6 +46,8 @@ export default abstract class ELNode {
   public cells: Cell[] = [];
   // 当前节点的X6 Node内容
   public nodes: Node[] = [];
+  // 代理节点
+  public proxy?: ELNode;
 
   /**
    * 在后面添加子节点
@@ -327,6 +329,23 @@ export default abstract class ELNode {
    * 转换为JSON格式
    */
   public abstract toJSON(): Record<string, any>;
+
+  /**
+   * 当前模型，是否是参数模型的父节点
+   * @param model 模型
+   * @returns
+   */
+  public isParentOf(model: ELNode): boolean {
+    const thisModel = this.proxy || this;
+    let nextModel: ELNode | undefined = model.proxy || model;
+    while (nextModel) {
+      if (nextModel.parent === thisModel) {
+        return true;
+      }
+      nextModel = nextModel.parent;
+    }
+    return false;
+  }
 }
 
 /**
