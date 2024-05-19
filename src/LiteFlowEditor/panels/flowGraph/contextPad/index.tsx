@@ -9,8 +9,9 @@ import {
   CONTROL_GROUP,
 } from '../../../cells';
 import ELBuilder from '../../../model/builder';
-import styles from './index.module.less';
 import { history } from '../../../hooks/useHistory';
+import { INodeData } from '../../../model/node';
+import styles from './index.module.less';
 
 interface IProps {
   x: number;
@@ -47,9 +48,19 @@ const FlowGraphContextPad: React.FC<IProps> = (props) => {
   const onClickMenu = useCallback(
     (cellType) => {
       if (edge) {
-        const targetNode = edge.getSourceNode();
-        const { model } = targetNode?.getData();
-        model.append(ELBuilder.createELNode(cellType.type, model));
+        let targetNode = edge.getSourceNode();
+        const outgoingEdgesLength = (
+          flowGraph.getOutgoingEdges(targetNode as Node) || []
+        ).length;
+        if (outgoingEdgesLength > 1) {
+          targetNode = edge.getTargetNode();
+        }
+        const { model } = targetNode?.getData<INodeData>() || {};
+        if (outgoingEdgesLength > 1) {
+          model?.prepend(ELBuilder.createELNode(cellType.type, model));
+        } else {
+          model?.append(ELBuilder.createELNode(cellType.type, model));
+        }
         history.push();
       } else if (node) {
         const { model } = node.getData() || {};

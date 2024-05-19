@@ -277,7 +277,7 @@ export default class IfOperator extends ELNode {
     return {
       type,
       condition: condition.toJSON(),
-      children: children.map((child) => child.toJSON()),
+      children: children.filter((x) => x).map((child) => child.toJSON()),
       properties,
     };
   }

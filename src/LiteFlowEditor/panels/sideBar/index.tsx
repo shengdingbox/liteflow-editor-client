@@ -46,9 +46,19 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
               cellViews[0].cell.id,
             ) as Edge | null;
             if (currentEdge) {
-              const targetNode = currentEdge.getSourceNode();
+              let targetNode = currentEdge.getSourceNode();
+              const outgoingEdgesLength = (
+                flowGraph.getOutgoingEdges(targetNode as Node) || []
+              ).length;
+              if (outgoingEdgesLength > 1) {
+                targetNode = currentEdge.getTargetNode();
+              }
               const { model } = targetNode?.getData<INodeData>() || {};
-              model?.append(ELBuilder.createELNode(node.type, model));
+              if (outgoingEdgesLength > 1) {
+                model?.prepend(ELBuilder.createELNode(node.type, model));
+              } else {
+                model?.append(ELBuilder.createELNode(node.type, model));
+              }
               history.push();
             }
           }
