@@ -189,6 +189,12 @@ class FeimaFlowLayout {
         eachHeight = Math.max(eachHeight, this.calHeight(node.children[i]));
       }
       result = eachHeight;
+    } else if (comp.metadata.childrenType === 'include' && node.children) {
+      let eachHeight = NODE_HEIGHT * 4 + Y_STEP;
+      for (let i = 0; i < node.children.length; i++) {
+        eachHeight = Math.max(eachHeight, this.calHeight(node.children[i]));
+      }
+      result = eachHeight;
     } else {
       result = nodeSize;
     }
@@ -210,6 +216,19 @@ class FeimaFlowLayout {
         // 普通节点，无需处理
       } else if (childrenType === 'include') {
         // 暂不处理
+        for (let i = 0; i < cur.children!?.length; i++) {
+          // queue.push(cur.children![i]);
+          // maxTotalHeight = Math.max(
+          //   maxTotalHeight,
+          //   this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
+          // );
+        }
+        const offset = nodeSize * 4 + Y_STEP;
+        for (let i = 0; i < cur.children!?.length; i++) {
+          const node = cur.children![i];
+          this.translateOne(node, 0, offset);
+        }
+        // this.translateOne(cur, 0, offset);
       } else if (childrenType === 'then') {
         let maxTotalHeight = 0;
         for (let i = 0; i < cur.children!?.length; i++) {
