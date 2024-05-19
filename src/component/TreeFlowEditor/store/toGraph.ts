@@ -144,6 +144,9 @@ export function addPlacehoderNodes(root: AdvNodeData): AdvNodeData {
         } else if (parentComp.metadata.childrenType === 'then') {
           const children = curParent.children!;
           children.splice(n.childrenIndex! + 1, 0, createPlaceholderComp());
+        } else if (parentComp.metadata.childrenType === 'include') {
+          const children = curParent.children!;
+          children.splice(n.childrenIndex! + 1, 0, createPlaceholderComp());
         }
       }
     } else if (comp.metadata.childrenType === 'include') {

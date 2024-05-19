@@ -1,11 +1,10 @@
-import { DagreLayoutOptions } from '@antv/layout';
 import { Graph } from '@antv/x6';
 import { toJS } from 'mobx';
 
-import { AdvNodeData, CellPosition, NodeData } from '../types/node';
+import { NODE_HEIGHT } from '../constant';
 import { NodeCompStore } from '../store/CompStore';
-import { NODE_HEIGHT, NODE_WIDTH } from '../constant';
 import { travelNode } from '../store/travel';
+import { AdvNodeData, CellPosition, NodeData } from '../types/node';
 
 const nodeSize: number = 30;
 
@@ -190,11 +189,11 @@ class FeimaFlowLayout {
       }
       result = eachHeight;
     } else if (comp.metadata.childrenType === 'include' && node.children) {
-      let eachHeight = NODE_HEIGHT * 4 + Y_STEP;
+      let eachHeight = NODE_HEIGHT;
       for (let i = 0; i < node.children.length; i++) {
         eachHeight = Math.max(eachHeight, this.calHeight(node.children[i]));
       }
-      result = eachHeight;
+      result = eachHeight + NODE_HEIGHT + Y_STEP;
     } else {
       result = nodeSize;
     }
@@ -215,20 +214,24 @@ class FeimaFlowLayout {
       if (childrenType == null) {
         // 普通节点，无需处理
       } else if (childrenType === 'include') {
-        // 暂不处理
+        let maxTotalHeight = 0;
+        let hasMultiChild = false;
         for (let i = 0; i < cur.children!?.length; i++) {
-          // queue.push(cur.children![i]);
-          // maxTotalHeight = Math.max(
-          //   maxTotalHeight,
-          //   this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
-          // );
+          queue.push(cur.children![i]);
+          const childCompType = NodeCompStore.getNode(cur.children![i].type);
+          if (childCompType.metadata.childrenType === 'multiple') {
+            hasMultiChild = true;
+          }
+          maxTotalHeight = Math.max(
+            maxTotalHeight,
+            this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
+          );
         }
-        const offset = nodeSize * 4 + Y_STEP;
         for (let i = 0; i < cur.children!?.length; i++) {
           const node = cur.children![i];
-          this.translateOne(node, 0, offset);
+          this.translate(node, 0, nodeSize + Y_STEP);
+          this.translateOne(node, 0, maxTotalHeight / 2);
         }
-        // this.translateOne(cur, 0, offset);
       } else if (childrenType === 'then') {
         let maxTotalHeight = 0;
         for (let i = 0; i < cur.children!?.length; i++) {
@@ -248,10 +251,17 @@ class FeimaFlowLayout {
       } else if (childrenType === 'multiple') {
         let multiTotalHeight = 0;
         for (let m = 0; m < cur.multiple!?.length; m++) {
+          let hasMultiChild = false;
           let maxTotalHeight = 0;
           let mutiCur = cur.multiple![m];
-          for (let i = 0; i < mutiCur.children!?.length; i++) {
+          for (let i = 0; i < mutiCur.children.length; i++) {
             queue.push(mutiCur.children![i]);
+            const childCompType = NodeCompStore.getNode(
+              mutiCur.children[i].type,
+            );
+            if (childCompType.metadata.childrenType === 'multiple') {
+              hasMultiChild = true;
+            }
             maxTotalHeight = Math.max(
               maxTotalHeight,
               this.cache.nodeMap[mutiCur.children![i].id].data.totalHeight!,
@@ -260,9 +270,12 @@ class FeimaFlowLayout {
 
           for (let i = 0; i < mutiCur.children!?.length; i++) {
             const node = mutiCur.children![i];
-
             this.translate(node, 0, multiTotalHeight);
-            this.translateOne(node, 0, maxTotalHeight / 2);
+            if (hasMultiChild) {
+              this.translateOne(node, 0, maxTotalHeight / 2);
+            } else {
+              this.translateOne(node, 0, nodeSize / 2);
+            }
           }
 
           multiTotalHeight += maxTotalHeight + Y_STEP;

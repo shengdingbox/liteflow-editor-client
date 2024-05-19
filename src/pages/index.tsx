@@ -1,7 +1,7 @@
 import TreeFlowEditor from '../component/TreeFlowEditor';
 import { compGroups } from './comps/groups';
 import styles from './index.less';
-import initSchema from './mocks/demo4.json';
+import initSchema from './mocks/demo5.json';
 
 export default function IndexPage() {
   return (
