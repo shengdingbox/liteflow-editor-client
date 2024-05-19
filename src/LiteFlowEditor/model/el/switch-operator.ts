@@ -1,5 +1,6 @@
 import { Cell, Node, Edge } from '@antv/x6';
-import ELNode, { Properties, ELEndNode } from '../node';
+import ELNode, { Properties } from '../node';
+import { ELEndNode } from '../utils';
 import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
@@ -159,8 +160,8 @@ export default class SwitchOperator extends ELNode {
         .map((x) => x.toEL(`${prefix}  `))
         .join(', \n')}\n${prefix})`;
     }
-    return `SWITCH(${this.condition.toEL(prefix)}).to(${this.children
-      .map((x) => x.toEL(prefix))
+    return `SWITCH(${this.condition.toEL()}).to(${this.children
+      .map((x) => x.toEL())
       .join(', ')})`;
   }
 

@@ -1,5 +1,6 @@
 import { Cell, Node, Edge } from '@antv/x6';
-import ELNode, { Properties, ELEndNode } from '../node';
+import ELNode, { Properties } from '../node';
+import { ELEndNode, ELVirtualNode } from '../utils';
 import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
@@ -81,7 +82,18 @@ export default class IfOperator extends ELNode {
         label: { text: condition.id },
       },
     });
-    start.setData({ model: condition }, { overwrite: true });
+    start.setData(
+      {
+        model: condition,
+        toolbar: {
+          prepend: true,
+          append: false,
+          delete: true,
+          replace: true,
+        },
+      },
+      { overwrite: true },
+    );
     cells.push(this.addNode(start));
     this.startNode = start;
 
@@ -91,66 +103,59 @@ export default class IfOperator extends ELNode {
         label: { text: '' },
       },
     });
-    end.setData({ model: new ELEndNode(this) }, { overwrite: true });
+    end.setData(
+      {
+        model: new ELEndNode(this),
+        toolbar: {
+          prepend: false,
+          append: true,
+          delete: true,
+          replace: true,
+        },
+      },
+      { overwrite: true },
+    );
     cells.push(this.addNode(end));
     this.endNode = end;
 
     const [first, last] = children;
-    first.toCells([], options);
-    const trueNode = first.getStartNode();
-    cells.push(
-      Edge.create({
-        shape: LITEFLOW_EDGE,
-        source: start.id,
-        target: trueNode.id,
-        label: 'true',
-      }),
-    );
-    cells.push(
-      Edge.create({
-        shape: LITEFLOW_EDGE,
-        source: trueNode.id,
-        target: end.id,
-      }),
-    );
-    let falseNode;
-    if (!last) {
-      falseNode = Node.create({
-        shape: NodeTypeEnum.VIRTUAL,
-        view: 'react-shape-view',
-        attrs: {
-          label: { text: '' },
-        },
-      });
-      falseNode.setData({ model: new ELEndNode(this) }, { overwrite: true });
-      cells.push(this.addNode(falseNode));
+    [first, last].forEach((item, index) => {
+      const next = item || NodeOperator.create(this, NodeTypeEnum.VIRTUAL, ' ');
+      next.toCells([], options);
+      const nextNode = next.getStartNode();
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
           source: start.id,
-          target: falseNode.id,
-          label: 'false',
+          target: nextNode.id,
+          label: index ? 'false' : 'true',
         }),
       );
-    } else {
-      last.toCells([], options);
-      falseNode = last.getStartNode();
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
-          source: start.id,
-          target: falseNode.id,
-          label: 'false',
+          source: nextNode.id,
+          target: end.id,
+          label: ' ',
         }),
       );
-    }
-    cells.push(
-      Edge.create({
-        shape: LITEFLOW_EDGE,
-        source: falseNode.id,
-        target: end.id,
-      }),
-    );
+
+      if (!item) {
+        nextNode.setData(
+          {
+            model: new ELVirtualNode(this, index, next),
+            toolbar: {
+              prepend: false,
+              append: false,
+              delete: false,
+              replace: true,
+            },
+          },
+          { overwrite: true },
+        );
+        cells.push(this.addNode(nextNode));
+      }
+    });
     return this.getCells();
   }
 
@@ -169,18 +174,98 @@ export default class IfOperator extends ELNode {
   }
 
   /**
+   * 在后面添加子节点
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
+   */
+  public appendChild(newNode: ELNode): boolean;
+  public appendChild(newNode: ELNode, index: number): boolean;
+  public appendChild(newNode: ELNode, sibling: ELNode): boolean;
+  public appendChild(newNode: ELNode, index?: number | ELNode): boolean {
+    newNode.parent = this;
+    if (this.children) {
+      // 尝试在父节点中添加新节点
+      if (typeof index === 'number') {
+        // 1. 如果有索引
+        // this.children.splice(index, this.children[index] ? 1: 0, newNode);
+        this.children[index <= 1 ? index : 1] = newNode;
+        return true;
+      } else if (index) {
+        // 2. 如果有目标节点
+        const _index = this.children.indexOf(index);
+        if (_index !== -1) {
+          // this.children.splice(_index + 1, this.children[_index] ? 1: 0, newNode);
+          this.children[_index <= 1 ? _index : 1] = newNode;
+          return true;
+        } else if (this.condition === index) {
+          // 3. 如果是在condition之后追加
+          return this.appendChild(newNode, 0);
+        } else {
+          this.children.push(newNode);
+          return true;
+        }
+      } else {
+        // 4. 否则直接插入
+        this.children.push(newNode);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 在后面添加子节点
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
+   */
+  public prependChild(newNode: ELNode): boolean;
+  public prependChild(newNode: ELNode, index: number): boolean;
+  public prependChild(newNode: ELNode, sibling: ELNode): boolean;
+  public prependChild(newNode: ELNode, index?: number | ELNode): boolean {
+    newNode.parent = this;
+    if (this.children) {
+      // 尝试在父节点中添加新节点
+      if (typeof index === 'number') {
+        // 1. 如果有索引
+        // this.children.splice(index, this.children[index] ? 1: 0, newNode);
+        this.children[index] = newNode;
+        return true;
+      } else if (index) {
+        // 2. 如果有目标节点
+        const _index = this.children.indexOf(index);
+        if (_index !== -1) {
+          // this.children.splice(_index, this.children[_index] ? 1: 0, newNode);
+          this.children[_index] = newNode;
+          return true;
+        } else if (this.condition === index) {
+          // 3. 如果是在condition之前追加
+          return this.prepend(newNode);
+        } else {
+          this.children.splice(0, this.children[0] ? 1 : 0, newNode);
+          return true;
+        }
+      } else {
+        // 4. 否则直接插入
+        this.children.splice(0, this.children[0] ? 1 : 0, newNode);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * 转换为EL表达式字符串
    */
   public toEL(prefix: string = ''): string {
     if (prefix) {
       return `${prefix}IF(\n${[
         this.condition.toEL(`${prefix}  `),
-        ...this.children.map((x) => x.toEL(`${prefix}  `)),
+        ...this.children.filter((x) => x).map((x) => x.toEL(`${prefix}  `)),
       ].join(', \n')}\n${prefix})${this.propertiesToEL()}`;
     }
     return `IF(${[
-      this.condition.toEL(prefix),
-      ...this.children.map((x) => x.toEL(prefix)),
+      this.condition.toEL(),
+      ...this.children.filter((x) => x).map((x) => x.toEL()),
     ].join(', ')})${this.propertiesToEL()}`;
   }
 

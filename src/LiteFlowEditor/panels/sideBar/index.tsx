@@ -46,10 +46,10 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
               cellViews[0].cell.id,
             ) as Edge | null;
             if (currentEdge) {
-              flowGraph.trigger('graph:addNodeOnEdge', {
-                edge: currentEdge,
-                node: { shape: node.type },
-              });
+              const targetNode = currentEdge.getSourceNode();
+              const { model } = targetNode?.getData<INodeData>() || {};
+              model?.append(ELBuilder.createELNode(node.type, model));
+              history.push();
             }
           }
           cellViews =

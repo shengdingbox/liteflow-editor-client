@@ -80,13 +80,6 @@ const registerEvents = (flowGraph: Graph): void => {
   flowGraph.on('blank:mousedown', () => {
     flowGraph.cleanSelection();
   });
-  flowGraph.on('graph:addNodeOnEdge', (args: any) => {
-    const { edge: currentEdge, node: droppingNode } = args;
-    const targetNode = currentEdge.getSourceNode();
-    const { model } = targetNode?.getData();
-    model.append(ELBuilder.createELNode(droppingNode.shape, model));
-    history.push();
-  });
 };
 
 export default registerEvents;

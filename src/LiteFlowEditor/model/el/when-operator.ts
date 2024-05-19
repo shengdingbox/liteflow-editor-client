@@ -1,5 +1,6 @@
 import { Cell, Node, Edge } from '@antv/x6';
-import ELNode, { Properties, ELStartNode, ELEndNode } from '../node';
+import ELNode, { Properties } from '../node';
+import { ELStartNode, ELEndNode } from '../utils';
 import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
@@ -154,7 +155,7 @@ export default class WhenOperator extends ELNode {
         .join(', \n')}\n${prefix})${this.propertiesToEL()}`;
     }
     return `WHEN(${this.children
-      .map((x) => x.toEL(prefix))
+      .map((x) => x.toEL())
       .join(', ')})${this.propertiesToEL()}`;
   }
 

@@ -47,10 +47,10 @@ const FlowGraphContextPad: React.FC<IProps> = (props) => {
   const onClickMenu = useCallback(
     (cellType) => {
       if (edge) {
-        flowGraph.trigger('graph:addNodeOnEdge', {
-          edge,
-          node: { shape: cellType.type },
-        });
+        const targetNode = edge.getSourceNode();
+        const { model } = targetNode?.getData();
+        model.append(ELBuilder.createELNode(cellType.type, model));
+        history.push();
       } else if (node) {
         const { model } = node.getData() || {};
         if (scene === 'prepend') {

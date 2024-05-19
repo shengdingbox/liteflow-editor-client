@@ -1,5 +1,6 @@
 import { Cell, Edge, Node } from '@antv/x6';
-import ELNode, { Properties, ELEndNode } from '../node';
+import ELNode, { Properties } from '../node';
+import { ELEndNode } from '../utils';
 import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
@@ -179,8 +180,8 @@ export default class ForOperator extends ELNode {
         .map((x) => x.toEL(`${prefix}  `))
         .join(', \n')}\n${prefix})`;
     }
-    return `FOR(${this.condition.toEL(prefix)}).DO(${this.children
-      .map((x) => x.toEL(prefix))
+    return `FOR(${this.condition.toEL()}).DO(${this.children
+      .map((x) => x.toEL())
       .join(', ')})`;
   }
 
