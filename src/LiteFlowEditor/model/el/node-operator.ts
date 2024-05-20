@@ -46,7 +46,7 @@ export default class NodeOperator extends ELNode {
     super();
     this.parent = parent;
     this.type = type || NodeTypeEnum.COMMON;
-    this.id = id || `Placeholder`;
+    this.id = id || `Placeholder${Math.ceil(Math.random() * 10)}`;
     this.properties = properties;
   }
 
