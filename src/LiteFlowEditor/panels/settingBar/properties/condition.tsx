@@ -1,13 +1,17 @@
 import React from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { debounce } from 'lodash';
 import { history } from '../../../hooks/useHistory';
 import ELNode from '../../../model/node';
+import { ConditionTypeEnum } from '../../../constant';
 import styles from './index.module.less';
 
 interface IProps {
   model: ELNode;
 }
+
+const WHEN_ANY_TRUE: boolean = true;
+const WHEN_ANY_FALSE: boolean = false;
 
 const ConditionPropertiesEditor: React.FC<IProps> = (props) => {
   const { model } = props;
@@ -33,6 +37,14 @@ const ConditionPropertiesEditor: React.FC<IProps> = (props) => {
         initialValues={{ ...properties }}
         onValuesChange={handleOnChange}
       >
+        {(model.proxy || model).type === ConditionTypeEnum.WHEN && (
+          <Form.Item name="any" label="Any（any）">
+            <Select allowClear>
+              <Select.Option value={WHEN_ANY_TRUE}>是</Select.Option>
+              <Select.Option value={WHEN_ANY_FALSE}>否</Select.Option>
+            </Select>
+          </Form.Item>
+        )}
         <Form.Item name="id" label="唯一标识（id）">
           <Input allowClear />
         </Form.Item>
