@@ -43,9 +43,7 @@ const BreadcrumbPath: React.FC<IProps> = (props) => {
         {parents.map((elNodeModel: ELNode, index: number) => {
           const icon = getIconByType(elNodeModel.type);
           const handleClick = () => {
-            if (parents.length - 1 !== index) {
-              flowGraph.trigger('model:select', elNodeModel);
-            }
+            flowGraph.trigger('model:select', elNodeModel);
           };
           return (
             <Breadcrumb.Item key={index} onClick={handleClick}>
