@@ -9,12 +9,11 @@ interface IProps {
 
 const Basic: React.FC<IProps> = (props) => {
   const { flowGraph } = props;
-  const [elString, setELString] = useState<string>('');
+  const [elString, setELString] = useState<string>(useModel()?.toEL(' '));
 
   useEffect(() => {
     const handleModelChange = () => {
-      const model = useModel();
-      setELString(model.toEL(' '));
+      setELString(useModel()?.toEL(' '));
     };
     flowGraph.on('model:change', handleModelChange);
     return () => {
@@ -24,6 +23,7 @@ const Basic: React.FC<IProps> = (props) => {
 
   return (
     <div className={styles.liteflowEditorBasicContainer}>
+      <div className={styles.liteflowEditorTitle}>EL表达式：</div>
       <div className={styles.elContentWrapper}>
         <pre>{elString}</pre>
       </div>
