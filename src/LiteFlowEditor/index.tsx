@@ -15,6 +15,7 @@ import Layout from './panels/layout';
 import SideBar from './panels/sideBar';
 import ToolBar from './panels/toolBar';
 import SettingBar from './panels/settingBar';
+import Breadcrumb from './panels/breadcrumb';
 import styles from './index.module.less';
 import '@antv/x6/dist/x6.css';
 import { forceLayout } from './common/layout';
@@ -158,7 +159,8 @@ const LiteFlowEditor = forwardRef<React.FC, IProps>(function (props, ref) {
         <div className={styles.liteflowEditorContainer} ref={wrapperRef}>
           <div className={styles.liteflowEditorGraph} ref={graphRef} />
           <div className={styles.liteflowEditorMiniMap} ref={miniMapRef} />
-          {flowGraph && <NodeEditorModal flowGraph={flowGraph} />}
+          {flowGraph && <Breadcrumb flowGraph={flowGraph} />}
+          {/* {flowGraph && <NodeEditorModal flowGraph={flowGraph} />} */}
           {flowGraph && (
             <FlowGraphContextMenu {...contextMenuInfo} flowGraph={flowGraph} />
           )}

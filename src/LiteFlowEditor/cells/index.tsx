@@ -122,3 +122,27 @@ export const CONTROL_GROUP: IGroupItem = {
     { ...While, type: ConditionTypeEnum.WHILE, shape: While.type },
   ],
 };
+
+export const getIconByType = (nodeType: ConditionTypeEnum | NodeTypeEnum) => {
+  switch (nodeType) {
+    case ConditionTypeEnum.SWITCH:
+    case NodeTypeEnum.SWITCH:
+      return Switch.icon;
+    case ConditionTypeEnum.IF:
+    case NodeTypeEnum.IF:
+      return If.icon;
+    case ConditionTypeEnum.FOR:
+    case NodeTypeEnum.FOR:
+      return For.icon;
+    case ConditionTypeEnum.WHILE:
+    case NodeTypeEnum.WHILE:
+      return While.icon;
+    case ConditionTypeEnum.WHEN:
+      return When.icon;
+    case ConditionTypeEnum.CHAIN:
+      return Start.icon;
+    case NodeTypeEnum.COMMON:
+    default:
+      return Common.icon;
+  }
+};
