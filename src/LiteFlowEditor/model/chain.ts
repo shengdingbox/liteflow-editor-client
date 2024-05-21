@@ -141,7 +141,37 @@ export default class Chain extends ELNode {
    * 转换为EL表达式字符串
    */
   public toEL(prefix: string = ''): string {
-    return `${this.children.map((x) => x.toEL(prefix)).join(', ')};`;
+    return `${this.dataPropertyToEL(prefix)}${this.children
+      .map((x) => x.toEL(prefix))
+      .join(', ')};`;
+  }
+
+  public dataPropertyToEL(prefix: string = ''): string {
+    const dataProperties: any[] = [];
+    let next: ELNode[] = [this];
+    while (next.length) {
+      let current: ELNode[] = [];
+      next.forEach((item) => {
+        const properties = item.getProperties();
+        if (properties.data) {
+          dataProperties.push(properties.data);
+        }
+
+        if (item.condition) {
+          current.push(item.condition);
+        }
+        if (item.children && item.children.length) {
+          current = current.concat(item.children);
+        }
+      });
+      next = current;
+    }
+    return dataProperties
+      .map(
+        (dataProperty) =>
+          `${prefix}${dataProperty.name || ''}=${dataProperty.value || ''};\n`,
+      )
+      .join('');
   }
 
   /**

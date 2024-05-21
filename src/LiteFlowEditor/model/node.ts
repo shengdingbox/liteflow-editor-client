@@ -299,7 +299,11 @@ export default abstract class ELNode {
    * @returns 属性
    */
   public getProperties(): Properties {
-    return this.properties || {};
+    const properties = this.properties || {};
+    Object.keys(properties)
+      .filter((key) => properties[key] === '' || properties[key] === null)
+      .forEach((key) => (properties[key] = undefined));
+    return properties;
   }
 
   /**
@@ -314,9 +318,10 @@ export default abstract class ELNode {
    * @returns 属性的EL表达式
    */
   public propertiesToEL(): string {
-    const properties = this.properties || {};
+    const properties = this.getProperties();
     return Object.keys(properties)
-      .map((key) => `.${key}("${properties[key]}")`)
+      .filter((key) => properties[key] !== undefined)
+      .map((key) => `.${key}(${propertyToString(properties[key])})`)
       .join('');
   }
 
@@ -365,4 +370,14 @@ export interface INodeData {
     delete?: boolean;
     replace?: boolean;
   };
+}
+
+function propertyToString(propertyValue: any): string {
+  if (typeof propertyValue === 'string') {
+    return `"${propertyValue}"`;
+  }
+  if (typeof propertyValue === 'object') {
+    return propertyValue.name || propertyValue;
+  }
+  return propertyValue;
 }
