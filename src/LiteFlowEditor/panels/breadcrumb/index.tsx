@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import { Graph } from '@antv/x6';
 import { Breadcrumb } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
@@ -14,19 +14,25 @@ interface IProps {
 const BreadcrumbPath: React.FC<IProps> = (props) => {
   const { flowGraph } = props;
 
+  const [selectedModel, setSelectedModel] = useState<ELNode | null>(null);
+
   const forceUpdate = useReducer((n) => n + 1, 0)[1];
   useEffect(() => {
-    flowGraph.on('settingBar:forceUpdate', forceUpdate);
-    return () => {
-      flowGraph.off('settingBar:forceUpdate');
+    const handler = () => {
+      setSelectedModel(null);
+      forceUpdate();
     };
-  }, [flowGraph]);
+    flowGraph.on('settingBar:forceUpdate', handler);
+    return () => {
+      flowGraph.off('settingBar:forceUpdate', handler);
+    };
+  }, [flowGraph, setSelectedModel, forceUpdate]);
 
   const nodes = flowGraph.getSelectedCells().filter((v) => !v.isEdge());
   const parents: ELNode[] = [];
-  if (nodes.length) {
-    const { model } = nodes[0].getData();
-    let nextModel = model.proxy || model;
+  if (selectedModel || nodes.length === 1) {
+    const currentModel = selectedModel || nodes[0].getData().model;
+    let nextModel = currentModel.proxy || currentModel;
     while (nextModel) {
       if (nextModel.parent) {
         parents.splice(0, 0, nextModel);
@@ -50,6 +56,7 @@ const BreadcrumbPath: React.FC<IProps> = (props) => {
           const handleClick = () => {
             flowGraph.cleanSelection();
             flowGraph.select(elNodeModel.getNodes());
+            setSelectedModel(elNodeModel);
             handleSelectModel(elNodeModel);
           };
           return (
