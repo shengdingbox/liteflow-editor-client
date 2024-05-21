@@ -173,17 +173,30 @@ class FeimaFlowLayout {
     let result: HeightInfo = { total: 0, base: 0 };
     const comp = NodeCompStore.getNode(node.type);
     if (comp.metadata.childrenType === 'multiple') {
+      let firstBaseHeight = 0;
+      let lastBaseRemainingHeight = 0;
       for (let i = 0; i < node.multiple!.length; i++) {
         const multiple = node.multiple![i];
-        let multiHeight = NODE_HEIGHT;
+        let multiTotalHeight = NODE_HEIGHT;
+        let multiBaseHeight = NODE_HEIGHT / 2;
         for (let j = 0; j < multiple.children.length; j++) {
           const curNode = multiple.children[j];
-          multiHeight = Math.max(multiHeight, this.calHeight(curNode).total);
+          const { total, base } = this.calHeight(curNode);
+          multiTotalHeight = Math.max(multiTotalHeight, total);
+          multiBaseHeight = Math.max(multiBaseHeight, base);
         }
-        result.total += multiHeight + Y_STEP;
+        if (i === 0) {
+          firstBaseHeight = multiBaseHeight;
+        } else if (i === node.multiple!?.length - 1) {
+          lastBaseRemainingHeight = multiTotalHeight - multiBaseHeight;
+        }
+        result.total += multiTotalHeight + Y_STEP;
       }
       result.total -= Y_STEP;
-      result.base = result.total / 2;
+      result.base =
+        (result.total - firstBaseHeight - lastBaseRemainingHeight) / 2 +
+        firstBaseHeight;
+      // result.base =
     } else if (comp.metadata.childrenType == 'then' && node.children) {
       let eachHeight = NODE_HEIGHT;
       for (let i = 0; i < node.children.length; i++) {
@@ -253,14 +266,14 @@ class FeimaFlowLayout {
           // this.translate(node, 0, );
         }
       } else if (childrenType === 'then') {
-        const baseHeight = this.cache.nodeMap[cur.id].data.heightInfo?.base!;
-        this.translate(cur, 0, baseHeight);
+        // const baseHeight = this.cache.nodeMap[cur.id].data.heightInfo?.base!;
+        // this.translate(cur, 0, baseHeight);
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
         }
-        if (cur.children) {
-          this.setChildrenY(cur.children, -baseHeight);
-        }
+        // if (cur.children) {
+        // this.setChildrenY(cur.children, -baseHeight);
+        // }
       } else if (childrenType === 'multiple') {
         let multiTotalHeight = 0;
         let maxBaseHeight = 0;
