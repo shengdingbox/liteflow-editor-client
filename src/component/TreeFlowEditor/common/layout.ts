@@ -207,9 +207,9 @@ class FeimaFlowLayout {
       //     graphNode.data.position.childrenIndex ?? ''
       //   }`,
       // };
-      graphNode.attrs.label = {
-        text: graphNode.data.totalHeight,
-      };
+      // graphNode.attrs.label = {
+      //   text: graphNode.data.totalHeight,
+      // };
     }
     // console.log('====height', node.id, result);
     return result;

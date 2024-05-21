@@ -141,7 +141,7 @@ export function addPlacehoderNodes(root: AdvNodeData): AdvNodeData {
       cur.multiple!.forEach((m, i) => {
         if (m.children.length == 0) {
           const children = m.children as AdvNodeData[];
-          children.push(createPlaceholderComp(i > 1));
+          children.push(createPlaceholderComp(cur.multiple!?.length > 2));
         }
       });
       const curParent = n.parent;
