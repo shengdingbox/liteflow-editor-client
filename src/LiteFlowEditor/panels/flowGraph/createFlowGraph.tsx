@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 import { Button } from 'antd';
-import { Cell, Graph } from '@antv/x6';
+import { Cell, Graph, NodeView } from '@antv/x6';
 import { debounce } from 'lodash';
 import { MIN_ZOOM, MAX_ZOOM } from '../../constant';
-import MiniMapSimpleNode from './miniMapSimpleNode';
+// import MiniMapSimpleNode from './miniMapSimpleNode';
 import {
   LITEFLOW_ANCHOR,
   registerEvents,
@@ -145,7 +145,8 @@ const createFlowChart = (
         async: true,
         getCellView(cell: Cell) {
           if (cell.isNode()) {
-            return MiniMapSimpleNode;
+            return NodeView.registry.get('react-shape-view');
+            // return MiniMapSimpleNode;
           }
         },
         createCellView(cell: Cell) {
