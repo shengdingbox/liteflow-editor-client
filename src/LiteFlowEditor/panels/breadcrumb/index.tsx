@@ -2,7 +2,6 @@ import React, { useState, useReducer, useEffect } from 'react';
 import { Graph } from '@antv/x6';
 import { Breadcrumb } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
-import { debounce } from 'lodash';
 import ELNode from '../../model/node';
 import { getIconByType } from '../../cells';
 import styles from './index.module.less';
@@ -41,9 +40,9 @@ const BreadcrumbPath: React.FC<IProps> = (props) => {
     }
   }
 
-  const handleSelectModel = debounce((selectedModel) => {
+  const handleSelectModel = (selectedModel: ELNode) => {
     flowGraph.trigger('model:select', selectedModel);
-  }, 100);
+  };
 
   return (
     <div className={styles.liteflowEditorBreadcrumb}>
