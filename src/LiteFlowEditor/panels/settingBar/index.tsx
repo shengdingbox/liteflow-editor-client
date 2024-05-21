@@ -42,7 +42,7 @@ const SettingBar: React.FC<IProps> = (props) => {
   }, [flowGraph, setSelectedModel, forceUpdate]);
 
   const nodes = flowGraph.getSelectedCells().filter((v) => !v.isEdge());
-  if (selectedModel || nodes.length) {
+  if (selectedModel || nodes.length === 1) {
     const currentModel = selectedModel || nodes[0].getData().model;
     if (Object.getPrototypeOf(currentModel) === NodeOperator.prototype) {
       return (

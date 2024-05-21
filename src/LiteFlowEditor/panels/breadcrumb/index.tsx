@@ -1,8 +1,9 @@
 import React, { useReducer, useEffect } from 'react';
 import { Graph } from '@antv/x6';
-import ELNode from '../../model/node';
 import { Breadcrumb } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
+import { debounce } from 'lodash';
+import ELNode from '../../model/node';
 import { getIconByType } from '../../cells';
 import styles from './index.module.less';
 
@@ -34,6 +35,10 @@ const BreadcrumbPath: React.FC<IProps> = (props) => {
     }
   }
 
+  const handleSelectModel = debounce((selectedModel) => {
+    flowGraph.trigger('model:select', selectedModel);
+  }, 100);
+
   return (
     <div className={styles.liteflowEditorBreadcrumb}>
       <Breadcrumb>
@@ -43,7 +48,9 @@ const BreadcrumbPath: React.FC<IProps> = (props) => {
         {parents.map((elNodeModel: ELNode, index: number) => {
           const icon = getIconByType(elNodeModel.type);
           const handleClick = () => {
-            flowGraph.trigger('model:select', elNodeModel);
+            flowGraph.cleanSelection();
+            flowGraph.select(elNodeModel.getNodes());
+            handleSelectModel(elNodeModel);
           };
           return (
             <Breadcrumb.Item key={index} onClick={handleClick}>
