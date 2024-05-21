@@ -51,17 +51,19 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
 
   // children
   if (comp.metadata.childrenType === 'then') {
-    // for (const pre of pres) {
-    // }
     let preNodeIds = [curNode.id];
+    let virtualCount = 0;
     node.children?.forEach((n, childrenIndex) => {
+      if (n.type === 'NodeVirtualComponent') {
+        virtualCount++;
+      }
       preNodeIds = nodeToCells({
         node: n,
         cells,
         pres: preNodeIds.map((id) => ({ nodeId: id })),
         position: {
           parent: node,
-          childrenIndex,
+          childrenIndex: Math.max(0, childrenIndex - virtualCount),
         },
       });
     });
