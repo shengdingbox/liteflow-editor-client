@@ -10,133 +10,28 @@
       }
     },
     {
+      "type": "switch",
+      "id": "ur3svjvrwt",
+      "props": {
+        "test": 1
+      },
+      "multiple": [
+        {
+          "children": []
+        },
+        {
+          "children": []
+        },
+        {
+          "children": []
+        }
+      ]
+    },
+    {
       "id": "i1r6iz2qd7d",
       "type": "common",
       "props": {
         "node": "a"
-      }
-    },
-    {
-      "type": "switch",
-      "id": "on3ef87vnoe",
-      "props": {
-        "test": 1
-      },
-      "multiple": [
-        {
-          "children": [
-            {
-              "type": "common",
-              "id": "5gxiak2qhav",
-              "props": {
-                "test": 1
-              }
-            }
-          ]
-        },
-        {
-          "children": [
-            {
-              "type": "common",
-              "id": "btg9qdpwoaq",
-              "props": {
-                "test": 1
-              }
-            },
-            {
-              "type": "common",
-              "id": "b79humrgknv",
-              "props": {
-                "test": 1
-              }
-            }
-          ]
-        },
-        {
-          "children": [
-            {
-              "type": "common",
-              "id": "ao6byp8sw9s",
-              "props": {
-                "test": 1
-              }
-            },
-            {
-              "type": "common",
-              "id": "2xvesq1gw3h",
-              "props": {
-                "test": 1
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "3xqfj3psj4r",
-      "type": "common",
-      "props": {
-        "node": "b"
-      }
-    },
-    {
-      "type": "when",
-      "id": "aquzmq8d9np",
-      "props": {
-        "test": 1
-      },
-      "multiple": [
-        {
-          "children": [
-            {
-              "type": "common",
-              "id": "kstbzqtkzjm",
-              "props": {
-                "test": 1
-              }
-            }
-          ]
-        },
-        {
-          "children": [
-            {
-              "type": "common",
-              "id": "y9wrhlq8xhk",
-              "props": {
-                "test": 1
-              }
-            }
-          ]
-        },
-        {
-          "children": [
-            {
-              "type": "common",
-              "id": "b9kxr1id4e",
-              "props": {
-                "test": 1
-              }
-            }
-          ]
-        },
-        {
-          "children": [
-            {
-              "type": "common",
-              "id": "aano9cecf4d",
-              "props": {
-                "test": 1
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "1nq1eu2gl0l",
-      "type": "common",
-      "props": {
-        "node": "c"
       }
     }
   ]

@@ -197,9 +197,19 @@ class FeimaFlowLayout {
     } else {
       result = nodeSize;
     }
-    if (this.cache.nodeMap[node.id]?.data) {
-      this.cache.nodeMap[node.id].data.totalHeight = result;
+
+    const graphNode = this.cache.nodeMap[node.id];
+    if (graphNode.data) {
+      graphNode.data.totalHeight = result;
       // this.cache.nodeMap[node.id].attrs.label = { text: result };
+      // graphNode.attrs.label = {
+      //   text: `${graphNode.data.position.multiIndex ?? ''}_${
+      //     graphNode.data.position.childrenIndex ?? ''
+      //   }`,
+      // };
+      graphNode.attrs.label = {
+        text: graphNode.data.totalHeight,
+      };
     }
     // console.log('====height', node.id, result);
     return result;
@@ -215,13 +225,8 @@ class FeimaFlowLayout {
         // 普通节点，无需处理
       } else if (childrenType === 'include') {
         let maxTotalHeight = 0;
-        let hasMultiChild = false;
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
-          const childCompType = NodeCompStore.getNode(cur.children![i].type);
-          if (childCompType.metadata.childrenType === 'multiple') {
-            hasMultiChild = true;
-          }
           maxTotalHeight = Math.max(
             maxTotalHeight,
             this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
@@ -229,60 +234,165 @@ class FeimaFlowLayout {
         }
         for (let i = 0; i < cur.children!?.length; i++) {
           const node = cur.children![i];
-          this.translate(node, 0, nodeSize + Y_STEP);
-          this.translateOne(node, 0, maxTotalHeight / 2);
+          this.translate(node, 0, maxTotalHeight / 2 + Y_STEP + nodeSize);
         }
       } else if (childrenType === 'then') {
-        let maxTotalHeight = 0;
+        const height = this.cache.nodeMap[cur.id].data.totalHeight!;
+        // console.log('======then.height', height);
+        this.translateOne(cur, 0, height / 2);
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
-          maxTotalHeight = Math.max(
-            maxTotalHeight,
-            this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
-          );
+          // const childHeight =
+          //   this.cache.nodeMap[cur.children![i].id].data.totalHeight!;
+          // this.translate();
         }
-        const offset = maxTotalHeight / 2;
-        for (let i = 0; i < cur.children!?.length; i++) {
-          const node = cur.children![i];
-
-          this.translateOne(node, 0, offset);
+        if (cur.children) {
+          this.setChildrenY(cur.children, 0);
         }
-        this.translateOne(cur, 0, offset);
+        // for (let i = 0; i < cur.children!?.length; i++) {}
       } else if (childrenType === 'multiple') {
         let multiTotalHeight = 0;
         for (let m = 0; m < cur.multiple!?.length; m++) {
-          let hasMultiChild = false;
-          let maxTotalHeight = 0;
           let mutiCur = cur.multiple![m];
-          for (let i = 0; i < mutiCur.children.length; i++) {
-            queue.push(mutiCur.children![i]);
-            const childCompType = NodeCompStore.getNode(
-              mutiCur.children[i].type,
-            );
-            if (childCompType.metadata.childrenType === 'multiple') {
-              hasMultiChild = true;
-            }
-            maxTotalHeight = Math.max(
-              maxTotalHeight,
-              this.cache.nodeMap[mutiCur.children![i].id].data.totalHeight!,
-            );
-          }
-
+          let maxTotalHeight = 0;
           for (let i = 0; i < mutiCur.children!?.length; i++) {
-            const node = mutiCur.children![i];
-            this.translate(node, 0, multiTotalHeight);
-            if (hasMultiChild) {
-              this.translateOne(node, 0, maxTotalHeight / 2);
-            } else {
-              this.translateOne(node, 0, nodeSize / 2);
-            }
+            queue.push(mutiCur.children![i]);
+            this.translate(mutiCur.children[i], 0, multiTotalHeight);
           }
+          for (let i = 0; i < mutiCur.children.length; i++) {
+            const childHeight =
+              this.cache.nodeMap[mutiCur.children![i].id].data.totalHeight!;
+
+            maxTotalHeight = Math.max(maxTotalHeight, childHeight);
+          }
+          // this.setChildrenY(mutiCur.children, maxTotalHeight / 2 - nodeSize); ////////////
 
           multiTotalHeight += maxTotalHeight + Y_STEP;
+
+          // this.setChildrenY(mutiCur.children, -multiTotalHeight / 2);
+        }
+        multiTotalHeight -= Y_STEP;
+
+        for (let m = 0; m < cur.multiple!?.length; m++) {
+          let mutiCur = cur.multiple![m];
+          // for (let i = 0; i < mutiCur.children!?.length; i++) {
+          // this.translate(mutiCur.children[i], 0, multiTotalHeight);
+          this.setChildrenY(mutiCur.children, -multiTotalHeight / 2);
+          // }
+          // multiTotalHeight += maxTotalHeight;
+          // this.setChildrenY(mutiCur.children, 0);
         }
       }
     }
   }
+
+  setChildrenY(children: AdvNodeData[], ty: number = 0) {
+    let maxTotalHeight = 0;
+    for (let i = 0; i < children.length; i++) {
+      const childHeight = this.cache.nodeMap[children![i].id].data.totalHeight!;
+      maxTotalHeight = Math.max(maxTotalHeight, childHeight);
+    }
+    for (let i = 0; i < children.length; i++) {
+      this.translate(children[i], 0, maxTotalHeight / 2 + ty);
+    }
+  }
+
+  // setY() {
+  //   const queue = [this.root];
+  //   while (queue.length > 0) {
+  //     const cur = queue.shift()!;
+  //     const curComp = NodeCompStore.getNode(cur.type);
+  //     const childrenType = curComp.metadata.childrenType;
+  //     if (childrenType == null) {
+  //       // 普通节点，无需处理
+  //     } else if (childrenType === 'include') {
+  //       let maxTotalHeight = 0;
+  //       let hasMultiChild = false;
+  //       for (let i = 0; i < cur.children!?.length; i++) {
+  //         queue.push(cur.children![i]);
+  //         const childCompType = NodeCompStore.getNode(cur.children![i].type);
+  //         if (childCompType.metadata.childrenType === 'multiple') {
+  //           hasMultiChild = true;
+  //         }
+  //         maxTotalHeight = Math.max(
+  //           maxTotalHeight,
+  //           this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
+  //         );
+  //       }
+  //       for (let i = 0; i < cur.children!?.length; i++) {
+  //         const node = cur.children![i];
+  //         if (hasMultiChild) {
+  //           this.translate(node, 0, Y_STEP + nodeSize);
+  //           this.translateOne(node, 0, maxTotalHeight / 2);
+  //         } else {
+  //           this.translate(node, 0, maxTotalHeight / 2 + Y_STEP + nodeSize);
+  //         }
+  //       }
+  //     } else if (childrenType === 'then') {
+  //       let maxTotalHeight = 0;
+  //       for (let i = 0; i < cur.children!?.length; i++) {
+  //         queue.push(cur.children![i]);
+  //         maxTotalHeight = Math.max(
+  //           maxTotalHeight,
+  //           this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
+  //         );
+  //       }
+  //       const offset = maxTotalHeight / 2;
+  //       for (let i = 0; i < cur.children!?.length; i++) {
+  //         const node = cur.children![i];
+  //         const childNodeComp = NodeCompStore.getNode(node.type);
+  //         console.log(
+  //           '===curNodeComp.metadata.childrenType',
+  //           childNodeComp.metadata.childrenType,
+  //         );
+  //         if (childNodeComp.metadata.childrenType === 'multiple') {
+  //           // this.translate(node, 0, offset);
+  //           this.translateOne(node, 0, maxTotalHeight / 2);
+
+  //           // this.translate(node, 0, maxTotalHeight / 2);
+  //           // this.translate(node, 0, maxTotalHeight / 2);
+  //           // this.translateOne(node, 0, maxTotalHeight / 2);
+  //         } else {
+  //           this.translate(node, 0, maxTotalHeight / 2);
+  //         }
+  //       }
+  //       this.translateOne(cur, 0, maxTotalHeight / 2);
+  //     } else if (childrenType === 'multiple') {
+  //       let multiTotalHeight = 0;
+  //       for (let m = 0; m < cur.multiple!?.length; m++) {
+  //         let hasMultiChild = false;
+  //         let maxTotalHeight = 0;
+  //         let mutiCur = cur.multiple![m];
+  //         for (let i = 0; i < mutiCur.children.length; i++) {
+  //           queue.push(mutiCur.children![i]);
+  //           const childCompType = NodeCompStore.getNode(
+  //             mutiCur.children[i].type,
+  //           );
+  //           if (childCompType.metadata.childrenType === 'multiple') {
+  //             hasMultiChild = true;
+  //           }
+  //           maxTotalHeight = Math.max(
+  //             maxTotalHeight,
+  //             this.cache.nodeMap[mutiCur.children![i].id].data.totalHeight!,
+  //           );
+  //         }
+
+  //         for (let i = 0; i < mutiCur.children!?.length; i++) {
+  //           const node = mutiCur.children![i];
+  //           this.translate(node, 0, multiTotalHeight);
+  //           if (hasMultiChild) {
+  //             this.translateOne(node, 0, maxTotalHeight / 2);
+  //             // this.translate(node, 0, maxTotalHeight / 2);
+  //           } else {
+  //             this.translateOne(node, 0, nodeSize / 2);
+  //           }
+  //         }
+
+  //         multiTotalHeight += maxTotalHeight + Y_STEP;
+  //       }
+  //     }
+  //   }
+  // }
 
   // 移动节点及其子节点
   translate(node: NodeData, tx: number, ty: number) {

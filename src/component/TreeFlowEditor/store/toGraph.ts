@@ -29,9 +29,10 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
   // console.log('===nodeToCells', nodeToCells);
   const { node, cells, pres = [], position } = opts;
   const comp = NodeCompStore.getNode(node.type);
+
   const curNode = createNode(node, position);
   cells.push(curNode);
-  for (const pre of pres)
+  for (const pre of pres) {
     if (pre.nodeId) {
       // console.log('===position', position, node);
       cells.push(
@@ -46,6 +47,7 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
         }),
       );
     }
+  }
 
   // children
   if (comp.metadata.childrenType === 'then') {
@@ -66,15 +68,19 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
     return preNodeIds;
   } else if (comp.metadata.childrenType === 'include') {
     let preNodeIds = [curNode.id];
+    let virtualCount = 0;
     node.children?.forEach((n, childrenIndex) => {
       const port = childrenIndex === 0 ? 'bottom1' : undefined;
+      if (n.type === 'NodeVirtualComponent') {
+        virtualCount++;
+      }
       preNodeIds = nodeToCells({
         node: n,
         cells,
         pres: preNodeIds.map((id) => ({ nodeId: id, port })),
         position: {
           parent: node,
-          childrenIndex,
+          childrenIndex: Math.max(0, childrenIndex - virtualCount),
         },
       });
     });
@@ -98,9 +104,12 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
     const outNodeIds: string[] = [];
     node.multiple?.forEach((line, multiIndex) => {
       let preNodeIds = [curNode.id];
-      // if (line.children.length > 0) {
-      line.children.forEach((n, childrenIndex) => {
+      let virtualCount = 0;
+      line.children.forEach((n: AdvNodeData, childrenIndex) => {
         const label = childrenIndex === 0 ? line.name : undefined;
+        if (n.type === 'NodeVirtualComponent') {
+          virtualCount++;
+        }
         preNodeIds = nodeToCells({
           node: n,
           cells,
@@ -111,7 +120,7 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
           position: {
             parent: node,
             multiIndex,
-            childrenIndex,
+            childrenIndex: Math.max(0, childrenIndex - virtualCount),
           },
         });
       });

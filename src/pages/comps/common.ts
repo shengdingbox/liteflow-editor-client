@@ -5,7 +5,6 @@ export const CommonNode: NodeComp = {
   metadata: {
     label: '普通节点',
     type: 'common',
-    childrenType: 'then',
     icon,
   },
 
