@@ -26,6 +26,7 @@ const View: React.FC<IProps> = makeBtnWidget({
           displayDataTypes={false}
           displayObjectSize={false}
           src={grapher.store.document.data}
+          collapsed={2}
         />
       ),
     });

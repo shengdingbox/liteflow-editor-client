@@ -34,13 +34,20 @@ export const forceLayout = (
   flowGraph.fromJSON(newModel);
 };
 
+interface HeightInfo {
+  total: number;
+  base: number;
+}
+
 interface SimpleNode {
   id: string;
   x: number;
   y: number;
   data: {
     position: CellPosition;
-    totalHeight?: number;
+    heightInfo?: HeightInfo;
+    totalHeight?: string;
+    // baseHeight?: number;
     isVirtual?: boolean;
     [key: string]: any;
   };
@@ -151,25 +158,19 @@ class FeimaFlowLayout {
     if (!firstNode) {
       throw new Error('no first node');
     }
-    // firstNode.x = START_X;
-    // firstNode.y = START_Y;
 
     this.setNodePosition(firstNode, this.cache);
 
     // 调整高度
     this.calHeight(this.root);
     this.setY();
-    // console.log(this.cache.nodes);
-    // this.root.
-
-    // this.adjustPosition();
     this.translate(this.root, X_STEP, Y_STEP);
 
     return { nodes: this.cache.nodes, edges: this.cache.edges };
   }
 
-  calHeight(node: AdvNodeData): number {
-    let result = 0;
+  calHeight(node: AdvNodeData): HeightInfo {
+    let result: HeightInfo = { total: 0, base: 0 };
     const comp = NodeCompStore.getNode(node.type);
     if (comp.metadata.childrenType === 'multiple') {
       for (let i = 0; i < node.multiple!.length; i++) {
@@ -177,30 +178,40 @@ class FeimaFlowLayout {
         let multiHeight = NODE_HEIGHT;
         for (let j = 0; j < multiple.children.length; j++) {
           const curNode = multiple.children[j];
-          multiHeight = Math.max(multiHeight, this.calHeight(curNode));
+          multiHeight = Math.max(multiHeight, this.calHeight(curNode).total);
         }
-        result += multiHeight + Y_STEP;
+        result.total += multiHeight + Y_STEP;
       }
-      result -= Y_STEP;
+      result.total -= Y_STEP;
+      result.base = result.total / 2;
     } else if (comp.metadata.childrenType == 'then' && node.children) {
       let eachHeight = NODE_HEIGHT;
       for (let i = 0; i < node.children.length; i++) {
-        eachHeight = Math.max(eachHeight, this.calHeight(node.children[i]));
+        eachHeight = Math.max(
+          eachHeight,
+          this.calHeight(node.children[i]).total,
+        );
       }
-      result = eachHeight;
+      result.total = eachHeight;
+      result.base = eachHeight / 2;
     } else if (comp.metadata.childrenType === 'include' && node.children) {
       let eachHeight = NODE_HEIGHT;
       for (let i = 0; i < node.children.length; i++) {
-        eachHeight = Math.max(eachHeight, this.calHeight(node.children[i]));
+        eachHeight = Math.max(
+          eachHeight,
+          this.calHeight(node.children[i]).total,
+        );
       }
-      result = eachHeight + NODE_HEIGHT + Y_STEP;
+      result.total = eachHeight + Y_STEP;
+      result.base = nodeSize / 2;
     } else {
-      result = nodeSize;
+      result.total = nodeSize;
+      result.base = nodeSize / 2;
     }
 
     const graphNode = this.cache.nodeMap[node.id];
     if (graphNode.data) {
-      graphNode.data.totalHeight = result;
+      graphNode.data.heightInfo = result;
       // this.cache.nodeMap[node.id].attrs.label = { text: result };
       // graphNode.attrs.label = {
       //   text: `${graphNode.data.position.multiIndex ?? ''}_${
@@ -208,10 +219,9 @@ class FeimaFlowLayout {
       //   }`,
       // };
       // graphNode.attrs.label = {
-      //   text: graphNode.data.totalHeight,
+      //   text: `${graphNode.data.heightInfo.base}_${graphNode.data.heightInfo.total}`,
       // };
     }
-    // console.log('====height', node.id, result);
     return result;
   }
 
@@ -225,174 +235,72 @@ class FeimaFlowLayout {
         // 普通节点，无需处理
       } else if (childrenType === 'include') {
         let maxTotalHeight = 0;
+        let maxBaseHeight = 0;
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
           maxTotalHeight = Math.max(
             maxTotalHeight,
-            this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
+            this.cache.nodeMap[cur.children![i].id].data.heightInfo?.total!,
+          );
+          maxBaseHeight = Math.max(
+            maxBaseHeight,
+            this.cache.nodeMap[cur.children![i].id].data.heightInfo?.base!,
           );
         }
         for (let i = 0; i < cur.children!?.length; i++) {
           const node = cur.children![i];
-          this.translate(node, 0, maxTotalHeight / 2 + Y_STEP + nodeSize);
+          this.translate(node, 0, maxBaseHeight + Y_STEP);
+          // this.translate(node, 0, );
         }
       } else if (childrenType === 'then') {
-        const height = this.cache.nodeMap[cur.id].data.totalHeight!;
-        // console.log('======then.height', height);
-        this.translateOne(cur, 0, height / 2);
+        const baseHeight = this.cache.nodeMap[cur.id].data.heightInfo?.base!;
+        this.translate(cur, 0, baseHeight);
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
-          // const childHeight =
-          //   this.cache.nodeMap[cur.children![i].id].data.totalHeight!;
-          // this.translate();
         }
         if (cur.children) {
-          this.setChildrenY(cur.children, 0);
+          this.setChildrenY(cur.children, -baseHeight);
         }
-        // for (let i = 0; i < cur.children!?.length; i++) {}
       } else if (childrenType === 'multiple') {
         let multiTotalHeight = 0;
+        let maxBaseHeight = 0;
         for (let m = 0; m < cur.multiple!?.length; m++) {
           let mutiCur = cur.multiple![m];
           let maxTotalHeight = 0;
           for (let i = 0; i < mutiCur.children!?.length; i++) {
             queue.push(mutiCur.children![i]);
             this.translate(mutiCur.children[i], 0, multiTotalHeight);
+            const { total: childTotalHeight, base: childBaseHeight } =
+              this.cache.nodeMap[mutiCur.children![i].id].data.heightInfo!;
+            maxTotalHeight = Math.max(maxTotalHeight, childTotalHeight);
+            maxBaseHeight = Math.max(maxBaseHeight, childBaseHeight);
           }
-          for (let i = 0; i < mutiCur.children.length; i++) {
-            const childHeight =
-              this.cache.nodeMap[mutiCur.children![i].id].data.totalHeight!;
-
-            maxTotalHeight = Math.max(maxTotalHeight, childHeight);
-          }
-          // this.setChildrenY(mutiCur.children, maxTotalHeight / 2 - nodeSize); ////////////
-
           multiTotalHeight += maxTotalHeight + Y_STEP;
-
-          // this.setChildrenY(mutiCur.children, -multiTotalHeight / 2);
         }
         multiTotalHeight -= Y_STEP;
 
+        const baseHeight = this.cache.nodeMap[cur.id].data.heightInfo?.base!;
         for (let m = 0; m < cur.multiple!?.length; m++) {
           let mutiCur = cur.multiple![m];
-          // for (let i = 0; i < mutiCur.children!?.length; i++) {
-          // this.translate(mutiCur.children[i], 0, multiTotalHeight);
-          this.setChildrenY(mutiCur.children, -multiTotalHeight / 2);
-          // }
-          // multiTotalHeight += maxTotalHeight;
-          // this.setChildrenY(mutiCur.children, 0);
+          this.setChildrenY(mutiCur.children, -baseHeight);
         }
       }
     }
   }
 
-  setChildrenY(children: AdvNodeData[], ty: number = 0) {
+  setChildrenY(children: AdvNodeData[], ty: number) {
     let maxTotalHeight = 0;
+    let maxBaseHeight = 0;
     for (let i = 0; i < children.length; i++) {
-      const childHeight = this.cache.nodeMap[children![i].id].data.totalHeight!;
-      maxTotalHeight = Math.max(maxTotalHeight, childHeight);
+      const { total: childTotalHeight, base: childBaseHeight } =
+        this.cache.nodeMap[children![i].id].data.heightInfo!;
+      maxTotalHeight = Math.max(maxTotalHeight, childTotalHeight);
+      maxBaseHeight = Math.max(maxBaseHeight, childBaseHeight);
     }
     for (let i = 0; i < children.length; i++) {
-      this.translate(children[i], 0, maxTotalHeight / 2 + ty);
+      this.translate(children[i], 0, maxBaseHeight + ty);
     }
   }
-
-  // setY() {
-  //   const queue = [this.root];
-  //   while (queue.length > 0) {
-  //     const cur = queue.shift()!;
-  //     const curComp = NodeCompStore.getNode(cur.type);
-  //     const childrenType = curComp.metadata.childrenType;
-  //     if (childrenType == null) {
-  //       // 普通节点，无需处理
-  //     } else if (childrenType === 'include') {
-  //       let maxTotalHeight = 0;
-  //       let hasMultiChild = false;
-  //       for (let i = 0; i < cur.children!?.length; i++) {
-  //         queue.push(cur.children![i]);
-  //         const childCompType = NodeCompStore.getNode(cur.children![i].type);
-  //         if (childCompType.metadata.childrenType === 'multiple') {
-  //           hasMultiChild = true;
-  //         }
-  //         maxTotalHeight = Math.max(
-  //           maxTotalHeight,
-  //           this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
-  //         );
-  //       }
-  //       for (let i = 0; i < cur.children!?.length; i++) {
-  //         const node = cur.children![i];
-  //         if (hasMultiChild) {
-  //           this.translate(node, 0, Y_STEP + nodeSize);
-  //           this.translateOne(node, 0, maxTotalHeight / 2);
-  //         } else {
-  //           this.translate(node, 0, maxTotalHeight / 2 + Y_STEP + nodeSize);
-  //         }
-  //       }
-  //     } else if (childrenType === 'then') {
-  //       let maxTotalHeight = 0;
-  //       for (let i = 0; i < cur.children!?.length; i++) {
-  //         queue.push(cur.children![i]);
-  //         maxTotalHeight = Math.max(
-  //           maxTotalHeight,
-  //           this.cache.nodeMap[cur.children![i].id].data.totalHeight!,
-  //         );
-  //       }
-  //       const offset = maxTotalHeight / 2;
-  //       for (let i = 0; i < cur.children!?.length; i++) {
-  //         const node = cur.children![i];
-  //         const childNodeComp = NodeCompStore.getNode(node.type);
-  //         console.log(
-  //           '===curNodeComp.metadata.childrenType',
-  //           childNodeComp.metadata.childrenType,
-  //         );
-  //         if (childNodeComp.metadata.childrenType === 'multiple') {
-  //           // this.translate(node, 0, offset);
-  //           this.translateOne(node, 0, maxTotalHeight / 2);
-
-  //           // this.translate(node, 0, maxTotalHeight / 2);
-  //           // this.translate(node, 0, maxTotalHeight / 2);
-  //           // this.translateOne(node, 0, maxTotalHeight / 2);
-  //         } else {
-  //           this.translate(node, 0, maxTotalHeight / 2);
-  //         }
-  //       }
-  //       this.translateOne(cur, 0, maxTotalHeight / 2);
-  //     } else if (childrenType === 'multiple') {
-  //       let multiTotalHeight = 0;
-  //       for (let m = 0; m < cur.multiple!?.length; m++) {
-  //         let hasMultiChild = false;
-  //         let maxTotalHeight = 0;
-  //         let mutiCur = cur.multiple![m];
-  //         for (let i = 0; i < mutiCur.children.length; i++) {
-  //           queue.push(mutiCur.children![i]);
-  //           const childCompType = NodeCompStore.getNode(
-  //             mutiCur.children[i].type,
-  //           );
-  //           if (childCompType.metadata.childrenType === 'multiple') {
-  //             hasMultiChild = true;
-  //           }
-  //           maxTotalHeight = Math.max(
-  //             maxTotalHeight,
-  //             this.cache.nodeMap[mutiCur.children![i].id].data.totalHeight!,
-  //           );
-  //         }
-
-  //         for (let i = 0; i < mutiCur.children!?.length; i++) {
-  //           const node = mutiCur.children![i];
-  //           this.translate(node, 0, multiTotalHeight);
-  //           if (hasMultiChild) {
-  //             this.translateOne(node, 0, maxTotalHeight / 2);
-  //             // this.translate(node, 0, maxTotalHeight / 2);
-  //           } else {
-  //             this.translateOne(node, 0, nodeSize / 2);
-  //           }
-  //         }
-
-  //         multiTotalHeight += maxTotalHeight + Y_STEP;
-  //       }
-  //     }
-  //   }
-  // }
 
   // 移动节点及其子节点
   translate(node: NodeData, tx: number, ty: number) {
@@ -410,24 +318,6 @@ class FeimaFlowLayout {
     if (curNode) {
       curNode.x += tx;
       curNode.y += ty;
-    }
-  }
-
-  adjustPosition() {
-    let minY = Infinity;
-    this.cache.nodes.forEach((n) => {
-      minY = Math.min(minY, n.y);
-    });
-    if (minY < Y_STEP) {
-      const addY = Y_STEP - minY;
-      this.cache.nodes.forEach((n) => {
-        n.y += addY;
-      });
-      // this.cache.edges.forEach((e) => {
-      //   e.vertices?.forEach((v) => {
-      //     v.y += addY;
-      //   });
-      // });
     }
   }
 
