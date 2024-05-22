@@ -22,7 +22,7 @@ $ yarn start
 
 作为一名前端开发，我们需要特别关注的前端开发要素有三个——数据（Model）、视图（View）和逻辑（Control），即“MVC”——而在实现[LiteFlow](https://liteflow.cc/)逻辑可视化编排时，我们也可以使用“MVC三要素”的知识框架来进行系统的拆解、组合、设计和实现。
 
-![LiteFlow逻辑可视化编排设计与实现.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad8c3dfeff9f4a609180c9412c98704b~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2225&h=1849&s=611604&e=png&b=fefdfd)
+![LiteFlow逻辑可视化编排设计与实现.png](./docs/assets/Liteflow逻辑编排可视化设计.png)
 
 1. 数据模型（Model）：将EL表达式的操作符（Operator）进行建模，在这个项目里，我们将EL表达式建模成了由ELNode组成的一棵树；
 2. 视图呈现（View）：使用AntV X6的节点（Node）和边（Edge）进行ELNode的可视化呈现，即通过Nodes & Edges实现[LiteFlow](https://liteflow.cc/)的逻辑可视化；
@@ -36,7 +36,7 @@ $ yarn start
 
 [LiteFlow](https://liteflow.cc/)对可执行的逻辑流程进行建模，主要包括以下2个部分：
 
-![Liteflow流程建模：逻辑组件 + 逻辑编排.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/59468ad628c845a58cdb9c0488a50584~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1774&h=916&s=180643&e=png&a=1&b=eaf6fe)
+![Liteflow流程建模：逻辑组件 + 逻辑编排.png](./docs/assets/Liteflow流程建模：逻辑组件+逻辑编排.png)
 
 - 1、逻辑组件（组件节点）：逻辑组件类型包括： <br/>
 ① 顺序组件：用于THEN、WHEN； <br/>
@@ -66,7 +66,7 @@ $ yarn start
 
 而我们数据模型（Model），就是将EL表达式的操作符（Operator）进行建模：
 
-![LiteFlow逻辑可视化编排设计与实现 1. 数据模型（Model）.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e54a34b8870141b09e7921bf4f612caa~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=4892&h=1772&s=924870&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排设计与实现 1. 数据模型（Model）.png](./docs/assets/LiteFlow逻辑可视化编排设计与实现-数据模型（Model）.png)
 
 - EL表达式：[LiteFlow](https://liteflow.cc/)的逻辑编排是通过EL表达式来实现的，比如我们之前提到过的这个例子：
 ```typescript
@@ -132,7 +132,7 @@ export default abstract class ELNode {
 
 在实现[LiteFlow](https://liteflow.cc/)逻辑可视化编排时，我们使用的图编辑引擎是[AntV X6](https://x6.antv.vision/zh/)——不光因为它足够好用、我们很常用，而且我们用起来也挺有心得，感兴趣的朋友可以看我之前写的文章：[「AntV X6」从5个核心要素出发，快速上手AntV X6图可视化编排](https://juejin.cn/post/7326766014258855972)。
 
-![Liteflow逻辑编排可视化设计.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2310eba7eeb24179bd6f5c97e7cf2d95~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1176&h=728&s=121027&e=png&b=fdfafa)
+![Liteflow逻辑编排可视化设计.png](./docs/assets/Liteflow逻辑编排可视化设计.png)
 
 我们目前初步实现了[LiteFlow](https://liteflow.cc/)的以下3类/6种逻辑可视化：
 
@@ -144,11 +144,11 @@ export default abstract class ELNode {
 
 ## 3、操作逻辑（Control）
 
-![LiteFlow逻辑可视化编排-操作逻辑篇（Control）-增删改查CRUD.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0fdeb55aeaae4462a30db2c841e17b91~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2134&h=1016&s=213893&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-操作逻辑篇（Control）-增删改查CRUD.png](./docs/assets/LiteFlow逻辑可视化编排-操作逻辑篇（Control）-增删改查CRUD.png)
 
 [LiteFlow](https://liteflow.cc/)的逻辑可视化编排，主要是实现对ELNode模型的增删改查操作：
 
-![LiteFlow ContextPad.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5047e412b05b4ac19509407dc163a99e~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1728&h=1080&s=542866&e=gif&f=286&b=fdfdfb)
+![LiteFlow ContextPad.gif](./docs/assets/LiteFlow-ContextPad.gif)
 
 为了方便使用，我们不光实现了通过拖拽（Drag & Drop）添加节点，而且在画布中也实现了通过快捷面板（ContextPad），在节点和边上快速新增节点。
 
@@ -202,13 +202,13 @@ export default abstract class ELNode {
 
 回顾一下我们在《[先导篇](https://juejin.cn/spost/7365694439568343080)》中提到过的内容，作为一名前端开发，我们需要特别关注的要素有三个——数据（Model）、视图（View）和逻辑（Control），即“MVC”——我接下来也是使用“MVC三要素”的知识框架来进行LiteFlow逻辑可视化编排系统的拆解、组合、设计和实现的：
 
-![LiteFlow逻辑可视化编排设计与实现.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad8c3dfeff9f4a609180c9412c98704b~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2225&h=1849&s=611604&e=png&b=fefdfd)
+![LiteFlow逻辑可视化编排设计与实现.png](./docs/assets/Liteflow逻辑编排可视化设计.png)
 
 
 
 而“数据”，或者“模型”，或者“数据模型”，或者“概念模型”，是我们开发之前需要最先分析和设计的部分，而具体到对LiteFlow进行逻辑可视化编排的模型设计上，我们的目标是将EL表达式的操作符（Operator）进行建模，最终我们将EL表达式建模成了由ELNode组成的一棵树：
 
-![LiteFlow逻辑可视化编排设计与实现 1. 数据模型（Model）.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e54a34b8870141b09e7921bf4f612caa~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=4892&h=1772&s=924870&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排设计与实现 1. 数据模型（Model）.png](./docs/assets/LiteFlow逻辑可视化编排设计与实现-数据模型（Model）.png)
 
 ## 1、EL表达式
 
@@ -224,13 +224,13 @@ export default abstract class ELNode {
 </chain>
 ```
 
-![LiteFlow逻辑可视化编排-EL表达式.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fda1aef879ac4eafb750bde05879c70b~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1235&h=1259&s=118895&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-EL表达式.png](./docs/assets/LiteFlow逻辑可视化编排-EL表达式.png)
 
 其中“THEN”和“WHEN”是EL表达式的关键字，分别表示串行编排和并行编排，而“a”“b”“c”“d”“e”则是5个逻辑组件，由此组成了一个串行和并行编排的组合——即先执行“a”组件，然后并行执行“b”“c”“d”组件，最后执行“e”组件。
 
 [LiteFlow](https://liteflow.cc/)对可执行的逻辑流程进行建模，主要包括以下2个部分：
 
-![Liteflow流程建模：逻辑组件 + 逻辑编排.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/59468ad628c845a58cdb9c0488a50584~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1774&h=916&s=180643&e=png&a=1&b=eaf6fe)
+![Liteflow流程建模：逻辑组件 + 逻辑编排.png](./docs/assets/Liteflow流程建模：逻辑组件+逻辑编排.png)
 
 - 1、逻辑组件（组件节点）：逻辑组件类型包括： <br/>
 ① 顺序组件：用于THEN、WHEN； <br/>
@@ -250,7 +250,7 @@ export default abstract class ELNode {
 
 将[LiteFlow](https://liteflow.cc/)的EL表达式进行文本拆解，我们其实能得到一个树形结构:
 
-![LiteFlow逻辑可视化编排-EL表达式 vs AST语法树.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce4a9ebb7bd644f78b1e907c589fc43c~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2419&h=1394&s=501843&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-EL表达式 vs AST语法树.png](./docs/assets/LiteFlow逻辑可视化编排-EL表达式vsAST语法树.png)
 
 上面的树形结构来自于AST抽象语法树，使用[AST explorer](https://astexplorer.net/)解析的完整的AST语法树如下所示：
 
@@ -332,7 +332,7 @@ export default abstract class ELNode {
 
 我们可以把这棵AST抽象语法树进行简化，得到一个简化版的JSON表示：
 
-![LiteFlow逻辑可视化编排-AST语法树 vs JSON表示.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/62bd97b5506546428e20e27e65c65660~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3093&h=1440&s=616690&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-AST语法树 vs JSON表示.png](./docs/assets/LiteFlow逻辑可视化编排-AST语法树vsJSON表示.png)
 
 ```typescript
 {
@@ -356,7 +356,7 @@ export default abstract class ELNode {
 
 ## 4、建立模型
 
-![LiteFlow逻辑可视化编排设计与实现 1. 数据模型（Model）.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e54a34b8870141b09e7921bf4f612caa~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=4892&h=1772&s=924870&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排设计与实现 1. 数据模型（Model）.png](./docs/assets/LiteFlow逻辑可视化编排设计与实现-数据模型（Model）)
 
 经过以上步骤的分析，我们可以建立这么一个ELNode模型：
 
@@ -405,7 +405,7 @@ export default abstract class ELNode {
 }
 ```
 
-![LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0bb18f3e5c14e11bdd0868fb0afc642~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3376&h=2134&s=841073&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png](./docs/assets/LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png)
 
 对于我们建立的ELNode模型，关键点有以下2个：
 
@@ -456,24 +456,24 @@ export { default as NodeOperator } from './node-operator';
 
 回顾一下我们在《[先导篇](https://juejin.cn/spost/7365694439568343080)》中提到过的内容，作为一名前端开发，我们需要特别关注的要素有三个——数据（Model）、视图（View）和逻辑（Control），即“MVC”——我接下来也是使用“MVC三要素”的知识框架来进行LiteFlow逻辑可视化编排系统的拆解、组合、设计和实现的：
 
-![LiteFlow逻辑可视化编排设计与实现.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad8c3dfeff9f4a609180c9412c98704b~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2225&h=1849&s=611604&e=png&b=fefdfd)
+![LiteFlow逻辑可视化编排设计与实现.png](./docs/assets/Liteflow逻辑编排可视化设计.png)
 
 在《[数据模型篇](https://juejin.cn/spost/7366557738267426850)》中，我们完成了EL表达式的操作符（Operator）的建模工作，最终我们将EL表达式建模成了由ELNode组成的一棵树：
 
-![LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0bb18f3e5c14e11bdd0868fb0afc642~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3376&h=2134&s=841073&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png](./docs/assets/LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png)
 
 接下来，我们将使用AntV X6的节点（Node）和边（Edge）进行ELNode的可视化呈现，即通过Nodes & Edges实现[LiteFlow](https://liteflow.cc/)的逻辑可视化设计：
 
-![Liteflow逻辑编排可视化设计.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f2d406cfc164e4a9839c19d83498434~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1176&h=728&s=121027&e=png&b=fdfafa)
+![Liteflow逻辑编排可视化设计.png](./docs/assets/Liteflow逻辑编排可视化设计.png)
 
 ## 1、心法口诀：“两点一线”
 如果把[LiteFlow](https://liteflow.cc/)的逻辑可视化的设计心法总结一下，那就可以总结为一句口诀：“两点一线”。因为我们从要素的拆解来看，一张图本质上无外乎就是「两点一线」——即节点和连线，以及在节点和连线上的文字标签。
 
-![两点一线.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1507e7d1ddc64617ba71e905323ec3e1~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1262&h=393&s=31301&e=png&b=ffffff)
+![两点一线.png](./docs/assets/两点一线.png)
 
 我们对[LiteFlow](https://liteflow.cc/)的逻辑可视化设计，就是通过“节点”和“连线”的组合进行逻辑可视化呈现的。比如下面是[LiteFlow](https://liteflow.cc/)逻辑编排的根节点Chain的可视化设计：
 
-![LiteFlow逻辑可视化编排-Chain设计.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60bd95cd7f7b4f699cff05195497b9a0~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3022&h=1308&s=623702&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-Chain设计.png](./docs/assets/LiteFlow逻辑可视化编排-Chain设计.png)
 
 [LiteFlow](https://liteflow.cc/)逻辑编排的根节点Chain的可视化设计包括：
 
@@ -507,7 +507,7 @@ Edge.create({
 
 事实上，上面的代码就是我们对[LiteFlow](https://liteflow.cc/)逻辑可视化的实现代码，其他操作符（包括串行编排THEN、并行编排WHEN、条件编排IF等等）也是使用了同样“两点一线”的思路来实现的：
 
-![LiteFlow逻辑可视化编排-并行编排WHEN设计.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07cc0bdfd56d41c284750a2d66fa0bb5~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=4457&h=1451&s=807043&e=png&b=fefefe)
+![LiteFlow逻辑可视化编排-并行编排WHEN设计.png](./docs/assets/LiteFlow逻辑可视化编排-并行编排WHEN设计.png)
 
 以下是我们分别对[LiteFlow](https://liteflow.cc/)各个逻辑编排的可视化设计和实现。
 
@@ -558,7 +558,7 @@ Edge.create({
 
 #### 4、可视化设计与实现
 
-![LiteFlow逻辑可视化编排-串行编排THEN设计.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/db4f6a00e4584f578136b08d3e121e3f~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=4506&h=1432&s=620282&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-串行编排THEN设计.png](./docs/assets/LiteFlow逻辑可视化编排-串行编排THEN设计.png)
 
 ### 2.2 并行编排：WHEN
 
@@ -605,7 +605,7 @@ Edge.create({
 
 #### 4、可视化设计与实现
 
-![LiteFlow逻辑可视化编排-并行编排WHEN设计 2.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c694d05a33a44f1803cce826995a46f~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=4388&h=1439&s=716697&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-并行编排WHEN设计 2.png](./docs/assets/LiteFlow逻辑可视化编排-并行编排WHEN设计2.png)
 
 ### 2.3 选择编排：SWITCH
 
@@ -653,7 +653,7 @@ Edge.create({
 
 #### 4、可视化设计与实现
 
-![LiteFlow逻辑可视化编排-选择编排SWITCH设计.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0129be1b6c9a4adf8732a89c0fbd1595~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=4487&h=1438&s=775934&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-选择编排SWITCH设计.png](./docs/assets/LiteFlow逻辑可视化编排-选择编排SWITCH设计.png)
 
 ### 2.4 条件编排：IF
 
@@ -690,7 +690,7 @@ Edge.create({
 
 #### 4、可视化设计与实现
 
-![LiteFlow逻辑可视化编排-条件编排IF设计.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce621e9f58044a628000327c3518af84~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3838&h=1423&s=530070&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-条件编排IF设计.png](./docs/assets/LiteFlow逻辑可视化编排-条件编排IF设计.png)
 
 ### 2.5 循环编排：FOR
 
@@ -735,7 +735,7 @@ Edge.create({
 
 #### 4、可视化设计与实现
 
-![LiteFlow逻辑可视化编排-循环编排FOR设计.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df4f986e776b4022853b26535014473a~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3890&h=1444&s=621425&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-循环编排FOR设计.png](./docs/assets/LiteFlow逻辑可视化编排-循环编排FOR设计.png)
 
 ### 2.6 循环编排：WHILE
 
@@ -780,30 +780,30 @@ Edge.create({
 
 #### 4、可视化设计与实现
 
-![LiteFlow逻辑可视化编排-循环编排WHILE设计.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4f66220c05764a65b29ec1d2685776a8~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3797&h=1435&s=627352&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-循环编排WHILE设计.png](./docs/assets/LiteFlow逻辑可视化编排-循环编排WHILE设计.png)
 
 
 # 04-操作逻辑篇（Control）
 
 回顾一下我们在《[先导篇](https://juejin.cn/spost/7365694439568343080)》中提到过的内容，作为一名前端开发，我们需要特别关注的要素有三个——数据（Model）、视图（View）和逻辑（Control），即“MVC”——我接下来也是使用“MVC三要素”的知识框架来进行LiteFlow逻辑可视化编排系统的拆解、组合、设计和实现的：
 
-![LiteFlow逻辑可视化编排设计与实现.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad8c3dfeff9f4a609180c9412c98704b~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2225&h=1849&s=611604&e=png&b=fefdfd)
+![LiteFlow逻辑可视化编排设计与实现.png](./docs/assets/Liteflow逻辑编排可视化设计.png)
 
 在《[数据模型篇](https://juejin.cn/spost/7366557738267426850)》，我们完成了EL表达式的操作符（Operator）的建模工作，最终我们将EL表达式建模成了由ELNode组成的一棵树：
 
-![LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0bb18f3e5c14e11bdd0868fb0afc642~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3376&h=2134&s=841073&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png](./docs/assets/LiteFlow逻辑可视化编排-ELNode模型-组合关系vs继承关系.png)
 
 在《[视图呈现篇](https://juejin.cn/spost/7367611991362912308)》，我们完成了使用AntV X6的节点（Node）和边（Edge）进行ELNode的逻辑可视化呈现：
 
-![Liteflow逻辑编排可视化设计.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f2d406cfc164e4a9839c19d83498434~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1176&h=728&s=121027&e=png&b=fdfafa)
+![Liteflow逻辑编排可视化设计.png](./docs/assets/Liteflow逻辑编排可视化设计.png)
 
 接下来，我们将实现[LiteFlow](https://liteflow.cc/)逻辑可视化编排的“编排”部分实现了：
 
-![LiteFlow ContextPad.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5047e412b05b4ac19509407dc163a99e~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1728&h=1080&s=542866&e=gif&f=286&b=fdfdfb)
+![LiteFlow ContextPad.gif](./docs/assets/LiteFlow-ContextPad.gif)
 
 我们对“编排”的操作逻辑做进一步的拆解，也就是我们常说的“增删改查”（CRUD）操作了，在这里的具体实现，就是对ELNode模型的树型结构进行“增删改查”：
 
-![LiteFlow逻辑可视化编排-操作逻辑篇（Control）-增删改查CRUD.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0fdeb55aeaae4462a30db2c841e17b91~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2134&h=1016&s=213893&e=png&b=ffffff)
+![LiteFlow逻辑可视化编排-操作逻辑篇（Control）-增删改查CRUD.png](./docs/assets/LiteFlow逻辑可视化编排-操作逻辑篇（Control）-增删改查CRUD.png)
 
 ## 1、ELNode模型的增删改查
 
@@ -854,7 +854,7 @@ export default abstract class ELNode {
 
 目前我们这个[LiteFlow](https://liteflow.cc/)逻辑可视化编辑器的功能原型，页面大体是经典的“左中右”3栏布局，内容由以下4个面板组成：左侧的“物料区”、中间的“画布区”、右侧的“设置区”，以及顶部的“工具栏”：
 
-![编辑器布局：物料区、画布区、设置区、工具栏.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/143c32d5c23043f182516454a6eca2d6~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2788&h=1578&s=370348&e=png&b=f3f6fb)
+![编辑器布局：物料区、画布区、设置区、工具栏.png](./docs/assets/编辑器布局：物料区、画布区、设置区、工具栏.png)
 
 - 1. 物料区：在页面的左侧是“物料区”，这里提供了可供选择的各类逻辑组件，主要包括： <br/>
 ① 节点类：在实际项目中，节点将会是最多的，这里为了方便只放了一个节点组件，组件的id属性会随机生成为"Placeholder[1-9]"形式； <br/>
@@ -876,7 +876,7 @@ export default abstract class ELNode {
 
 在左侧物料区，可以通过拖拽需要的逻辑组件到中间的画布区、实现逻辑组件的新增：
 
-![新增操作：1、拖拽.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bcc69d62889a487f92c9d3077c6b04fb~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1728&h=1080&s=266742&e=gif&f=96&b=f7f6fc)
+![新增操作：1、拖拽.gif](./docs/assets/新增操作：1、拖拽.gif)
 
 
 这里的拖拽节点到画布的实现，是使用了AntV X6的[Addon.Dnd](https://x6.antv.vision/zh/docs/tutorial/basic/dnd)，简化后的实现方法如下：
@@ -921,11 +921,11 @@ const dnd = useMemo(
 在中间的画布区的节点和边上，有相关的操作按钮，可以方便进行逻辑组件的新增操作：
 ① 节点附近新增：在节点前面/后面插入节点；
 
-![新增操作：前面插入节点.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/501d4c0cd2584d74a9645862620fdb18~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2788&h=1574&s=308970&e=png&b=f3f6fb)
+![新增操作：前面插入节点.png](./docs/assets/新增操作：前面插入节点.png)
 
 ② 边上新增：在边所在的位置插入节点（相当于在边前面的节点后面插入新节点）。
 
-![新增操作：边上插入节点.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b2fbb763dbc4f69a1619c830c4e8b63~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2790&h=1574&s=295170&e=png&b=f3f6fb)
+![新增操作：边上插入节点.png](./docs/assets/新增操作：边上插入节点.png)
 
 这里我们设计了一个ContextPad组件、用来快捷插入节点——这样就实现了不通过拖拽、而是直接在画布中进行组件的新增。
 
@@ -963,19 +963,19 @@ const onAppend = (event: any) => {
 
 在左侧物料区，可以通过拖拽需要的逻辑组件到中间的画布区的组件节点上、实现该组件节点的替换：
 
-![修改操作：1、拖拽替换节点.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63626d1ca38e4069a109488b5fe62c4d~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1728&h=1080&s=284529&e=gif&f=105&b=f7f6fc)
+![修改操作：1、拖拽替换节点.gif](./docs/assets/修改操作：1、拖拽替换节点.gif)
 
 ### 2.2 通过快捷面板（ContextPad）修改
 
 在中间的画布区，节点的工具栏上有一个替换按钮，可以方便进行逻辑组件的替换操作：
 
-![修改操作：2、替换按钮替换.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d6627739ad14ab28e58de521d39c0af~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1728&h=1080&s=329875&e=gif&f=129&b=f7f6fc)
+![修改操作：2、替换按钮替换.gif](./docs/assets/修改操作：2、替换按钮替换.gif)
 
 ### 2.3 通过设置面板修改
 
 在页面右侧是设置区，在选中某个逻辑节点组件之后，可以设置该组件的LiteFlow属性，比如id和tag等等：
 
-![修改操作：3、属性设置.gif](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4e5500d731540c5905d048db6a97b94~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1728&h=1080&s=347223&e=gif&f=226&b=f7f6fc)
+![修改操作：3、属性设置.gif](./docs/assets/修改操作：3、属性设置.gif)
 
 ## 4、删除（Delete）
 
@@ -983,13 +983,13 @@ const onAppend = (event: any) => {
 
 在中间的画布区，节点的工具栏上有一个删除按钮，可以方便进行逻辑组件的删除操作：
 
-![删除操作：1、删除按钮删除.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/951cc4cd3f44490fa6bb76a376635467~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1728&h=1080&s=3420292&e=gif&f=190&b=f7f6fc)
+![删除操作：1、删除按钮删除.gif](./docs/assets/删除操作：1、删除按钮删除.gif)
 
 ### 4.2 通过快捷键删除
 
 在中间的画布区，我们可以通过快捷键`backspace`或者`delete`进行删除，比如这里我通过`ctrl + a`进行组件全选，然后按`delete`键进行了删除：
 
-![删除操作：2、快捷键删除.gif](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5eec263dd4044673b8f2074aab1739d8~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1728&h=1080&s=1703801&e=gif&f=119&b=f7f6fc)
+![删除操作：2、快捷键删除.gif](./docs/assets/删除操作：2、快捷键删除.gif)
 
 这里的实现比较简单，实现代码如下：
 
