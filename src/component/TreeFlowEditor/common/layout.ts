@@ -153,18 +153,18 @@ class FeimaFlowLayout {
     } else if (comp.metadata.childrenType === 'include' && node.children) {
       const childTotalWidth = this.calChildrenWidth(node.children);
       result.total = nodeSize;
-      result.next = childTotalWidth.total;
+      result.next = childTotalWidth.total + X_SPACE;
     } else {
       result.total = nodeSize;
-      result.next = result.total;
+      result.next = 0;
     }
 
     const graphNode = this.cache.nodeMap[node.id];
     if (graphNode.data) {
       graphNode.data.widthInfo = result;
-      // graphNode.attrs.label = {
-      //   text: `${graphNode.data.widthInfo?.total}_${graphNode.data.widthInfo?.next}`,
-      // };
+      graphNode.attrs.label = {
+        text: `${graphNode.data.widthInfo?.total}_${graphNode.data.widthInfo?.next}`,
+      };
     }
     return result;
   }
@@ -190,48 +190,47 @@ class FeimaFlowLayout {
       if (childrenType == null) {
         // 普通节点，无需处理
       } else if (childrenType === 'include') {
-        let multiTotalWidth = nodeSize;
-        for (let i = 0; i < cur.children!?.length; i++) {
-          queue.push(cur.children![i]);
-          multiTotalWidth += i === 0 ? 0 : X_SPACE;
-          this.translate(cur.children![i], multiTotalWidth, 0);
-          const widthInfo =
-            this.cache.nodeMap[cur.children![i].id].data.widthInfo!;
-          multiTotalWidth += widthInfo?.total;
-        }
+        this.setChildrenX(cur.children!, queue, true);
       } else if (childrenType === 'then') {
-        let multiTotalWidth = nodeSize;
-        let multiNextTotalWidth = nodeSize;
-        let nextMinusTotal = 0;
-        for (let i = 0; i < cur.children!?.length; i++) {
-          queue.push(cur.children![i]);
-          multiTotalWidth += X_SPACE;
-          multiNextTotalWidth += X_SPACE;
-          this.translate(cur.children![i], multiTotalWidth, 0);
-          // }
-          const { total, next } =
-            this.cache.nodeMap[cur.children![i].id].data.widthInfo!;
-          console.log('total, next', total, next);
-          multiTotalWidth += total;
-          multiNextTotalWidth += next;
-          nextMinusTotal = multiNextTotalWidth - multiTotalWidth;
-          // multiTotalWidth += Math.max(total, next);
-        }
+        this.setChildrenX(cur.children!, queue);
       } else if (childrenType === 'multiple') {
         for (let m = 0; m < cur.multiple!?.length; m++) {
           let mutiCur = cur.multiple![m];
-          let multiTotalWidth = nodeSize;
-          for (let i = 0; i < mutiCur.children!?.length; i++) {
-            queue.push(mutiCur.children![i]);
-            multiTotalWidth += X_SPACE;
-            this.translate(mutiCur.children![i], multiTotalWidth, 0);
-            const widthInfo =
-              this.cache.nodeMap[mutiCur.children![i].id].data.widthInfo!;
-            // multiTotalWidth += widthInfo.total;
-            multiTotalWidth += Math.max(widthInfo.total, widthInfo.next);
-          }
+          this.setChildrenX(mutiCur.children!, queue);
         }
       }
+    }
+  }
+
+  setChildrenX(
+    children: AdvNodeData[],
+    queue: AdvNodeData[],
+    isIncludeType: boolean = false,
+  ) {
+    let multiTotalWidth = nodeSize;
+    let multiNextTotalWidth = nodeSize;
+    for (let i = 0; i < children!?.length; i++) {
+      queue.push(children![i]);
+
+      const { total, next } =
+        this.cache.nodeMap[children![i].id].data.widthInfo!;
+      if (multiTotalWidth < multiNextTotalWidth && next === 0) {
+        multiTotalWidth += X_SPACE;
+        this.translate(children![i], multiTotalWidth, 0);
+      } else {
+        if (isIncludeType && i === 0) {
+          // 无需处理
+        } else {
+          multiTotalWidth += X_SPACE;
+          multiNextTotalWidth += X_SPACE;
+        }
+        multiTotalWidth = multiNextTotalWidth;
+        this.translate(children![i], multiTotalWidth, 0);
+      }
+
+      multiTotalWidth += total;
+      multiNextTotalWidth += next;
+      multiNextTotalWidth = Math.max(multiTotalWidth, multiNextTotalWidth);
     }
   }
 
@@ -292,11 +291,11 @@ class FeimaFlowLayout {
     if (graphNode.data) {
       graphNode.data.heightInfo = result;
       // this.cache.nodeMap[node.id].attrs.label = { text: result };
-      graphNode.attrs.label = {
-        text: `${graphNode.data.position.multiIndex ?? ''}_${
-          graphNode.data.position.childrenIndex ?? ''
-        }`,
-      };
+      // graphNode.attrs.label = {
+      //   text: `${graphNode.data.position.multiIndex ?? ''}_${
+      //     graphNode.data.position.childrenIndex ?? ''
+      //   }`,
+      // };
       // graphNode.attrs.label = {
       //   text: `${graphNode.data.heightInfo.base}_${graphNode.data.heightInfo.total}`,
       // };

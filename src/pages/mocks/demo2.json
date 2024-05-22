@@ -3,29 +3,156 @@
   "type": "BUILDIN/START",
   "children": [
     {
-      "id": "i1r6iz2qd7d",
-      "type": "common",
-      "props": {
-        "node": "a"
-      }
-    },
-    {
-      "type": "when",
-      "id": "awnt6r0s22g",
+      "type": "switch",
+      "id": "ls2qqwx5qa",
       "props": {
         "test": 1
       },
       "multiple": [
         {
-          "children": []
+          "children": [
+            {
+              "type": "then",
+              "id": "v8bzo5th1g",
+              "props": {
+                "test": 1
+              },
+              "children": [
+                {
+                  "type": "common",
+                  "id": "asajr7f75i",
+                  "props": {
+                    "test": 1
+                  }
+                },
+                {
+                  "type": "when",
+                  "id": "3ckg0t6m3ix",
+                  "props": {
+                    "test": 1
+                  },
+                  "multiple": [
+                    {
+                      "children": []
+                    },
+                    {
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "common",
+                  "id": "bq9l2sphrms",
+                  "props": {
+                    "test": 1
+                  }
+                },
+                {
+                  "type": "common",
+                  "id": "l8fyxqz2ji9",
+                  "props": {
+                    "test": 1
+                  }
+                },
+                {
+                  "type": "common",
+                  "id": "tqxampa850r",
+                  "props": {
+                    "test": 1
+                  }
+                }
+              ]
+            },
+            {
+              "type": "common",
+              "id": "d0vqmg2q4d9",
+              "props": {
+                "test": 1
+              }
+            },
+            {
+              "type": "common",
+              "id": "04nnheg015nw",
+              "props": {
+                "test": 1
+              }
+            },
+            {
+              "type": "common",
+              "id": "4u7rte4zy6w",
+              "props": {
+                "test": 1
+              }
+            },
+            {
+              "type": "then",
+              "id": "v507gqphyuf",
+              "props": {
+                "test": 1
+              },
+              "children": []
+            },
+            {
+              "type": "then",
+              "id": "nmj4sehayp",
+              "props": {
+                "test": 1
+              },
+              "children": []
+            }
+          ]
         },
         {
           "children": []
         },
         {
           "children": []
+        }
+      ]
+    },
+    {
+      "type": "then",
+      "id": "9q5qqcbeli6",
+      "props": {
+        "test": 1
+      },
+      "children": [
+        {
+          "type": "common",
+          "id": "9owtf8en6gc",
+          "props": {
+            "test": 1
+          }
         },
         {
+          "type": "then",
+          "id": "9h0xl8nu6v",
+          "props": {
+            "test": 1
+          },
+          "children": [
+            {
+              "type": "common",
+              "id": "vnbkx9e0zgp",
+              "props": {
+                "test": 1
+              }
+            },
+            {
+              "type": "common",
+              "id": "igr55ta9a7",
+              "props": {
+                "test": 1
+              }
+            }
+          ]
+        },
+        {
+          "type": "then",
+          "id": "l8pqwparqbj",
+          "props": {
+            "test": 1
+          },
           "children": []
         }
       ]
