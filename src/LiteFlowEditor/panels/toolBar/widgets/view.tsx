@@ -13,7 +13,7 @@ interface IProps {
 
 const View: React.FC<IProps> = makeBtnWidget({
   tooltip: '查看DSL',
-  handler(flowGraph: Graph) {
+  handler() {
     const model = useModel();
     Modal.info({
       title: '查看DSL',
@@ -27,7 +27,7 @@ const View: React.FC<IProps> = makeBtnWidget({
           enableClipboard={true}
           displayDataTypes={false}
           displayObjectSize={false}
-          src={model.toJSON()}
+          src={JSON.parse(JSON.stringify(model.toJSON()))}
         />
       ),
     });

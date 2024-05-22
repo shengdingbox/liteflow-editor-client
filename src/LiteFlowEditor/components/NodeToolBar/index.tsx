@@ -38,6 +38,7 @@ const NodeToolBar: React.FC<{ node: Node }> = (props) => {
   };
   const onReplace = (event: any) => {
     node.model?.graph?.select(model.getNodes());
+    node.model?.graph?.trigger('model:select', model);
     showContextPad({
       x: event.clientX,
       y: event.clientY,
@@ -49,6 +50,7 @@ const NodeToolBar: React.FC<{ node: Node }> = (props) => {
   };
   const onDelete = debounce(() => {
     node.model?.graph?.select(model.selectNodes());
+    node.model?.graph?.trigger('model:select', model);
     Modal.confirm({
       title: `确认要删除选中的节点？`,
       content: '点击确认按钮进行删除，点击取消按钮返回',

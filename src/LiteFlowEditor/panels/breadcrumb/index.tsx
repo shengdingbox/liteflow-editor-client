@@ -21,9 +21,14 @@ const BreadcrumbPath: React.FC<IProps> = (props) => {
       setSelectedModel(null);
       forceUpdate();
     };
+    const handleSelect = (component: ELNode) => {
+      setSelectedModel(component);
+    };
     flowGraph.on('settingBar:forceUpdate', handler);
+    flowGraph.on('model:select', handleSelect);
     return () => {
       flowGraph.off('settingBar:forceUpdate', handler);
+      flowGraph.off('model:select', handleSelect);
     };
   }, [flowGraph, setSelectedModel, forceUpdate]);
 
