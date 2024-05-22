@@ -356,7 +356,7 @@ export default abstract class ELNode {
 
 ## 4、建立模型
 
-![LiteFlow逻辑可视化编排设计与实现 1. 数据模型（Model）.png](./docs/assets/LiteFlow逻辑可视化编排设计与实现-数据模型（Model）)
+![LiteFlow逻辑可视化编排设计与实现 1. 数据模型（Model）.png](./docs/assets/LiteFlow逻辑可视化编排设计与实现-数据模型（Model）.png)
 
 经过以上步骤的分析，我们可以建立这么一个ELNode模型：
 
