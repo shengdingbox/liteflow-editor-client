@@ -139,19 +139,17 @@ class FeimaFlowLayout {
     if (comp.metadata.childrenType === 'multiple') {
       let maxTotalWidth = 0;
       for (let i = 0; i < node.multiple!.length; i++) {
-        const { total, next } = this.calChildrenWidth(
-          node.multiple![i].children,
-        );
-        maxTotalWidth = Math.max(maxTotalWidth, total, next);
+        const { next } = this.calChildrenWidth(node.multiple![i].children);
+        maxTotalWidth = Math.max(maxTotalWidth, next);
       }
-      result.total += nodeSize + X_SPACE + maxTotalWidth;
+      result.total = maxTotalWidth;
       result.next = result.total;
     } else if (comp.metadata.childrenType == 'then' && node.children) {
       const { total, next } = this.calChildrenWidth(node.children);
       result.total = Math.max(total, next);
       result.next = result.total;
     } else if (comp.metadata.childrenType === 'include' && node.children) {
-      const childTotalWidth = this.calChildrenWidth(node.children);
+      const childTotalWidth = this.calChildrenWidth(node.children, true);
       result.total = nodeSize;
       result.next = childTotalWidth.total + X_SPACE;
     } else {
@@ -169,16 +167,34 @@ class FeimaFlowLayout {
     return result;
   }
 
-  calChildrenWidth(children: AdvNodeData[]): WidthInfo {
-    const result: WidthInfo = { total: 0, next: 0 };
+  calChildrenWidth(
+    children: AdvNodeData[],
+    isIncludeType: boolean = false,
+  ): WidthInfo {
+    let multiTotalWidth = nodeSize;
+    let multiNextTotalWidth = nodeSize;
     for (let i = 0; i < children.length; i++) {
       const { total, next } = this.calWidth(children[i]);
-      result.total += total + X_SPACE;
-      result.next += next + X_SPACE;
+
+      if (multiTotalWidth < multiNextTotalWidth && next === 0) {
+        multiTotalWidth += X_SPACE;
+      } else {
+        if (isIncludeType && i === 0) {
+          // 无需处理
+        } else {
+          multiNextTotalWidth += X_SPACE;
+        }
+        multiTotalWidth = multiNextTotalWidth;
+      }
+
+      multiTotalWidth += total;
+      multiNextTotalWidth += next;
+      multiNextTotalWidth = Math.max(multiTotalWidth, multiNextTotalWidth);
     }
-    result.total -= X_SPACE;
-    result.next -= X_SPACE;
-    return result;
+    return {
+      total: multiTotalWidth,
+      next: multiNextTotalWidth,
+    };
   }
 
   setX() {
@@ -221,7 +237,7 @@ class FeimaFlowLayout {
         if (isIncludeType && i === 0) {
           // 无需处理
         } else {
-          multiTotalWidth += X_SPACE;
+          // multiTotalWidth += X_SPACE;
           multiNextTotalWidth += X_SPACE;
         }
         multiTotalWidth = multiNextTotalWidth;

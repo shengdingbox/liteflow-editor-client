@@ -26,21 +26,6 @@
                   }
                 },
                 {
-                  "type": "when",
-                  "id": "3ckg0t6m3ix",
-                  "props": {
-                    "test": 1
-                  },
-                  "multiple": [
-                    {
-                      "children": []
-                    },
-                    {
-                      "children": []
-                    }
-                  ]
-                },
-                {
                   "type": "common",
                   "id": "bq9l2sphrms",
                   "props": {

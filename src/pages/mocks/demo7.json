@@ -164,7 +164,59 @@
                           },
                           "multiple": [
                             {
-                              "children": []
+                              "children": [
+                                {
+                                  "type": "switch",
+                                  "id": "4gln6o0wqtx",
+                                  "props": {
+                                    "test": 1
+                                  },
+                                  "multiple": [
+                                    {
+                                      "children": []
+                                    },
+                                    {
+                                      "children": []
+                                    },
+                                    {
+                                      "children": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "then",
+                                  "id": "zd1cr57wk1r",
+                                  "props": {
+                                    "test": 1
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "if",
+                                      "id": "m4w7frziuck",
+                                      "props": {
+                                        "test": 1
+                                      },
+                                      "multiple": [
+                                        {
+                                          "children": []
+                                        },
+                                        {
+                                          "children": [
+                                            {
+                                              "type": "then",
+                                              "id": "s0k6oxk6lql",
+                                              "props": {
+                                                "test": 1
+                                              },
+                                              "children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "children": []
