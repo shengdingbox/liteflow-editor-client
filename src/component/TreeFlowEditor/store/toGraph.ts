@@ -2,21 +2,20 @@ import { toJS } from 'mobx';
 import { NodeCompStore } from './CompStore';
 
 import { createEndComp } from '../buildinNodes/end';
-import PlaceholderComp, {
-  createPlaceholderComp,
-} from '../buildinNodes/multiple-placeholder';
-import { AdvNodeData, CellPosition } from '../types/node';
+import { createPlaceholderComp } from '../buildinNodes/multiple-placeholder';
+import { AdvNodeData, CellPosition, GraphNode } from '../types/node';
 import { generateNewId } from '../utils';
-import { insertNode, travelNode } from './travel';
+import { travelNode } from './travel';
 
 interface NodeToCellsOpts {
   node: AdvNodeData;
   cells: Array<Record<string, any>>;
-  pres?: Array<{
-    nodeId?: string;
-    edgeLabel?: string;
-    port?: string;
-  }>;
+  pres?: Array<
+    GraphNode & {
+      edgeLabel?: string;
+      port?: string;
+    }
+  >;
   position: CellPosition;
 }
 
@@ -25,7 +24,7 @@ interface NodeToCellsOpts {
  * @param opts
  * @returns 返回节点的出口 id
  */
-function nodeToCells(opts: NodeToCellsOpts): string[] {
+function nodeToCells(opts: NodeToCellsOpts): GraphNode[] {
   // console.log('===nodeToCells', nodeToCells);
   const { node, cells, pres = [], position } = opts;
   const comp = NodeCompStore.getNode(node.type);
@@ -33,16 +32,22 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
   const curNode = createNode(node, position);
   cells.push(curNode);
   for (const pre of pres) {
-    if (pre.nodeId) {
+    if (pre.id) {
       // console.log('===position', position, node);
       cells.push(
         createEdge({
-          from: pre?.nodeId,
+          from: pre?.id,
           fromPort: pre?.port || 'out',
           to: curNode.id,
           toPort: 'in',
           label: pre?.edgeLabel,
-          position,
+          position:
+            pres.length > 1
+              ? {
+                  ...pre.data.position,
+                  childrenIndex: pre.data.position.childrenIndex! + 1,
+                }
+              : position,
           // position: prePosition,
         }),
       );
@@ -51,35 +56,35 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
 
   // children
   if (comp.metadata.childrenType === 'then') {
-    let preNodeIds = [curNode.id];
+    let preNodes = [curNode];
     let virtualCount = 0;
     node.children?.forEach((n, childrenIndex) => {
       if (n.type === 'NodeVirtualComponent') {
         virtualCount++;
       }
-      preNodeIds = nodeToCells({
+      preNodes = nodeToCells({
         node: n,
         cells,
-        pres: preNodeIds.map((id) => ({ nodeId: id })),
+        pres: preNodes,
         position: {
           parent: node,
           childrenIndex: Math.max(0, childrenIndex - virtualCount),
         },
       });
     });
-    return preNodeIds;
+    return preNodes;
   } else if (comp.metadata.childrenType === 'include') {
-    let preNodeIds = [curNode.id];
+    let preNodes = [curNode];
     let virtualCount = 0;
     node.children?.forEach((n, childrenIndex) => {
       const port = childrenIndex === 0 ? 'bottom1' : undefined;
       if (n.type === 'NodeVirtualComponent') {
         virtualCount++;
       }
-      preNodeIds = nodeToCells({
+      preNodes = nodeToCells({
         node: n,
         cells,
-        pres: preNodeIds.map((id) => ({ nodeId: id, port })),
+        pres: preNodes.map((node) => ({ ...node, port })),
         position: {
           parent: node,
           childrenIndex: Math.max(0, childrenIndex - virtualCount),
@@ -87,10 +92,10 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
       });
     });
 
-    preNodeIds.forEach((preNodeId) => {
+    preNodes.forEach((preNode) => {
       cells.push(
         createEdge({
-          from: preNodeId,
+          from: preNode.id,
           fromPort: 'out',
           to: curNode.id,
           toPort: 'bottom2',
@@ -101,22 +106,22 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
         }),
       );
     });
-    return [curNode.id];
+    return [curNode];
   } else if (comp.metadata.childrenType === 'multiple') {
-    const outNodeIds: string[] = [];
+    const outNodes: GraphNode[] = [];
     node.multiple?.forEach((line, multiIndex) => {
-      let preNodeIds = [curNode.id];
+      let preNodes = [curNode];
       let virtualCount = 0;
       line.children.forEach((n: AdvNodeData, childrenIndex) => {
         const label = childrenIndex === 0 ? line.name : undefined;
         if (n.type === 'NodeVirtualComponent') {
           virtualCount++;
         }
-        preNodeIds = nodeToCells({
+        preNodes = nodeToCells({
           node: n,
           cells,
-          pres: preNodeIds.map((id) => ({
-            nodeId: id,
+          pres: preNodes.map((node) => ({
+            ...node,
             edgeLabel: label,
           })),
           position: {
@@ -126,11 +131,11 @@ function nodeToCells(opts: NodeToCellsOpts): string[] {
           },
         });
       });
-      outNodeIds.push(...preNodeIds);
+      outNodes.push(...preNodes);
     });
-    return outNodeIds;
+    return outNodes;
   } else {
-    return [curNode.id];
+    return [curNode];
   }
 }
 
@@ -276,7 +281,7 @@ const portGroups = {
   },
 };
 
-function createNode(node: AdvNodeData, position: CellPosition) {
+function createNode(node: AdvNodeData, position: CellPosition): GraphNode {
   // console.log('===create', node.type);
   const comp = NodeCompStore.getNode(node.type);
   const ports = {

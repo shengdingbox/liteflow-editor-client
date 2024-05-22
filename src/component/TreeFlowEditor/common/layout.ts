@@ -8,8 +8,8 @@ import { AdvNodeData, CellPosition, NodeData } from '../types/node';
 
 const nodeSize: number = 30;
 
-const X_STEP = 50;
-const Y_STEP = 50;
+const X_SPACE = 50;
+const Y_SPACE = 50;
 
 export const forceLayout = (
   flowGraph: Graph,
@@ -128,7 +128,7 @@ class FeimaFlowLayout {
     // 调整高度
     this.calHeight(this.root);
     this.setY();
-    this.translate(this.root, X_STEP, Y_STEP);
+    this.translate(this.root, X_SPACE, Y_SPACE);
 
     return { nodes: this.cache.nodes, edges: this.cache.edges };
   }
@@ -139,28 +139,32 @@ class FeimaFlowLayout {
     if (comp.metadata.childrenType === 'multiple') {
       let maxTotalWidth = 0;
       for (let i = 0; i < node.multiple!.length; i++) {
-        const childTotalWidth = this.calChildrenWidth(
+        const { total, next } = this.calChildrenWidth(
           node.multiple![i].children,
-        ).total;
-        maxTotalWidth = Math.max(maxTotalWidth, childTotalWidth);
+        );
+        maxTotalWidth = Math.max(maxTotalWidth, total, next);
       }
-      result.total += nodeSize + X_STEP + maxTotalWidth;
+      result.total += nodeSize + X_SPACE + maxTotalWidth;
+      result.next = result.total;
     } else if (comp.metadata.childrenType == 'then' && node.children) {
-      const totalWidth = this.calChildrenWidth(node.children).total;
-      result.total = totalWidth;
+      const { total, next } = this.calChildrenWidth(node.children);
+      result.total = Math.max(total, next);
+      result.next = result.total;
     } else if (comp.metadata.childrenType === 'include' && node.children) {
-      this.calChildrenWidth(node.children);
+      const childTotalWidth = this.calChildrenWidth(node.children);
       result.total = nodeSize;
+      result.next = childTotalWidth.total;
     } else {
       result.total = nodeSize;
+      result.next = result.total;
     }
 
     const graphNode = this.cache.nodeMap[node.id];
     if (graphNode.data) {
       graphNode.data.widthInfo = result;
-      graphNode.attrs.label = {
-        text: graphNode.data.widthInfo?.total,
-      };
+      // graphNode.attrs.label = {
+      //   text: `${graphNode.data.widthInfo?.total}_${graphNode.data.widthInfo?.next}`,
+      // };
     }
     return result;
   }
@@ -168,9 +172,12 @@ class FeimaFlowLayout {
   calChildrenWidth(children: AdvNodeData[]): WidthInfo {
     const result: WidthInfo = { total: 0, next: 0 };
     for (let i = 0; i < children.length; i++) {
-      result.total += this.calWidth(children[i]).total + X_STEP;
+      const { total, next } = this.calWidth(children[i]);
+      result.total += total + X_SPACE;
+      result.next += next + X_SPACE;
     }
-    result.total -= X_STEP;
+    result.total -= X_SPACE;
+    result.next -= X_SPACE;
     return result;
   }
 
@@ -186,7 +193,7 @@ class FeimaFlowLayout {
         let multiTotalWidth = nodeSize;
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
-          multiTotalWidth += X_STEP;
+          multiTotalWidth += i === 0 ? 0 : X_SPACE;
           this.translate(cur.children![i], multiTotalWidth, 0);
           const widthInfo =
             this.cache.nodeMap[cur.children![i].id].data.widthInfo!;
@@ -194,14 +201,21 @@ class FeimaFlowLayout {
         }
       } else if (childrenType === 'then') {
         let multiTotalWidth = nodeSize;
+        let multiNextTotalWidth = nodeSize;
+        let nextMinusTotal = 0;
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
-          multiTotalWidth += X_STEP;
+          multiTotalWidth += X_SPACE;
+          multiNextTotalWidth += X_SPACE;
           this.translate(cur.children![i], multiTotalWidth, 0);
           // }
-          const widthInfo =
+          const { total, next } =
             this.cache.nodeMap[cur.children![i].id].data.widthInfo!;
-          multiTotalWidth += widthInfo?.total;
+          console.log('total, next', total, next);
+          multiTotalWidth += total;
+          multiNextTotalWidth += next;
+          nextMinusTotal = multiNextTotalWidth - multiTotalWidth;
+          // multiTotalWidth += Math.max(total, next);
         }
       } else if (childrenType === 'multiple') {
         for (let m = 0; m < cur.multiple!?.length; m++) {
@@ -209,11 +223,12 @@ class FeimaFlowLayout {
           let multiTotalWidth = nodeSize;
           for (let i = 0; i < mutiCur.children!?.length; i++) {
             queue.push(mutiCur.children![i]);
-            multiTotalWidth += X_STEP;
+            multiTotalWidth += X_SPACE;
             this.translate(mutiCur.children![i], multiTotalWidth, 0);
             const widthInfo =
               this.cache.nodeMap[mutiCur.children![i].id].data.widthInfo!;
-            multiTotalWidth += widthInfo?.total;
+            // multiTotalWidth += widthInfo.total;
+            multiTotalWidth += Math.max(widthInfo.total, widthInfo.next);
           }
         }
       }
@@ -241,9 +256,9 @@ class FeimaFlowLayout {
         } else if (i === node.multiple!?.length - 1) {
           lastBaseRemainingHeight = multiTotalHeight - multiBaseHeight;
         }
-        result.total += multiTotalHeight + Y_STEP;
+        result.total += multiTotalHeight + Y_SPACE;
       }
-      result.total -= Y_STEP;
+      result.total -= Y_SPACE;
       result.base =
         (result.total - firstBaseHeight - lastBaseRemainingHeight) / 2 +
         firstBaseHeight;
@@ -266,7 +281,7 @@ class FeimaFlowLayout {
           this.calHeight(node.children[i]).total,
         );
       }
-      result.total = eachHeight + Y_STEP;
+      result.total = eachHeight + Y_SPACE;
       result.base = nodeSize / 2;
     } else {
       result.total = nodeSize;
@@ -277,11 +292,11 @@ class FeimaFlowLayout {
     if (graphNode.data) {
       graphNode.data.heightInfo = result;
       // this.cache.nodeMap[node.id].attrs.label = { text: result };
-      // graphNode.attrs.label = {
-      //   text: `${graphNode.data.position.multiIndex ?? ''}_${
-      //     graphNode.data.position.childrenIndex ?? ''
-      //   }`,
-      // };
+      graphNode.attrs.label = {
+        text: `${graphNode.data.position.multiIndex ?? ''}_${
+          graphNode.data.position.childrenIndex ?? ''
+        }`,
+      };
       // graphNode.attrs.label = {
       //   text: `${graphNode.data.heightInfo.base}_${graphNode.data.heightInfo.total}`,
       // };
@@ -313,7 +328,7 @@ class FeimaFlowLayout {
         }
         for (let i = 0; i < cur.children!?.length; i++) {
           const node = cur.children![i];
-          this.translate(node, 0, maxBaseHeight + Y_STEP);
+          this.translate(node, 0, maxBaseHeight + Y_SPACE);
           // this.translate(node, 0, );
         }
       } else if (childrenType === 'then') {
@@ -334,9 +349,9 @@ class FeimaFlowLayout {
             maxTotalHeight = Math.max(maxTotalHeight, childTotalHeight);
             maxBaseHeight = Math.max(maxBaseHeight, childBaseHeight);
           }
-          multiTotalHeight += maxTotalHeight + Y_STEP;
+          multiTotalHeight += maxTotalHeight + Y_SPACE;
         }
-        multiTotalHeight -= Y_STEP;
+        multiTotalHeight -= Y_SPACE;
 
         const baseHeight = this.cache.nodeMap[cur.id].data.heightInfo?.base!;
         for (let m = 0; m < cur.multiple!?.length; m++) {

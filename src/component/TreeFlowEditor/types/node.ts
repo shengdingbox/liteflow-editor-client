@@ -34,3 +34,21 @@ export interface CellPosition {
   multiIndex?: number;
   childrenIndex?: number;
 }
+
+export interface GraphNode {
+  view: string;
+  attrs: { label: { text?: string } };
+  shape: string;
+  id: string;
+  data: {
+    toolbar: {
+      delete?: boolean;
+      addMultiple: boolean;
+    };
+    nodeComp: NodeComp;
+    position: CellPosition;
+    isVirtual?: boolean;
+  };
+  zIndex: number;
+  ports: any;
+}
