@@ -3,14 +3,6 @@
   "type": "BUILDIN/START",
   "children": [
     {
-      "type": "then",
-      "id": "yaaagybgrhr",
-      "props": {
-        "test": 1
-      },
-      "children": []
-    },
-    {
       "id": "3xqfj3psj4r",
       "type": "common",
       "props": {

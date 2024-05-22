@@ -1,14 +1,14 @@
 import { Graph } from '@antv/x6';
 import { toJS } from 'mobx';
 
-import { NODE_HEIGHT } from '../constant';
+import { NODE_HEIGHT, NODE_WIDTH } from '../constant';
 import { NodeCompStore } from '../store/CompStore';
 import { travelNode } from '../store/travel';
 import { AdvNodeData, CellPosition, NodeData } from '../types/node';
 
 const nodeSize: number = 30;
 
-const X_STEP = 80;
+const X_STEP = 50;
 const Y_STEP = 50;
 
 export const forceLayout = (
@@ -34,6 +34,11 @@ export const forceLayout = (
   flowGraph.fromJSON(newModel);
 };
 
+interface WidthInfo {
+  total: number; // 当前行
+  next: number; // 下一行，用于 include 类型的节点
+}
+
 interface HeightInfo {
   total: number;
   base: number;
@@ -46,7 +51,8 @@ interface SimpleNode {
   data: {
     position: CellPosition;
     heightInfo?: HeightInfo;
-    totalHeight?: string;
+    widthInfo?: WidthInfo;
+    // totalHeight?: string;
     // baseHeight?: number;
     isVirtual?: boolean;
     [key: string]: any;
@@ -70,10 +76,10 @@ type NodeAndEdge = [string, string];
 
 interface ModelCache extends Model {
   // key: nodeId, value: nodeId[]
-  inMap: Record<string, NodeAndEdge[]>;
-  outMap: Record<string, NodeAndEdge[]>;
-  bottom1Map: Record<string, NodeAndEdge>;
-  bottom2Map: Record<string, NodeAndEdge>;
+  // inMap: Record<string, NodeAndEdge[]>;
+  // outMap: Record<string, NodeAndEdge[]>;
+  // bottom1Map: Record<string, NodeAndEdge>;
+  // bottom2Map: Record<string, NodeAndEdge>;
 
   // key: nodeId, value: node
   nodeMap: Record<string, SimpleNode>;
@@ -93,18 +99,6 @@ class FeimaFlowLayout {
     this.flowGraph = flowGraph;
     this.root = root;
     const { nodes, edges } = model;
-    // 有哪些【节点/边】出来后，进入此节点
-    const inMap: Record<string, NodeAndEdge[]> = {};
-
-    // 从此节点出来后，去到了哪些【节点/边】
-    const outMap: Record<string, NodeAndEdge[]> = {};
-
-    // 有哪些节点从此节点底部出来
-    const bottom1Map: Record<string, NodeAndEdge> = {};
-
-    // 有哪些节点连到从此节点底部
-    const bottom2Map: Record<string, NodeAndEdge> = {};
-
     // key: nodeId, value: node
     const nodeMap: Record<string, SimpleNode> = {};
     const edgeMap: Record<string, SimpleEdge> = {};
@@ -118,48 +112,18 @@ class FeimaFlowLayout {
       edgeMap[e.id] = e;
     });
 
-    edges.forEach((e) => {
-      if (e.source.port === 'out' && e.target.port === 'in') {
-        if (outMap[e.source.cell]) {
-          outMap[e.source.cell].push([e.target.cell, e.id]);
-        } else {
-          outMap[e.source.cell] = [[e.target.cell, e.id]];
-        }
-      } else if (e.source.port === 'bottom1') {
-        bottom1Map[e.source.cell] = [e.target.cell, e.id];
-      } else if (e.target.port === 'bottom2') {
-        bottom2Map[e.target.cell] = [e.source.cell, e.id];
-      }
-
-      if (e.target.port === 'in') {
-        if (inMap[e.target.cell]) {
-          inMap[e.target.cell].push([e.source.cell, e.id]);
-        } else {
-          inMap[e.target.cell] = [[e.source.cell, e.id]];
-        }
-      }
-    });
     this.cache = {
       nodes,
       edges,
-      inMap,
-      outMap,
-      bottom1Map,
-      bottom2Map,
       nodeMap,
       edgeMap,
     };
   }
 
   layout(): Model {
-    const firstNode = this.cache.nodes.find((n) => {
-      return !this.cache.inMap[n.id];
-    });
-    if (!firstNode) {
-      throw new Error('no first node');
-    }
-
-    this.setNodePosition(firstNode, this.cache);
+    // 调整宽度
+    this.calWidth(this.root);
+    this.setX();
 
     // 调整高度
     this.calHeight(this.root);
@@ -169,8 +133,95 @@ class FeimaFlowLayout {
     return { nodes: this.cache.nodes, edges: this.cache.edges };
   }
 
+  calWidth(node: AdvNodeData): WidthInfo {
+    const result: WidthInfo = { total: 0, next: 0 };
+    const comp = NodeCompStore.getNode(node.type);
+    if (comp.metadata.childrenType === 'multiple') {
+      let maxTotalWidth = 0;
+      for (let i = 0; i < node.multiple!.length; i++) {
+        const childTotalWidth = this.calChildrenWidth(
+          node.multiple![i].children,
+        ).total;
+        maxTotalWidth = Math.max(maxTotalWidth, childTotalWidth);
+      }
+      result.total += nodeSize + X_STEP + maxTotalWidth;
+    } else if (comp.metadata.childrenType == 'then' && node.children) {
+      const totalWidth = this.calChildrenWidth(node.children).total;
+      result.total = totalWidth;
+    } else if (comp.metadata.childrenType === 'include' && node.children) {
+      this.calChildrenWidth(node.children);
+      result.total = nodeSize;
+    } else {
+      result.total = nodeSize;
+    }
+
+    const graphNode = this.cache.nodeMap[node.id];
+    if (graphNode.data) {
+      graphNode.data.widthInfo = result;
+      graphNode.attrs.label = {
+        text: graphNode.data.widthInfo?.total,
+      };
+    }
+    return result;
+  }
+
+  calChildrenWidth(children: AdvNodeData[]): WidthInfo {
+    const result: WidthInfo = { total: 0, next: 0 };
+    for (let i = 0; i < children.length; i++) {
+      result.total += this.calWidth(children[i]).total + X_STEP;
+    }
+    result.total -= X_STEP;
+    return result;
+  }
+
+  setX() {
+    const queue = [this.root];
+    while (queue.length > 0) {
+      const cur = queue.shift()!;
+      const curComp = NodeCompStore.getNode(cur.type);
+      const childrenType = curComp.metadata.childrenType;
+      if (childrenType == null) {
+        // 普通节点，无需处理
+      } else if (childrenType === 'include') {
+        let multiTotalWidth = nodeSize;
+        for (let i = 0; i < cur.children!?.length; i++) {
+          queue.push(cur.children![i]);
+          multiTotalWidth += X_STEP;
+          this.translate(cur.children![i], multiTotalWidth, 0);
+          const widthInfo =
+            this.cache.nodeMap[cur.children![i].id].data.widthInfo!;
+          multiTotalWidth += widthInfo?.total;
+        }
+      } else if (childrenType === 'then') {
+        let multiTotalWidth = nodeSize;
+        for (let i = 0; i < cur.children!?.length; i++) {
+          queue.push(cur.children![i]);
+          multiTotalWidth += X_STEP;
+          this.translate(cur.children![i], multiTotalWidth, 0);
+          // }
+          const widthInfo =
+            this.cache.nodeMap[cur.children![i].id].data.widthInfo!;
+          multiTotalWidth += widthInfo?.total;
+        }
+      } else if (childrenType === 'multiple') {
+        for (let m = 0; m < cur.multiple!?.length; m++) {
+          let mutiCur = cur.multiple![m];
+          let multiTotalWidth = nodeSize;
+          for (let i = 0; i < mutiCur.children!?.length; i++) {
+            queue.push(mutiCur.children![i]);
+            multiTotalWidth += X_STEP;
+            this.translate(mutiCur.children![i], multiTotalWidth, 0);
+            const widthInfo =
+              this.cache.nodeMap[mutiCur.children![i].id].data.widthInfo!;
+            multiTotalWidth += widthInfo?.total;
+          }
+        }
+      }
+    }
+  }
+
   calHeight(node: AdvNodeData): HeightInfo {
-    let result: HeightInfo = { total: 0, base: 0 };
+    const result: HeightInfo = { total: 0, base: 0 };
     const comp = NodeCompStore.getNode(node.type);
     if (comp.metadata.childrenType === 'multiple') {
       let firstBaseHeight = 0;
@@ -266,14 +317,9 @@ class FeimaFlowLayout {
           // this.translate(node, 0, );
         }
       } else if (childrenType === 'then') {
-        // const baseHeight = this.cache.nodeMap[cur.id].data.heightInfo?.base!;
-        // this.translate(cur, 0, baseHeight);
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
         }
-        // if (cur.children) {
-        // this.setChildrenY(cur.children, -baseHeight);
-        // }
       } else if (childrenType === 'multiple') {
         let multiTotalHeight = 0;
         let maxBaseHeight = 0;
@@ -332,121 +378,6 @@ class FeimaFlowLayout {
       curNode.x += tx;
       curNode.y += ty;
     }
-  }
-
-  setNodePosition(node: SimpleNode, cache: ModelCache) {
-    // in
-    const inInfos = this.findIns(node.id, cache);
-    if (inInfos.length > 1) {
-      let maxX = 0;
-      // let sumY = 0;
-      for (let i = 0; i < inInfos.length; i++) {
-        const [inNode, inEdge] = inInfos[i];
-        inEdge.data.position = {
-          ...inNode.data.position,
-          childrenIndex: inNode.data.position.childrenIndex! + 1,
-        };
-        maxX = Math.max(maxX, inNode.x);
-        // sumY = sumY + inNode.y;
-      }
-      node.x = maxX + X_STEP;
-      // node.y = sumY / inInfos.length;
-      // for (let i = 0; i < inInfos.length; i++) {
-      //   const [_inNode, inEdge] = inInfos[i];
-      //   const lineY = _inNode.y;
-      //   inEdge.vertices = [
-      //     { x: node.x + nodeSize / 2, y: lineY + nodeSize / 2 },
-      //   ];
-      // }
-    }
-
-    // out
-    const outInfos = this.findOuts(node.id, cache);
-    if (outInfos.length > 0 && !isNaN(node.x)) {
-      for (let i = 0; i < outInfos.length; i++) {
-        const [outNode, outEdge] = outInfos[i];
-        outNode.x = node.x + X_STEP;
-        // outNode.y = node.y + Y_STEP * i - (Y_STEP * (outInfos.length - 1)) / 2;
-
-        // if (outInfos.length > 1) {
-        //   outEdge.vertices = [
-        //     { x: node.x + nodeSize, y: outNode.y + nodeSize / 2 },
-        //   ];
-        // }
-        this.setNodePosition(outNode, cache);
-      }
-    }
-
-    // bottom1
-    const bottom1Info = this.findBottom1(node.id, cache);
-    if (bottom1Info) {
-      const [n, e] = bottom1Info;
-      n.x = node.x + X_STEP / 2;
-      // n.y = node.y + Y_STEP * 1.2;
-      this.setNodePosition(n, cache);
-
-      // e.vertices = [{ x: node.x, y: n.y + nodeSize / 2 }];
-    }
-
-    // bottom2
-    const bottom2Info = this.findBottom2(node.id, cache);
-    if (bottom2Info) {
-      const [n, e] = bottom2Info;
-
-      // e.vertices = [
-      //   { x: n.x + nodeSize * 2, y: n.y + nodeSize / 2 },
-      //   { x: n.x + nodeSize * 2, y: n.y - nodeSize },
-      //   { x: node.x + nodeSize, y: n.y - nodeSize },
-      // ];
-    }
-  }
-
-  findOuts(
-    nodeId: string,
-    { outMap, nodeMap, edgeMap }: ModelCache,
-  ): Array<[SimpleNode, SimpleEdge]> {
-    if (!outMap[nodeId]) {
-      return [];
-    }
-    return outMap[nodeId].map(([nodeId, edgeId]) => [
-      nodeMap[nodeId],
-      edgeMap[edgeId],
-    ]);
-  }
-
-  findIns(
-    nodeId: string,
-    { inMap, nodeMap, edgeMap }: ModelCache,
-  ): Array<[SimpleNode, SimpleEdge]> {
-    if (!inMap[nodeId]) {
-      return [];
-    }
-    return inMap[nodeId].map(([nodeId, edgeId]) => [
-      nodeMap[nodeId],
-      edgeMap[edgeId],
-    ]);
-  }
-
-  findBottom1(
-    nodeId: string,
-    { bottom1Map, nodeMap, edgeMap }: ModelCache,
-  ): [SimpleNode, SimpleEdge] | undefined {
-    if (!bottom1Map[nodeId]) {
-      return undefined;
-    }
-    const [_nodeId, _edgeId] = bottom1Map[nodeId];
-    return [nodeMap[_nodeId], edgeMap[_edgeId]];
-  }
-
-  findBottom2(
-    nodeId: string,
-    { bottom2Map, nodeMap, edgeMap }: ModelCache,
-  ): [SimpleNode, SimpleEdge] | undefined {
-    if (!bottom2Map[nodeId]) {
-      return undefined;
-    }
-    const [_nodeId, _edgeId] = bottom2Map[nodeId];
-    return [nodeMap[_nodeId], edgeMap[_edgeId]];
   }
 }
 
