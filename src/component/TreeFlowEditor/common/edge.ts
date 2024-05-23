@@ -1,7 +1,7 @@
 import { Markup } from '@antv/x6';
 import { LINE_COLOR } from '../constant';
 
-export default function getEdge(type?: 'withoutArrow') {
+export default function getEdge(type?: 'toVirtualNode') {
   return {
     inherit: 'edge',
     markup: [
@@ -38,7 +38,7 @@ export default function getEdge(type?: 'withoutArrow') {
         strokeWidth: 2,
         fill: 'none',
         pointerEvents: 'none',
-        ...(type === 'withoutArrow'
+        ...(type === 'toVirtualNode'
           ? {
               targetMarker: {
                 tagName: 'path',

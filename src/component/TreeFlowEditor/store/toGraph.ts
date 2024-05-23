@@ -37,9 +37,9 @@ function nodeToCells(opts: NodeToCellsOpts): GraphNode[] {
       cells.push(
         createEdge({
           from: pre?.id,
-          fromPort: pre?.port || 'out',
+          fromPort: pre.data.isVirtual ? 'center' : pre?.port || 'out',
           to: curNode.id,
-          toPort: 'in',
+          toPort: curNode.data.isVirtual ? 'center' : 'in',
           label: pre?.edgeLabel,
           position:
             pres.length > 1
@@ -48,7 +48,7 @@ function nodeToCells(opts: NodeToCellsOpts): GraphNode[] {
                   childrenIndex: pre.data.position.childrenIndex! + 1,
                 }
               : position,
-          // position: prePosition,
+          // toVirtualNode: curNode.data.isVirtual,
         }),
       );
     }
@@ -315,6 +315,13 @@ function createNode(node: AdvNodeData, position: CellPosition): GraphNode {
           text: { text: '' },
         },
       },
+      {
+        id: 'center',
+        group: 'center',
+        attrs: {
+          text: { text: '' },
+        },
+      },
     ],
   };
   const canAddMultiple = comp.metadata.multipleType === 'mutable';
@@ -345,19 +352,19 @@ interface EdgeOpts {
   toPort: string;
   label?: string;
   position: CellPosition;
-  withoutArrow?: boolean;
+  toVirtualNode?: boolean;
 }
 
 function createEdge(opts: EdgeOpts) {
-  const { from, fromPort, to, toPort, label, position, withoutArrow } = opts;
+  const { from, fromPort, to, toPort, label, position, toVirtualNode } = opts;
   return {
-    shape: withoutArrow ? 'FLOW_EDGE_NOARROW' : 'FLOW_EDGE',
+    shape: toVirtualNode ? 'FLOW_EDGE_TO_VIRTUAL' : 'FLOW_EDGE',
     labels: [{ attrs: { label: { text: label, color: '#666' } } }],
     id: generateNewId(),
     source: { cell: from, port: fromPort },
     target: { cell: to, port: toPort },
     zIndex: 0,
-    router: 'manhattan',
+    // router: 'er',
     connector: {
       name: 'rounded',
       args: {},

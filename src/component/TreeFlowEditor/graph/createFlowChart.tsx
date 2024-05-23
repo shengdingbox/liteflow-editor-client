@@ -20,7 +20,7 @@ import { NodeCompStore } from '../store/CompStore';
 import { NodeComp } from '../types/node';
 
 Graph.registerEdge('FLOW_EDGE', liteflowEdge());
-Graph.registerEdge('FLOW_EDGE_NOARROW', liteflowEdge('withoutArrow'));
+Graph.registerEdge('FLOW_EDGE_TO_VIRTUAL', liteflowEdge('toVirtualNode'));
 Graph.registerRouter('FLOW_ROUTER', liteflowRouter);
 Graph.registerAnchor('FLOW_ANCHOR', liteflowAnchor);
 
@@ -147,7 +147,7 @@ const createFlowChart = (
       // connector: {
       //   name: 'jumpover', //两条线交叉时，出现线桥。
       // },
-      router: 'normal', // FLOW_ROUTER, // 'normal',
+      router: 'FLOW_ROUTER', // FLOW_ROUTER, // 'normal',
       validateEdge: (args) => {
         const { edge } = args;
         return !!(edge?.target as any)?.port;
