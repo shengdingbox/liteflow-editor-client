@@ -96,7 +96,7 @@ function nodeToCells(opts: NodeToCellsOpts): GraphNode[] {
       cells.push(
         createEdge({
           from: preNode.id,
-          fromPort: 'out',
+          fromPort: preNode.data.isVirtual ? 'center' : 'out',
           to: curNode.id,
           toPort: 'bottom2',
           position: {

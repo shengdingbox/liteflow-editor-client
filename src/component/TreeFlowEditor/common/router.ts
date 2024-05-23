@@ -49,8 +49,8 @@ export default function router(
     // 第二象限
     points.push(
       Point.create(sourceCorner.x + 30, sourceCorner.y),
-      Point.create(sourceCorner.x + 30, targetCorner.y + 20),
-      Point.create(targetCorner.x, targetCorner.y + 20),
+      Point.create(sourceCorner.x + 30, targetCorner.y + 30),
+      Point.create(targetCorner.x, targetCorner.y + 30),
     );
   } else if (
     sourceCorner.x < targetCorner.x &&

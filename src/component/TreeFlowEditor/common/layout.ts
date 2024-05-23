@@ -160,9 +160,9 @@ class FeimaFlowLayout {
     const graphNode = this.cache.nodeMap[node.id];
     if (graphNode.data) {
       graphNode.data.widthInfo = result;
-      graphNode.attrs.label = {
-        text: `${graphNode.data.widthInfo?.total}_${graphNode.data.widthInfo?.next}`,
-      };
+      // graphNode.attrs.label = {
+      //   text: `${graphNode.data.widthInfo?.total}_${graphNode.data.widthInfo?.next}`,
+      // };
     }
     return result;
   }
@@ -302,7 +302,7 @@ class FeimaFlowLayout {
           this.calHeight(node.children[i]).total,
         );
       }
-      result.total = eachHeight + Y_SPACE;
+      result.total = eachHeight + Y_SPACE + NODE_HEIGHT / 2;
       result.base = nodeSize / 2;
     } else {
       result.total = nodeSize;
@@ -318,9 +318,9 @@ class FeimaFlowLayout {
       //     graphNode.data.position.childrenIndex ?? ''
       //   }`,
       // };
-      graphNode.attrs.label = {
-        text: `${graphNode.data.heightInfo.base}_${graphNode.data.heightInfo.total}`,
-      };
+      // graphNode.attrs.label = {
+      //   text: `${graphNode.data.heightInfo.base}_${graphNode.data.heightInfo.total}`,
+      // };
     }
     return result;
   }
@@ -349,7 +349,7 @@ class FeimaFlowLayout {
         }
         for (let i = 0; i < cur.children!?.length; i++) {
           const node = cur.children![i];
-          this.translate(node, 0, maxBaseHeight + Y_SPACE);
+          this.translate(node, 0, maxBaseHeight + Y_SPACE + NODE_HEIGHT / 2);
           // this.translate(node, 0, );
         }
       } else if (childrenType === 'then') {
