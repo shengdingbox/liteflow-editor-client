@@ -42,7 +42,9 @@ const Outline: React.FC<IProps> = (props) => {
       flowGraph.cleanSelection();
       flowGraph.select(currentModel.getNodes());
       // flowGraph.centerCell(currentModel.getNodes()[0]);
-      // flowGraph.positionCell(currentModel.getNodes()[0], 'left', { padding: { left: 160 } });
+      flowGraph.positionCell(currentModel.getNodes()[0], 'left', {
+        padding: { left: 240 },
+      });
       flowGraph.trigger('model:select', currentModel);
     };
     const key = `${currentModel.type}-${StringExt.uuid()}`;
