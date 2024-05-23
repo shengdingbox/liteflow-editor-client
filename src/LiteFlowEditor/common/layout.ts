@@ -1,6 +1,7 @@
 import { Graph, Node } from '@antv/x6';
 import { DagreLayout, DagreLayoutOptions } from '@antv/layout';
 // import dagre from '@dagrejs/dagre';
+// import ELK from 'elkjs/lib/elk.bundled.js';
 // import cytoscape from 'cytoscape';
 // import cyDagre from 'cytoscape-dagre';
 // import cyElk from 'cytoscape-elk';
@@ -110,4 +111,54 @@ function antvDagreLayout(flowGraph: Graph, cfg: any = {}): void {
 //   })
 
 //   flowGraph.unfreeze();
+// }
+
+/**
+ * 使用ELK实现布局
+ * @param flowGraph 图实例
+ * @param cfg 配置
+ */
+// function elkLayout(flowGraph: Graph, cfg: any = {}) {
+//   const elk = new ELK();
+//   const elkOptions: Record<string, any> = {
+//     'elk.algorithm': 'layered',
+//     'elk.layered.spacing.nodeNodeBetweenLayers': 80,
+//     'elk.spacing.nodeNode': 20,
+//     'elk.direction': 'RIGHT',
+//   };
+//   const nodes = flowGraph
+//     .getCells()
+//     .filter((cell) => cell.isNode())
+//     .map((cell) => cell.toJSON()) as any[];
+//   const edges = flowGraph
+//     .getCells()
+//     .filter((cell) => cell.isEdge())
+//     .map((cell) => cell.toJSON()) as any[];
+//   const elkGraph = {
+//     id: 'root',
+//     layoutOptions: elkOptions,
+//     children: nodes.map((node) => ({
+//       ...node,
+//       width: nodeSize,
+//       height: nodeSize,
+//     })),
+//     edges: edges.map((edge) => ({
+//       ...edge,
+//       source: edge.source.cell,
+//       target: edge.target.cell,
+//     })),
+//   };
+//   elk
+//     .layout(elkGraph as any)
+//     .then((layoutedGraph: any) => {
+//       flowGraph.freeze();
+//       layoutedGraph.children.forEach((node: any) => {
+//         const current: Node | undefined = flowGraph.getCellById(node?.id) as Node | undefined;
+//         if (current) {
+//           current.position(node.x, node.y);
+//         }
+//       });
+//       flowGraph.unfreeze();
+//     })
+//     .catch(console.error);
 // }
