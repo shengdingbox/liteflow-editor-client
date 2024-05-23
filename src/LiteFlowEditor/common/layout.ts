@@ -17,6 +17,7 @@ const nodeSize: number = 30;
 const ranksep: number = 20;
 const nodesep: number = 20;
 const controlPoints: DagreLayoutOptions['controlPoints'] = false;
+const begin: [number, number] = [40, 40];
 
 export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
   antvDagreLayout(flowGraph, cfg);
@@ -31,7 +32,7 @@ export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
  */
 function antvDagreLayout(flowGraph: Graph, cfg: any = {}): void {
   const dagreLayout: DagreLayout = new DagreLayout({
-    begin: [40, 40],
+    begin,
     type: 'dagre',
     rankdir,
     align,
@@ -44,9 +45,7 @@ function antvDagreLayout(flowGraph: Graph, cfg: any = {}): void {
   dagreLayout.updateCfg({
     // ranker: 'tight-tree', // 'tight-tree' 'longest-path' 'network-simplex'
     // nodeOrder,
-    // preset: {
-    //   nodes: model.nodes.filter((node: any) => node._order !== undefined),
-    // },
+    // preset: preset(flowGraph),
     ...cfg,
   });
 
@@ -73,7 +72,32 @@ function antvDagreLayout(flowGraph: Graph, cfg: any = {}): void {
     }
   });
 
+  fineTuneLayer(flowGraph);
+
   flowGraph.unfreeze();
+}
+
+function fineTuneLayer(flowGraph: Graph) {
+  let queue = flowGraph.getRootNodes();
+  let layer: number = 0;
+
+  while (queue.length) {
+    let cells: Node[] = [];
+    queue.forEach((next: Node) => {
+      const { y } = next.position();
+      next.position(begin[0] + layer * (ranksep + nodeSize + 40), y);
+
+      const neighbors = flowGraph.getNeighbors(next, {
+        outgoing: true,
+      }) as Node[];
+      const lastIndex = cells.length;
+      neighbors.forEach((neighbor) => {
+        cells.splice(lastIndex, 0, neighbor);
+      });
+    });
+    layer++;
+    queue = cells;
+  }
 }
 
 /**
