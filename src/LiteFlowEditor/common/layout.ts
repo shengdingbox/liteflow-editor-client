@@ -77,6 +77,10 @@ function antvDagreLayout(flowGraph: Graph, cfg: any = {}): void {
   flowGraph.unfreeze();
 }
 
+/**
+ * 解决Dagre布局部分节点层次过低问题
+ * @param flowGraph 图实例
+ */
 function fineTuneLayer(flowGraph: Graph) {
   let queue = flowGraph.getRootNodes();
   let layer: number = 0;
@@ -90,10 +94,7 @@ function fineTuneLayer(flowGraph: Graph) {
       const neighbors = flowGraph.getNeighbors(next, {
         outgoing: true,
       }) as Node[];
-      const lastIndex = cells.length;
-      neighbors.forEach((neighbor) => {
-        cells.splice(lastIndex, 0, neighbor);
-      });
+      cells = cells.concat(neighbors);
     });
     layer++;
     queue = cells;
