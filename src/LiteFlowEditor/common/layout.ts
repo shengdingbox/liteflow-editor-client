@@ -1,5 +1,14 @@
 import { Graph, Node } from '@antv/x6';
 import { DagreLayout, DagreLayoutOptions } from '@antv/layout';
+// import dagre from '@dagrejs/dagre';
+// import cytoscape from 'cytoscape';
+// import cyDagre from 'cytoscape-dagre';
+// import cyElk from 'cytoscape-elk';
+// import cyKlay from 'cytoscape-klay';
+
+// cytoscape.use( cyDagre );
+// cytoscape.use( cyElk );
+// cytoscape.use( cyKlay );
 
 const rankdir: DagreLayoutOptions['rankdir'] = 'LR';
 const align: DagreLayoutOptions['align'] = undefined;
@@ -9,6 +18,17 @@ const nodesep: number = 20;
 const controlPoints: DagreLayoutOptions['controlPoints'] = false;
 
 export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
+  antvDagreLayout(flowGraph, cfg);
+
+  // dagreLayout(flowGraph, cfg);
+};
+
+/**
+ * 使用AntV的图布局包实现布局
+ * @param flowGraph 图实例
+ * @param cfg 配置
+ */
+function antvDagreLayout(flowGraph: Graph, cfg: any = {}): void {
   const dagreLayout: DagreLayout = new DagreLayout({
     begin: [40, 40],
     type: 'dagre',
@@ -40,6 +60,9 @@ export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
       return edge.toJSON();
     }),
   });
+
+  flowGraph.freeze();
+
   newNodes?.forEach((node: any) => {
     const cell: Node | undefined = flowGraph.getCellById(node.id) as
       | Node
@@ -48,4 +71,43 @@ export const forceLayout = (flowGraph: Graph, cfg: any = {}): void => {
       cell.position(node.x, node.y);
     }
   });
-};
+
+  flowGraph.unfreeze();
+}
+
+/**
+ * 使用Dagre原始包实现布局
+ * @param flowGraph 图实例
+ * @param cfg 配置
+ */
+// function dagreLayout(flowGraph: Graph, cfg: any = {}): void {
+//   const g = new dagre.graphlib.Graph();
+//   g.setGraph({ rankdir, nodesep: 50, ranksep: 50 });
+//   g.setDefaultEdgeLabel(() => ({}));
+
+//   flowGraph.getNodes().forEach((node) => {
+//     node.setZIndex(1);
+//     g.setNode(node.id, { width: nodeSize, height: nodeSize });
+//   })
+
+//   flowGraph.getEdges().forEach((edge) => {
+//     edge.setZIndex(0);
+//     const source = edge.getSourceNode() as Node;
+//     const target = edge.getTargetNode() as Node;
+//     g.setEdge(source?.id, target?.id);
+//   })
+
+//   dagre.layout(g);
+
+//   flowGraph.freeze();
+
+//   g.nodes().forEach((id) => {
+//     const node = flowGraph.getCellById(id) as Node;
+//     if (node) {
+//       const pos = g.node(id);
+//       node.position(pos.x, pos.y);
+//     }
+//   })
+
+//   flowGraph.unfreeze();
+// }

@@ -9,6 +9,11 @@ declare module '*.svg' {
   export default url;
 }
 
+// declare module 'cytoscape';
+// declare module 'cytoscape-dagre';
+// declare module 'cytoscape-elk';
+// declare module 'cytoscape-klay';
+
 declare interface LiteFlowNode {
   type: string;
   label: string;
