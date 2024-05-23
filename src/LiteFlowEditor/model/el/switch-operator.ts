@@ -90,6 +90,7 @@ export default class SwitchOperator extends ELNode {
         label: { text: condition.id },
       },
     });
+    condition.resetCells([start], [start]);
     start.setData({ model: condition }, { overwrite: true });
     cells.push(this.addNode(start));
     this.startNode = start;

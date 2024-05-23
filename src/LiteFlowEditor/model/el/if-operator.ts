@@ -82,6 +82,7 @@ export default class IfOperator extends ELNode {
         label: { text: condition.id },
       },
     });
+    condition.resetCells([start], [start]);
     start.setData(
       {
         model: condition,

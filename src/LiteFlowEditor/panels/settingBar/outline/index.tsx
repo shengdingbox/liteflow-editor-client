@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, MouseEventHandler } from 'react';
 import classNames from 'classnames';
-import { Graph } from '@antv/x6';
+import { Graph, StringExt } from '@antv/x6';
 import { Tree } from 'antd';
 import type { DataNode } from 'antd/es/tree';
 import { useModel } from '../../../hooks/useModel';
@@ -13,10 +13,16 @@ interface IProps {
   flowGraph: Graph;
 }
 
-const TreeNodeTitle: React.FC<{ model: ELNode }> = ({ model }) => {
+const TreeNodeTitle: React.FC<{
+  model: ELNode;
+  onClick: MouseEventHandler<HTMLDivElement>;
+}> = ({ model, onClick }) => {
   const { id, type } = model;
   return (
-    <div className={classNames(styles.liteflowEditorOutlineTitle)}>
+    <div
+      className={classNames(styles.liteflowEditorOutlineTitle)}
+      onClick={onClick}
+    >
       <span>{id ? `${id} : ${type}` : type}</span>
     </div>
   );
@@ -32,13 +38,20 @@ const Outline: React.FC<IProps> = (props) => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>(initialkeys);
 
   function transformer(currentModel: ELNode, keys: string[]): DataNode {
-    const key = `${currentModel.type}-${Math.ceil(Math.random() * 1000)}`;
+    const handleClick = () => {
+      flowGraph.cleanSelection();
+      flowGraph.select(currentModel.getNodes());
+      // flowGraph.centerCell(currentModel.getNodes()[0]);
+      // flowGraph.positionCell(currentModel.getNodes()[0], 'left', { padding: { left: 160 } });
+      flowGraph.trigger('model:select', currentModel);
+    };
+    const key = `${currentModel.type}-${StringExt.uuid()}`;
     keys.push(key);
     const node: DataNode = {
-      title: <TreeNodeTitle model={currentModel} />,
+      title: <TreeNodeTitle model={currentModel} onClick={handleClick} />,
       key,
       icon: (
-        <div className={styles.liteflowEditorOutlineIcon}>
+        <div className={styles.liteflowEditorOutlineIcon} onClick={handleClick}>
           <img
             className={styles.liteflowEditorOutlineImage}
             src={getIconByType(currentModel.type)}
