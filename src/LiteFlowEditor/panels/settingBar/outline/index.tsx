@@ -2,12 +2,12 @@ import React, { useEffect, useState, MouseEventHandler } from 'react';
 import classNames from 'classnames';
 import { Graph, StringExt } from '@antv/x6';
 import { Tree } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import type { DataNode } from 'antd/es/tree';
 import { useModel } from '../../../hooks/useModel';
 import ELNode from '../../../model/node';
+import { getIconByType } from '../../../cells';
 import styles from './index.module.less';
-import { DownOutlined } from '@ant-design/icons';
-import { getIconByType } from '@/LiteFlowEditor/cells';
 
 interface IProps {
   flowGraph: Graph;
