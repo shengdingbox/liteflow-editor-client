@@ -265,6 +265,12 @@ class FeimaFlowLayout {
           const { total, base } = this.calHeight(curNode);
           multiTotalHeight = Math.max(multiTotalHeight, total);
           multiBaseHeight = Math.max(multiBaseHeight, base);
+          if (base < multiBaseHeight) {
+            multiTotalHeight = Math.max(
+              multiTotalHeight,
+              total + (multiBaseHeight - base),
+            );
+          }
         }
         if (i === 0) {
           firstBaseHeight = multiBaseHeight;
@@ -312,9 +318,9 @@ class FeimaFlowLayout {
       //     graphNode.data.position.childrenIndex ?? ''
       //   }`,
       // };
-      // graphNode.attrs.label = {
-      //   text: `${graphNode.data.heightInfo.base}_${graphNode.data.heightInfo.total}`,
-      // };
+      graphNode.attrs.label = {
+        text: `${graphNode.data.heightInfo.base}_${graphNode.data.heightInfo.total}`,
+      };
     }
     return result;
   }
@@ -355,7 +361,8 @@ class FeimaFlowLayout {
         let maxBaseHeight = 0;
         for (let m = 0; m < cur.multiple!?.length; m++) {
           let mutiCur = cur.multiple![m];
-          let maxTotalHeight = 0;
+          let maxTotalHeight = NODE_HEIGHT;
+          let multiBaseHeight = NODE_HEIGHT / 2;
           for (let i = 0; i < mutiCur.children!?.length; i++) {
             queue.push(mutiCur.children![i]);
             this.translate(mutiCur.children[i], 0, multiTotalHeight);
@@ -363,6 +370,14 @@ class FeimaFlowLayout {
               this.cache.nodeMap[mutiCur.children![i].id].data.heightInfo!;
             maxTotalHeight = Math.max(maxTotalHeight, childTotalHeight);
             maxBaseHeight = Math.max(maxBaseHeight, childBaseHeight);
+
+            multiBaseHeight = Math.max(multiBaseHeight, childBaseHeight);
+            if (childBaseHeight < maxBaseHeight) {
+              maxTotalHeight = Math.max(
+                maxTotalHeight,
+                childTotalHeight + (multiBaseHeight - childBaseHeight),
+              );
+            }
           }
           multiTotalHeight += maxTotalHeight + Y_SPACE;
         }
