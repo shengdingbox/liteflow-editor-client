@@ -14,9 +14,10 @@ interface IProps {
 }
 
 const TreeNodeTitle: React.FC<{ model: ELNode }> = ({ model }) => {
+  const { id, type } = model;
   return (
     <div className={classNames(styles.liteflowEditorOutlineTitle)}>
-      <span>{model.type}</span>
+      <span>{id ? `${id} : ${type}` : type}</span>
     </div>
   );
 };
@@ -82,6 +83,7 @@ const Outline: React.FC<IProps> = (props) => {
         showLine
         switcherIcon={<DownOutlined />}
         expandedKeys={expandedKeys}
+        selectedKeys={[]}
         treeData={treeData}
       />
     </div>
