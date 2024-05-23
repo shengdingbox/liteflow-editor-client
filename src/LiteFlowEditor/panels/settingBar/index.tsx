@@ -6,6 +6,7 @@ import {
   ComponentPropertiesEditor,
   ConditionPropertiesEditor,
 } from './properties';
+import Outline from './outline';
 import ELNode from '../../model/node';
 import NodeOperator from '../../model/el/node-operator';
 import styles from './index.module.less';
@@ -37,7 +38,7 @@ const SettingBar: React.FC<IProps> = (props) => {
       flowGraph.off('settingBar:forceUpdate', handler);
       flowGraph.off('model:select', handleSelect);
     };
-  }, [flowGraph, setSelectedModel, forceUpdate]);
+  }, [flowGraph]);
 
   const nodes = flowGraph.getSelectedCells().filter((v) => !v.isEdge());
   let currentModel;
@@ -46,61 +47,24 @@ const SettingBar: React.FC<IProps> = (props) => {
     currentModel = currentModel.proxy || currentModel;
   }
 
+  let propertiesPanel = <Basic flowGraph={flowGraph} />;
+
   if (currentModel?.parent) {
     if (Object.getPrototypeOf(currentModel) === NodeOperator.prototype) {
-      return (
-        <div className={styles.liteflowEditorSettingBarContainer}>
-          <Tabs
-            tabBarGutter={0}
-            defaultActiveKey={'componentProperties'}
-            tabBarStyle={{
-              display: 'flex',
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <TabPane tab={'组件属性'} key={'componentProperties'}>
-              <ComponentPropertiesEditor model={currentModel} />
-            </TabPane>
-          </Tabs>
-        </div>
-      );
+      propertiesPanel = <ComponentPropertiesEditor model={currentModel} />;
+    } else {
+      propertiesPanel = <ConditionPropertiesEditor model={currentModel} />;
     }
-    return (
-      <div className={styles.liteflowEditorSettingBarContainer}>
-        <Tabs
-          tabBarGutter={0}
-          defaultActiveKey={'conditionProperties'}
-          tabBarStyle={{
-            display: 'flex',
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <TabPane tab={'节点属性'} key={'conditionProperties'}>
-            <ConditionPropertiesEditor model={currentModel} />
-          </TabPane>
-        </Tabs>
-      </div>
-    );
   }
 
   return (
     <div className={styles.liteflowEditorSettingBarContainer}>
-      <Tabs
-        tabBarGutter={0}
-        defaultActiveKey={'basic'}
-        tabBarStyle={{
-          display: 'flex',
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <TabPane tab={'属性'} key={'basic'}>
-          <Basic flowGraph={flowGraph} />
+      <Tabs defaultActiveKey={'properties'}>
+        <TabPane tab={'属性'} key={'properties'}>
+          {propertiesPanel}
+        </TabPane>
+        <TabPane tab={'结构树'} key={'outline'}>
+          <Outline flowGraph={flowGraph} />
         </TabPane>
       </Tabs>
     </div>

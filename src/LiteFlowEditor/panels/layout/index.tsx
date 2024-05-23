@@ -44,7 +44,7 @@ const Layout: React.FC<IProps> = (props) => {
             className={styles.liteflowEditorSettingBar}
             minSize={'50px'}
             maxSize={'500px'}
-            initialSize={'200px'}
+            initialSize={'260px'}
           >
             {settingBar}
           </Pane>
