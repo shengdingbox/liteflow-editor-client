@@ -37,7 +37,7 @@ const ConditionPropertiesEditor: React.FC<IProps> = (props) => {
         initialValues={{ ...properties }}
         onValuesChange={handleOnChange}
       >
-        {(model.proxy || model).type === ConditionTypeEnum.WHEN && (
+        {model.type === ConditionTypeEnum.WHEN && (
           <Form.Item name="any" label="Any（any）">
             <Select allowClear>
               <Select.Option value={WHEN_ANY_TRUE}>是</Select.Option>

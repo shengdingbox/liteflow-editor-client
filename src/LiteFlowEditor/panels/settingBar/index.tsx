@@ -40,9 +40,13 @@ const SettingBar: React.FC<IProps> = (props) => {
   }, [flowGraph, setSelectedModel, forceUpdate]);
 
   const nodes = flowGraph.getSelectedCells().filter((v) => !v.isEdge());
+  let currentModel;
   if (selectedModel || nodes.length === 1) {
-    let currentModel = selectedModel || nodes[0].getData().model;
+    currentModel = selectedModel || nodes[0].getData().model;
     currentModel = currentModel.proxy || currentModel;
+  }
+
+  if (currentModel?.parent) {
     if (Object.getPrototypeOf(currentModel) === NodeOperator.prototype) {
       return (
         <div className={styles.liteflowEditorSettingBarContainer}>
