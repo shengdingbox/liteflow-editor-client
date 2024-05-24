@@ -31,7 +31,7 @@ export default function router(
       } else {
         points.push(Point.create(targetCorner.x, sourceCorner.y));
       }
-    } else if (sourceComp.metadata.childrenType === 'multiple') {
+    } else if (sourceComp.metadata.childrenType === 'branch') {
       points.push(Point.create(sourceCorner.x, targetCorner.y));
     } else {
       points.push(Point.create(targetCorner.x, sourceCorner.y));
@@ -58,7 +58,7 @@ export default function router(
   ) {
     // 第一象限
     // points.push(Point.create(sourceCorner.x, targetCorner.y));
-    if (sourceComp.metadata.childrenType === 'multiple') {
+    if (sourceComp.metadata.childrenType === 'branch') {
       points.push(Point.create(sourceCorner.x, targetCorner.y));
     } else {
       points.push(Point.create(targetCorner.x, sourceCorner.y));

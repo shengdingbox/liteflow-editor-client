@@ -5,15 +5,15 @@ export const IfNode: NodeComp = {
   metadata: {
     label: 'IF 条件',
     type: 'if',
-    childrenType: 'multiple',
-    multipleType: 'two',
+    childrenType: 'branch',
+    branchType: 'two',
     icon,
   },
 
   defaults: [
     {
       props: { test: 1 },
-      multiple: [
+      branches: [
         {
           children: [],
         },

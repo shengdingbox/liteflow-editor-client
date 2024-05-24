@@ -2,7 +2,7 @@ import { toJS } from 'mobx';
 import { NodeCompStore } from './CompStore';
 
 import { createEndComp } from '../buildinNodes/end';
-import { createPlaceholderComp } from '../buildinNodes/multiple-placeholder';
+import { createPlaceholderComp } from '../buildinNodes/branch-placeholder';
 import { AdvNodeData, CellPosition, GraphNode } from '../types/node';
 import { generateNewId } from '../utils';
 import { travelNode } from './travel';
@@ -107,9 +107,9 @@ function nodeToCells(opts: NodeToCellsOpts): GraphNode[] {
       );
     });
     return [curNode];
-  } else if (comp.metadata.childrenType === 'multiple') {
+  } else if (comp.metadata.childrenType === 'branch') {
     const outNodes: GraphNode[] = [];
-    node.multiple?.forEach((line, multiIndex) => {
+    node.branches?.forEach((line, branchIndex) => {
       let preNodes = [curNode];
       let virtualCount = 0;
       line.children.forEach((n: AdvNodeData, childrenIndex) => {
@@ -126,7 +126,7 @@ function nodeToCells(opts: NodeToCellsOpts): GraphNode[] {
           })),
           position: {
             parent: node,
-            multiIndex,
+            branchIndex,
             childrenIndex: Math.max(0, childrenIndex - virtualCount),
           },
         });
@@ -144,18 +144,18 @@ export function addPlacehoderNodes(root: AdvNodeData): AdvNodeData {
   for (const n of travelNode(result)) {
     const cur = n.current as AdvNodeData;
     const comp = NodeCompStore.getNode(cur.type);
-    if (comp.metadata.childrenType === 'multiple') {
-      cur.multiple!.forEach((m, i) => {
+    if (comp.metadata.childrenType === 'branch') {
+      cur.branches!.forEach((m, i) => {
         if (m.children.length == 0) {
           const children = m.children as AdvNodeData[];
-          children.push(createPlaceholderComp(cur.multiple!?.length > 2));
+          children.push(createPlaceholderComp(cur.branches!?.length > 2));
         }
       });
       const curParent = n.parent;
       if (curParent) {
         const parentComp = NodeCompStore.getNode(curParent.type);
-        if (parentComp.metadata.childrenType === 'multiple') {
-          const children = curParent.multiple![n.multiIndex!].children;
+        if (parentComp.metadata.childrenType === 'branch') {
+          const children = curParent.branches![n.branchIndex!].children;
           children.splice(n.childrenIndex! + 1, 0, createPlaceholderComp());
         } else if (parentComp.metadata.childrenType === 'then') {
           const children = curParent.children!;
@@ -324,7 +324,7 @@ function createNode(node: AdvNodeData, position: CellPosition): GraphNode {
       },
     ],
   };
-  const canAddMultiple = comp.metadata.multipleType === 'mutable';
+  const canAddBranch = comp.metadata.branchType === 'mutable';
   // console.log('=====node.isVirtual', node.isVirtual, node);
   return {
     view: 'react-shape-view',
@@ -334,7 +334,7 @@ function createNode(node: AdvNodeData, position: CellPosition): GraphNode {
     data: {
       toolbar: {
         delete: !node.isVirtual || node.canDelete,
-        addMultiple: canAddMultiple,
+        addBranch: canAddBranch,
       },
       nodeComp: comp,
       position,

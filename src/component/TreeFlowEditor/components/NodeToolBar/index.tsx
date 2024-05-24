@@ -14,15 +14,15 @@ const NodeToolBar: React.FC<any> = (props) => {
     toolbar = {
       delete: false,
       prepend: false,
-      addMultiple: false,
+      addBranch: false,
     },
     isVirtual,
   } = node.getData() || {};
   const onDelete = debounce(() => {
     grapher.store.removeNode(position, isVirtual);
   }, 100);
-  const addMultiple = debounce(() => {
-    grapher.store.addMultiple(nodeId);
+  const addBranch = debounce(() => {
+    grapher.store.addBranch(nodeId);
   }, 100);
 
   return (
@@ -42,13 +42,13 @@ const NodeToolBar: React.FC<any> = (props) => {
               </Tooltip>
             </div>
           )}
-          {toolbar.addMultiple && (
+          {toolbar.addBranch && (
             <div
               className={classNames(
                 styles.liteflowToolBarBtn,
                 styles.liteflowDeleteNode,
               )}
-              onClick={addMultiple}
+              onClick={addBranch}
             >
               <Tooltip title="增加分支">
                 <PlusOutlined />

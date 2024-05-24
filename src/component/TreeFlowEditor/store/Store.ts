@@ -36,9 +36,9 @@ export class Store extends HistoryStore<DocumentModel> {
     insertNode(this.document.data, position, node);
   }
 
-  @action addMultiple(id: string) {
+  @action addBranch(id: string) {
     const nodeDataInfo = findNode(this.document.data, id)?.current;
-    nodeDataInfo?.multiple?.push({ children: [] });
+    nodeDataInfo?.branches?.push({ children: [] });
   }
 }
 

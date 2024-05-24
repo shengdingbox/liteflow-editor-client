@@ -13,7 +13,7 @@ import MiniMapSimpleNode from '../panels/flowGraph/miniMapSimpleNode';
 
 import Common from '../buildinNodes/common';
 import End from '../buildinNodes/end';
-import MultiplePlaceholder from '../buildinNodes/multiple-placeholder';
+import BranchPlaceholder from '../buildinNodes/branch-placeholder';
 import Start from '../buildinNodes/start';
 import { Grapher } from '../context/GraphContext';
 import { NodeCompStore } from '../store/CompStore';
@@ -25,7 +25,7 @@ Graph.registerRouter('FLOW_ROUTER', liteflowRouter);
 Graph.registerAnchor('FLOW_ANCHOR', liteflowAnchor);
 
 function registerNodes(compGroups: Array<[string, NodeComp[]]>) {
-  const allComps = [Start, End, Common, MultiplePlaceholder];
+  const allComps = [Start, End, Common, BranchPlaceholder];
   compGroups.forEach((g) => {
     allComps.push(...g[1]);
   });

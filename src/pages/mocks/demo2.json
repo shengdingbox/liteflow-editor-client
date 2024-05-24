@@ -8,7 +8,7 @@
       "props": {
         "test": 1
       },
-      "multiple": [
+      "branches": [
         {
           "children": [
             {

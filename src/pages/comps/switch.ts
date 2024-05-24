@@ -5,15 +5,15 @@ export const SwitchNode: NodeComp = {
   metadata: {
     label: 'Switch 选择',
     type: 'switch',
-    childrenType: 'multiple',
-    multipleType: 'mutable',
+    childrenType: 'branch',
+    branchType: 'mutable',
     icon,
   },
 
   defaults: [
     {
       props: { test: 1 },
-      multiple: [
+      branches: [
         {
           children: [],
         },

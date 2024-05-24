@@ -5,8 +5,8 @@ export interface NodeComp {
     type: string;
     label?: string;
     icon?: React.ReactNode;
-    childrenType?: 'then' | 'include' | 'multiple';
-    multipleType?: 'two' | 'mutable';
+    childrenType?: 'then' | 'include' | 'branch';
+    branchType?: 'two' | 'mutable';
   };
 
   defaults?: Array<Omit<NodeData, 'id' | 'type'>>;
@@ -18,7 +18,7 @@ export interface NodeData {
   label?: string;
   props?: Record<string, any>;
   children?: NodeData[];
-  multiple?: Array<{
+  branches?: Array<{
     name?: string;
     children: NodeData[];
   }>;
@@ -31,7 +31,7 @@ export interface AdvNodeData extends NodeData {
 
 export interface CellPosition {
   parent?: NodeData;
-  multiIndex?: number;
+  branchIndex?: number;
   childrenIndex?: number;
 }
 
@@ -43,7 +43,7 @@ export interface GraphNode {
   data: {
     toolbar: {
       delete?: boolean;
-      addMultiple: boolean;
+      addBranch: boolean;
     };
     nodeComp: NodeComp;
     position: CellPosition;

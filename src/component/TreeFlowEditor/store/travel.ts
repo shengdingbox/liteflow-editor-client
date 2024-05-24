@@ -4,14 +4,14 @@ import { generateNewId } from '../utils';
 interface NodeDataInfo {
   current: NodeData;
   parent?: NodeData;
-  multiIndex?: number;
+  branchIndex?: number;
   childrenIndex?: number;
 }
 
 interface TravelChildrenOpts {
   nodes: NodeData[];
   parent?: NodeData;
-  multiIndex?: number;
+  branchIndex?: number;
 }
 
 function* travelChildren(opts: TravelChildrenOpts): Generator<NodeDataInfo> {
@@ -19,7 +19,7 @@ function* travelChildren(opts: TravelChildrenOpts): Generator<NodeDataInfo> {
     yield* travelNodePro({
       current: opts.nodes[i],
       parent: opts.parent,
-      multiIndex: opts.multiIndex,
+      branchIndex: opts.branchIndex,
       childrenIndex: i,
     });
   }
@@ -30,12 +30,12 @@ function* travelNodePro(nodeInfo: NodeDataInfo): Generator<NodeDataInfo> {
 
   const current = nodeInfo.current;
 
-  if (current.multiple) {
-    for (let i = 0; i < current.multiple.length; i++) {
+  if (current.branches) {
+    for (let i = 0; i < current.branches.length; i++) {
       yield* travelChildren({
-        nodes: current.multiple[i].children,
+        nodes: current.branches[i].children,
         parent: current,
-        multiIndex: i,
+        branchIndex: i,
       });
     }
   }
@@ -71,15 +71,15 @@ export function removeNode(
   if (position.parent) {
     // 按位置删除
     const nodeInfo = findNode(root, position.parent.id);
-    if (position.multiIndex == null) {
+    if (position.branchIndex == null) {
       if (position.childrenIndex != null) {
         nodeInfo?.current.children?.splice(position.childrenIndex, 1);
       }
-    } else if (position.multiIndex != null) {
+    } else if (position.branchIndex != null) {
       if (position.childrenIndex == null || isVirtual) {
-        nodeInfo?.current.multiple?.splice(position.multiIndex, 1);
+        nodeInfo?.current.branches?.splice(position.branchIndex, 1);
       } else {
-        nodeInfo?.current.multiple?.[position.multiIndex].children?.splice(
+        nodeInfo?.current.branches?.[position.branchIndex].children?.splice(
           position.childrenIndex,
           1,
         );
@@ -100,8 +100,8 @@ export function insertNode(
       id: generateNewId(),
       ...nodeComp.defaults?.[0],
     };
-    if (position.multiIndex != null && position.childrenIndex != null) {
-      parentNode.multiple?.[position.multiIndex].children.splice(
+    if (position.branchIndex != null && position.childrenIndex != null) {
+      parentNode.branches?.[position.branchIndex].children.splice(
         position.childrenIndex,
         0,
         newNodeData,

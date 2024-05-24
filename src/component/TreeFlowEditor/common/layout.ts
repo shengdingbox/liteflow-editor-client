@@ -136,10 +136,10 @@ class FeimaFlowLayout {
   calWidth(node: AdvNodeData): WidthInfo {
     const result: WidthInfo = { total: 0, next: 0 };
     const comp = NodeCompStore.getNode(node.type);
-    if (comp.metadata.childrenType === 'multiple') {
+    if (comp.metadata.childrenType === 'branch') {
       let maxTotalWidth = 0;
-      for (let i = 0; i < node.multiple!.length; i++) {
-        const { next } = this.calChildrenWidth(node.multiple![i].children);
+      for (let i = 0; i < node.branches!.length; i++) {
+        const { next } = this.calChildrenWidth(node.branches![i].children);
         maxTotalWidth = Math.max(maxTotalWidth, next);
       }
       result.total = maxTotalWidth;
@@ -171,29 +171,32 @@ class FeimaFlowLayout {
     children: AdvNodeData[],
     isIncludeType: boolean = false,
   ): WidthInfo {
-    let multiTotalWidth = nodeSize;
-    let multiNextTotalWidth = nodeSize;
+    let childTotalWidth = nodeSize;
+    let childrenNextTotalWidth = nodeSize;
     for (let i = 0; i < children.length; i++) {
       const { total, next } = this.calWidth(children[i]);
 
-      if (multiTotalWidth < multiNextTotalWidth && next === 0) {
-        multiTotalWidth += X_SPACE;
+      if (childTotalWidth < childrenNextTotalWidth && next === 0) {
+        childTotalWidth += X_SPACE;
       } else {
         if (isIncludeType && i === 0) {
           // 无需处理
         } else {
-          multiNextTotalWidth += X_SPACE;
+          childrenNextTotalWidth += X_SPACE;
         }
-        multiTotalWidth = multiNextTotalWidth;
+        childTotalWidth = childrenNextTotalWidth;
       }
 
-      multiTotalWidth += total;
-      multiNextTotalWidth += next;
-      multiNextTotalWidth = Math.max(multiTotalWidth, multiNextTotalWidth);
+      childTotalWidth += total;
+      childrenNextTotalWidth += next;
+      childrenNextTotalWidth = Math.max(
+        childTotalWidth,
+        childrenNextTotalWidth,
+      );
     }
     return {
-      total: multiTotalWidth,
-      next: multiNextTotalWidth,
+      total: childTotalWidth,
+      next: childrenNextTotalWidth,
     };
   }
 
@@ -209,9 +212,9 @@ class FeimaFlowLayout {
         this.setChildrenX(cur.children!, queue, true);
       } else if (childrenType === 'then') {
         this.setChildrenX(cur.children!, queue);
-      } else if (childrenType === 'multiple') {
-        for (let m = 0; m < cur.multiple!?.length; m++) {
-          let mutiCur = cur.multiple![m];
+      } else if (childrenType === 'branch') {
+        for (let m = 0; m < cur.branches!?.length; m++) {
+          let mutiCur = cur.branches![m];
           this.setChildrenX(mutiCur.children!, queue);
         }
       }
@@ -223,61 +226,63 @@ class FeimaFlowLayout {
     queue: AdvNodeData[],
     isIncludeType: boolean = false,
   ) {
-    let multiTotalWidth = nodeSize;
-    let multiNextTotalWidth = nodeSize;
+    let childrenTotalWidth = nodeSize;
+    let childrenNextTotalWidth = nodeSize;
     for (let i = 0; i < children!?.length; i++) {
       queue.push(children![i]);
 
       const { total, next } =
         this.cache.nodeMap[children![i].id].data.widthInfo!;
-      if (multiTotalWidth < multiNextTotalWidth && next === 0) {
-        multiTotalWidth += X_SPACE;
-        this.translate(children![i], multiTotalWidth, 0);
+      if (childrenTotalWidth < childrenNextTotalWidth && next === 0) {
+        childrenTotalWidth += X_SPACE;
+        this.translate(children![i], childrenTotalWidth, 0);
       } else {
         if (isIncludeType && i === 0) {
           // 无需处理
         } else {
-          // multiTotalWidth += X_SPACE;
-          multiNextTotalWidth += X_SPACE;
+          childrenNextTotalWidth += X_SPACE;
         }
-        multiTotalWidth = multiNextTotalWidth;
-        this.translate(children![i], multiTotalWidth, 0);
+        childrenTotalWidth = childrenNextTotalWidth;
+        this.translate(children![i], childrenTotalWidth, 0);
       }
 
-      multiTotalWidth += total;
-      multiNextTotalWidth += next;
-      multiNextTotalWidth = Math.max(multiTotalWidth, multiNextTotalWidth);
+      childrenTotalWidth += total;
+      childrenNextTotalWidth += next;
+      childrenNextTotalWidth = Math.max(
+        childrenTotalWidth,
+        childrenNextTotalWidth,
+      );
     }
   }
 
   calHeight(node: AdvNodeData): HeightInfo {
     const result: HeightInfo = { total: 0, base: 0 };
     const comp = NodeCompStore.getNode(node.type);
-    if (comp.metadata.childrenType === 'multiple') {
+    if (comp.metadata.childrenType === 'branch') {
       let firstBaseHeight = 0;
       let lastBaseRemainingHeight = 0;
-      for (let i = 0; i < node.multiple!.length; i++) {
-        const multiple = node.multiple![i];
-        let multiTotalHeight = NODE_HEIGHT;
-        let multiBaseHeight = NODE_HEIGHT / 2;
-        for (let j = 0; j < multiple.children.length; j++) {
-          const curNode = multiple.children[j];
+      for (let i = 0; i < node.branches!.length; i++) {
+        const branches = node.branches![i];
+        let branchTotalHeight = NODE_HEIGHT;
+        let branchBaseHeight = NODE_HEIGHT / 2;
+        for (let j = 0; j < branches.children.length; j++) {
+          const curNode = branches.children[j];
           const { total, base } = this.calHeight(curNode);
-          multiTotalHeight = Math.max(multiTotalHeight, total);
-          multiBaseHeight = Math.max(multiBaseHeight, base);
-          if (base < multiBaseHeight) {
-            multiTotalHeight = Math.max(
-              multiTotalHeight,
-              total + (multiBaseHeight - base),
+          branchTotalHeight = Math.max(branchTotalHeight, total);
+          branchBaseHeight = Math.max(branchBaseHeight, base);
+          if (base < branchBaseHeight) {
+            branchTotalHeight = Math.max(
+              branchTotalHeight,
+              total + (branchBaseHeight - base),
             );
           }
         }
         if (i === 0) {
-          firstBaseHeight = multiBaseHeight;
-        } else if (i === node.multiple!?.length - 1) {
-          lastBaseRemainingHeight = multiTotalHeight - multiBaseHeight;
+          firstBaseHeight = branchBaseHeight;
+        } else if (i === node.branches!?.length - 1) {
+          lastBaseRemainingHeight = branchTotalHeight - branchBaseHeight;
         }
-        result.total += multiTotalHeight + Y_SPACE;
+        result.total += branchTotalHeight + Y_SPACE;
       }
       result.total -= Y_SPACE;
       result.base =
@@ -314,7 +319,7 @@ class FeimaFlowLayout {
       graphNode.data.heightInfo = result;
       // this.cache.nodeMap[node.id].attrs.label = { text: result };
       // graphNode.attrs.label = {
-      //   text: `${graphNode.data.position.multiIndex ?? ''}_${
+      //   text: `${graphNode.data.position.branchIndex ?? ''}_${
       //     graphNode.data.position.childrenIndex ?? ''
       //   }`,
       // };
@@ -356,36 +361,39 @@ class FeimaFlowLayout {
         for (let i = 0; i < cur.children!?.length; i++) {
           queue.push(cur.children![i]);
         }
-      } else if (childrenType === 'multiple') {
-        let multiTotalHeight = 0;
+      } else if (childrenType === 'branch') {
+        let branchTotalHeight = 0;
         let maxBaseHeight = 0;
-        for (let m = 0; m < cur.multiple!?.length; m++) {
-          let mutiCur = cur.multiple![m];
-          let maxTotalHeight = NODE_HEIGHT;
-          let multiBaseHeight = NODE_HEIGHT / 2;
+        for (let m = 0; m < cur.branches!?.length; m++) {
+          let mutiCur = cur.branches![m];
+          let childrenTotalHeight = NODE_HEIGHT;
+          let childrenBaseHeight = NODE_HEIGHT / 2;
           for (let i = 0; i < mutiCur.children!?.length; i++) {
             queue.push(mutiCur.children![i]);
-            this.translate(mutiCur.children[i], 0, multiTotalHeight);
+            this.translate(mutiCur.children[i], 0, branchTotalHeight);
             const { total: childTotalHeight, base: childBaseHeight } =
               this.cache.nodeMap[mutiCur.children![i].id].data.heightInfo!;
-            maxTotalHeight = Math.max(maxTotalHeight, childTotalHeight);
+            childrenTotalHeight = Math.max(
+              childrenTotalHeight,
+              childTotalHeight,
+            );
             maxBaseHeight = Math.max(maxBaseHeight, childBaseHeight);
 
-            multiBaseHeight = Math.max(multiBaseHeight, childBaseHeight);
+            childrenBaseHeight = Math.max(childrenBaseHeight, childBaseHeight);
             if (childBaseHeight < maxBaseHeight) {
-              maxTotalHeight = Math.max(
-                maxTotalHeight,
-                childTotalHeight + (multiBaseHeight - childBaseHeight),
+              childrenTotalHeight = Math.max(
+                childrenTotalHeight,
+                childTotalHeight + (childrenBaseHeight - childBaseHeight),
               );
             }
           }
-          multiTotalHeight += maxTotalHeight + Y_SPACE;
+          branchTotalHeight += childrenTotalHeight + Y_SPACE;
         }
-        multiTotalHeight -= Y_SPACE;
+        branchTotalHeight -= Y_SPACE;
 
         const baseHeight = this.cache.nodeMap[cur.id].data.heightInfo?.base!;
-        for (let m = 0; m < cur.multiple!?.length; m++) {
-          let mutiCur = cur.multiple![m];
+        for (let m = 0; m < cur.branches!?.length; m++) {
+          let mutiCur = cur.branches![m];
           this.setChildrenY(mutiCur.children, -baseHeight);
         }
       }

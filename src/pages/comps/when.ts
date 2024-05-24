@@ -5,15 +5,15 @@ export const WhenNode: NodeComp = {
   metadata: {
     label: 'When 并行',
     type: 'when',
-    childrenType: 'multiple',
-    multipleType: 'mutable',
+    childrenType: 'branch',
+    branchType: 'mutable',
     icon,
   },
 
   defaults: [
     {
       props: { test: 1 },
-      multiple: [
+      branches: [
         {
           children: [],
         },
