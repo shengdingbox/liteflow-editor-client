@@ -13,17 +13,6 @@ const nodeMenuConfig = [
     icon: <DeleteOutlined />,
     handler: shortcuts.delete.handler,
   },
-  {
-    key: 'editNode',
-    title: '编辑节点',
-    icon: <EditOutlined />,
-    disabled(flowGraph: Graph) {
-      return getSelectedNodes(flowGraph).length !== 1;
-    },
-    handler(flowGraph: Graph) {
-      flowGraph.trigger('graph:editNode');
-    },
-  },
 ];
 
 export default nodeMenuConfig;
