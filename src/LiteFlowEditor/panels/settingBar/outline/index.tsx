@@ -95,7 +95,7 @@ const Outline: React.FC<IProps> = (props) => {
       <Tree
         blockNode
         showIcon
-        showLine
+        showLine={{ showLeafIcon: false }}
         switcherIcon={<DownOutlined />}
         expandedKeys={expandedKeys}
         selectedKeys={[]}
