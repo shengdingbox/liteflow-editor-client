@@ -43,7 +43,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             [];
           if (cellViews && cellViews.length) {
             const currentEdge = flowGraph.getCellById(
-              cellViews[0].cell.id,
+              cellViews[cellViews.length - 1].cell.id,
             ) as Edge | null;
             if (currentEdge) {
               let targetNode = currentEdge.getTargetNode();
@@ -75,7 +75,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             [];
           if (cellViews && cellViews.length) {
             const currentNode = flowGraph.getCellById(
-              cellViews[0].cell.id,
+              cellViews[cellViews.length - 1].cell.id,
             ) as Node | null;
             if (currentNode) {
               let { model } = currentNode.getData<INodeData>();

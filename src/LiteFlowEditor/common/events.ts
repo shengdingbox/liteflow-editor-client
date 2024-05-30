@@ -1,7 +1,5 @@
 import { Dom, Graph, Rectangle } from '@antv/x6';
 import { getSelectedEdges } from '../utils/flowChartUtils';
-import ELBuilder from '../model/builder';
-import { history } from '../hooks/useHistory';
 
 export function findViewsFromPoint(flowGraph: Graph, x: number, y: number) {
   return flowGraph
