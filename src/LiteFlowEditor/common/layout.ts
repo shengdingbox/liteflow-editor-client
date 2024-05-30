@@ -1,5 +1,6 @@
 import { Graph, Node } from '@antv/x6';
 import { DagreLayout, DagreLayoutOptions } from '@antv/layout';
+import { NODE_WIDTH, RANK_SEP, NODE_SEP } from '../constant';
 // import dagre from '@dagrejs/dagre';
 // import ELK from 'elkjs/lib/elk.bundled.js';
 // import cytoscape from 'cytoscape';
@@ -13,9 +14,9 @@ import { DagreLayout, DagreLayoutOptions } from '@antv/layout';
 
 const rankdir: DagreLayoutOptions['rankdir'] = 'LR';
 const align: DagreLayoutOptions['align'] = undefined;
-const nodeSize: number = 30;
-const ranksep: number = 20;
-const nodesep: number = 20;
+const nodeSize: number = NODE_WIDTH;
+const ranksep: number = RANK_SEP;
+const nodesep: number = NODE_SEP;
 const controlPoints: DagreLayoutOptions['controlPoints'] = false;
 const begin: [number, number] = [40, 40];
 

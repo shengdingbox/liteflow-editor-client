@@ -5,6 +5,10 @@ export const MIN_ZOOM = 0.5;
 export const MAX_ZOOM = 1.5;
 export const ZOOM_STEP = 0.1;
 
+// 布局相关常量
+export const RANK_SEP = 20;
+export const NODE_SEP = 20;
+
 export const NODE_TYPE_START = 'LITEFLOW_START';
 export const NODE_TYPE_END = 'LITEFLOW_END';
 export const NODE_TYPE_INTERMEDIATE_END = 'LITEFLOW_INTERMEDIATE_END';
