@@ -6,6 +6,7 @@ import { MIN_ZOOM, MAX_ZOOM } from '../../constant';
 // import MiniMapSimpleNode from './miniMapSimpleNode';
 import {
   LITEFLOW_ANCHOR,
+  LITEFLOW_ROUTER,
   registerEvents,
   registerShortcuts,
 } from '../../common';
@@ -69,12 +70,15 @@ const createFlowChart = (
       allowEdge: false,
       dangling: true,
       highlight: true,
-      anchor: LITEFLOW_ANCHOR, // 'center',
+      anchor: LITEFLOW_ANCHOR, // LITEFLOW_ANCHOR, // 'center',
       connectionPoint: 'bbox',
-      // connector: {
-      //   name: 'jumpover', //两条线交叉时，出现线桥。
-      // },
-      router: 'normal', // LITEFLOW_ROUTER, // 'normal',
+      connector: {
+        name: 'rounded', //两条线交叉时，出现线桥。
+        args: {
+          radius: 8,
+        },
+      },
+      router: LITEFLOW_ROUTER, // LITEFLOW_ROUTER, // 'normal',
       validateEdge: (args) => {
         const { edge } = args;
         return !!(edge?.target as any)?.port;

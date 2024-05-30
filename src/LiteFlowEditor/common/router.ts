@@ -1,5 +1,6 @@
 import { EdgeView, NodeView, Point, Registry } from '@antv/x6';
 import anchor from './anchor';
+import { NODE_TYPE_INTERMEDIATE_END } from '../constant';
 
 export default function router(
   vertices: Point.PointLike[],
@@ -18,26 +19,34 @@ export default function router(
   const sourceCorner = anchor(view.sourceView as NodeView);
   const targetCorner = anchor(view.targetView as NodeView);
   if (sourceCorner.x < targetCorner.x && sourceCorner.y < targetCorner.y) {
-    // 第一象限
-    points.push(Point.create(sourceCorner.x, targetCorner.y));
+    // 第四象限
+    if (view.targetView.cell.shape === NODE_TYPE_INTERMEDIATE_END) {
+      points.push(Point.create(targetCorner.x, sourceCorner.y));
+    } else {
+      points.push(Point.create(sourceCorner.x, targetCorner.y));
+    }
   } else if (
     sourceCorner.x > targetCorner.x &&
     sourceCorner.y < targetCorner.y
   ) {
-    // 第二象限
+    // 第三象限
     points.push(Point.create(targetCorner.x, sourceCorner.y));
   } else if (
     sourceCorner.x > targetCorner.x &&
     sourceCorner.y > targetCorner.y
   ) {
-    // 第三象限
+    // 第二象限
     points.push(Point.create(targetCorner.x, sourceCorner.y));
   } else if (
     sourceCorner.x < targetCorner.x &&
     sourceCorner.y > targetCorner.y
   ) {
-    // 第四象限
-    points.push(Point.create(sourceCorner.x, targetCorner.y));
+    // 第一象限
+    if (view.targetView.cell.shape === NODE_TYPE_INTERMEDIATE_END) {
+      points.push(Point.create(targetCorner.x, sourceCorner.y));
+    } else {
+      points.push(Point.create(sourceCorner.x, targetCorner.y));
+    }
   }
   // @ts-ignore
   return normalRouter.call(this, points, args, view);
