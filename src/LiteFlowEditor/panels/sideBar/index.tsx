@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Collapse } from 'antd';
 import { Addon, Edge, Graph, Node } from '@antv/x6';
 import classNames from 'classnames';
@@ -23,6 +23,23 @@ interface ISideBarProps {
 
 const SideBar: React.FC<ISideBarProps> = (props) => {
   const { flowGraph } = props;
+
+  const lastEdgeRef = useRef<Edge | null>(null);
+  useEffect(() => {
+    const handleSetLastEdge = (args: any) => {
+      lastEdgeRef.current = args.edge;
+    };
+    const handleResetLastEdge = () => {
+      lastEdgeRef.current = null;
+    };
+    flowGraph.on('edge:mouseover', handleSetLastEdge);
+    flowGraph.on('edge:mouseleave', handleResetLastEdge);
+    return () => {
+      flowGraph.off('edge:mouseover', handleSetLastEdge);
+      flowGraph.off('edge:mouseleave', handleResetLastEdge);
+    };
+  }, [flowGraph]);
+
   const [groups, setGroups] = useState<IGroupItem[]>([]);
   const dnd = useMemo(
     () =>
@@ -38,13 +55,15 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
             position.x + size.width / 2,
             position.y + size.height / 2,
           );
-          let cellViews =
-            cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) ||
-            [];
-          if (cellViews && cellViews.length) {
-            const currentEdge = flowGraph.getCellById(
-              cellViews[cellViews.length - 1].cell.id,
-            ) as Edge | null;
+          // let cellViews =
+          //   cellViewsFromPoint.filter((cellView) => cellView.isEdgeView()) ||
+          //   [];
+          // if (cellViews && cellViews.length) {
+          //   const currentEdge = flowGraph.getCellById(
+          //     cellViews[cellViews.length - 1].cell.id,
+          //   ) as Edge | null;
+          if (lastEdgeRef.current) {
+            const currentEdge = lastEdgeRef.current;
             if (currentEdge) {
               let targetNode = currentEdge.getTargetNode();
               let { model: targetModel } =
@@ -70,7 +89,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
               history.push();
             }
           }
-          cellViews =
+          const cellViews =
             cellViewsFromPoint.filter((cellView) => cellView.isNodeView()) ||
             [];
           if (cellViews && cellViews.length) {
@@ -92,7 +111,7 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
   // life
   useEffect(() => {
     setGroups([NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP]);
-  }, []);
+  }, [setGroups]);
 
   return (
     <div className={styles.liteflowEditorSideBarContainer}>
