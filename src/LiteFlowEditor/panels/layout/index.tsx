@@ -2,6 +2,7 @@ import React from 'react';
 import { Graph } from '@antv/x6';
 import SplitPane from 'react-split-pane-v2';
 import styles from './index.module.less';
+import { useGraphWrapper } from '../../hooks';
 
 const Pane = SplitPane.Pane;
 
@@ -19,6 +20,16 @@ interface IProps {
 const Layout: React.FC<IProps> = (props) => {
   const { flowGraph, SideBar, ToolBar, SettingBar } = props;
 
+  const wrapperRef = useGraphWrapper();
+
+  const handleResize = () => {
+    if (flowGraph && wrapperRef && wrapperRef.current) {
+      const width = wrapperRef.current.clientWidth;
+      const height = wrapperRef.current.clientHeight;
+      flowGraph.resize(width, height);
+    }
+  };
+
   let sideBar, toolBar, settingBar;
   if (flowGraph) {
     sideBar = <SideBar flowGraph={flowGraph} />;
@@ -29,7 +40,7 @@ const Layout: React.FC<IProps> = (props) => {
   return (
     <div className={styles.liteflowEditorLayoutContainer}>
       <div className={styles.liteflowEditorToolBar}>{toolBar}</div>
-      <SplitPane split={'vertical'}>
+      <SplitPane split={'vertical'} onChange={handleResize}>
         <Pane
           className={styles.liteflowEditorSideBar}
           minSize={'145px'}
@@ -38,7 +49,7 @@ const Layout: React.FC<IProps> = (props) => {
         >
           {sideBar}
         </Pane>
-        <SplitPane split={'vertical'}>
+        <SplitPane split={'vertical'} onChange={handleResize}>
           {props.children}
           <Pane
             className={styles.liteflowEditorSettingBar}
