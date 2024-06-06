@@ -65,24 +65,22 @@ export default abstract class ELNode {
         // 1. 如果有索引
         this.children.splice(index, 0, newNode);
         return true;
-      } else if (index) {
+      }
+      if (index) {
         // 2. 如果有目标节点
         const _index = this.children.indexOf(index);
         if (_index !== -1) {
           this.children.splice(_index + 1, 0, newNode);
           return true;
-        } else if (this.condition === index) {
+        }
+        if (this.condition === index) {
           // 3. 如果是在condition之后追加
           return this.appendChild(newNode, 0);
-        } else {
-          this.children.push(newNode);
-          return true;
         }
-      } else {
-        // 4. 否则直接插入
-        this.children.push(newNode);
-        return true;
       }
+      // 4. 否则直接插入
+      this.children.push(newNode);
+      return true;
     }
     return false;
   }
@@ -103,24 +101,22 @@ export default abstract class ELNode {
         // 1. 如果有索引
         this.children.splice(index, 0, newNode);
         return true;
-      } else if (index) {
+      }
+      if (index) {
         // 2. 如果有目标节点
         const _index = this.children.indexOf(index);
         if (_index !== -1) {
           this.children.splice(_index, 0, newNode);
           return true;
-        } else if (this.condition === index) {
+        }
+        if (this.condition === index) {
           // 3. 如果是在condition之前追加
           return this.prepend(newNode);
-        } else {
-          this.children.splice(0, 0, newNode);
-          return true;
         }
-      } else {
-        // 4. 否则直接插入
-        this.children.splice(0, 0, newNode);
-        return true;
       }
+      // 4. 否则直接插入
+      this.children.splice(0, 0, newNode);
+      return true;
     }
     return false;
   }

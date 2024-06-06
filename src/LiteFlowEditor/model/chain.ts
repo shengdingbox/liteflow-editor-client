@@ -6,6 +6,7 @@ import {
   NODE_TYPE_END,
   NODE_TYPE_START,
 } from '../constant';
+import { ThenOperator } from './el';
 
 /**
  * EL表达式的根节点——EL表达式的所有延伸内容，都是在根节点上开始的。
@@ -203,15 +204,52 @@ export default class Chain extends ELNode {
   }
 
   /**
+   * 在后面添加子节点
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
+   */
+  public appendChild(newNode: ELNode, index?: number | ELNode): boolean {
+    const result = super.appendChild(newNode, index as any);
+    this.addWrapperIfPossible();
+    return result;
+  }
+
+  /**
    * 在结束节点的前面、插入新节点
    * @param child 新节点
    * @returns
    */
   public prepend(newNode: ELNode): boolean {
     if (this.children.length === 1) {
-      return this.children[0].appendChild(newNode);
+      if (this.children[0].type === ConditionTypeEnum.THEN) {
+        return this.children[0].appendChild(newNode);
+      }
     }
     return this.appendChild(newNode);
+  }
+
+  /**
+   * 在后面添加子节点
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
+   */
+  public prependChild(newNode: ELNode, index?: number | ELNode): boolean {
+    const result = super.prependChild(newNode, index as any);
+    this.addWrapperIfPossible();
+    return result;
+  }
+
+  /**
+   * 对于根节点，添加超过一个的新节点，则自动包一个THEN
+   */
+  addWrapperIfPossible() {
+    if (this.children.length > 1) {
+      const wrapper = new ThenOperator(this, []);
+      this.children.forEach((child) => {
+        wrapper.appendChild(child);
+      });
+      this.children = [wrapper];
+    }
   }
 
   /**
