@@ -12,7 +12,8 @@
   },
   "authors": [
     "shijiangjiayou@163.com",
-    "wu_qingwan@126.com"
+    "wu_qingwan@126.com",
+    "dogsong99@163.com"
   ],
   "gitHooks": {
     "pre-commit": "lint-staged"
