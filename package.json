@@ -30,6 +30,7 @@
     "@ant-design/icons": "^4.0.6",
     "@antv/layout": "^0.1.31",
     "@antv/x6": "^1.7.12",
+    "@antv/x6-react-components": "^1.1.15",
     "@antv/x6-react-shape": "^1.6.0",
     "antd": "^4.5.3",
     "mobx": "^6.12.3",
@@ -38,7 +39,6 @@
     "react": "17.x",
     "react-dom": "17.x",
     "react-json-view": "^1.19.1",
-    "react-split-pane-v2": "^1.0.3",
     "umi": "^3.5.20"
   },
   "devDependencies": {

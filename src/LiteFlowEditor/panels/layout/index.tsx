@@ -1,10 +1,9 @@
 import React from 'react';
 import { Graph } from '@antv/x6';
-import SplitPane from 'react-split-pane-v2';
-import styles from './index.module.less';
+import { SplitBox } from '@antv/x6-react-components';
 import { useGraphWrapper } from '../../hooks';
-
-const Pane = SplitPane.Pane;
+import '@antv/x6-react-components/es/split-box/style/index.css';
+import styles from './index.module.less';
 
 interface ISubComponentProps {
   flowGraph: Graph;
@@ -40,27 +39,27 @@ const Layout: React.FC<IProps> = (props) => {
   return (
     <div className={styles.liteflowEditorLayoutContainer}>
       <div className={styles.liteflowEditorToolBar}>{toolBar}</div>
-      <SplitPane split={'vertical'} onChange={handleResize}>
-        <Pane
-          className={styles.liteflowEditorSideBar}
-          minSize={'145px'}
-          maxSize={'443px'}
-          initialSize={'267px'}
+      <SplitBox
+        split={'vertical'}
+        minSize={50}
+        maxSize={500}
+        defaultSize={260}
+        primary="first"
+        onResizing={handleResize}
+      >
+        <div className={styles.liteflowEditorSideBar}>{sideBar}</div>
+        <SplitBox
+          split={'vertical'}
+          minSize={50}
+          maxSize={500}
+          defaultSize={260}
+          primary="second"
+          onResizing={handleResize}
         >
-          {sideBar}
-        </Pane>
-        <SplitPane split={'vertical'} onChange={handleResize}>
           {props.children}
-          <Pane
-            className={styles.liteflowEditorSettingBar}
-            minSize={'50px'}
-            maxSize={'500px'}
-            initialSize={'260px'}
-          >
-            {settingBar}
-          </Pane>
-        </SplitPane>
-      </SplitPane>
+          <div className={styles.liteflowEditorSettingBar}>{settingBar}</div>
+        </SplitBox>
+      </SplitBox>
     </div>
   );
 };
