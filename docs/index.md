@@ -1,7 +1,7 @@
 ---
 hero:
-  title: library
-  description: LiteFlow EL Expression Visual Editor
+  title: LiteFlow Editor
+  description: LiteFlow逻辑可视化编辑器
   actions:
     - text: Hello
       link: /
