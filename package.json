@@ -1,30 +1,83 @@
 {
-  "private": true,
+  "name": "liteflow-editor-client",
+  "version": "0.0.1",
+  "description": "LiteFlow EL-Expression Visual Editor",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "copy-files": "copyfiles -u 1 \"src/**/*.less\" es/src",
-    "dev": "umi dev",
-    "start": "export NODE_OPTIONS=--openssl-legacy-provider && umi dev",
-    "build": "umi build",
-    "postinstall": "umi generate tmp",
-    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
-    "test": "umi-test",
-    "test:coverage": "umi-test --coverage"
+    "start": "npm run dev",
+    "dev": "dumi dev",
+    "build": "father build",
+    "build:watch": "father dev",
+    "docs:build": "dumi build",
+    "docs:preview": "dumi preview",
+    "prepare": "husky install && dumi setup",
+    "doctor": "father doctor",
+    "lint": "npm run lint:es && npm run lint:css",
+    "lint:css": "stylelint \"{src,test}/**/*.{css,less}\"",
+    "lint:es": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx}\"",
+    "prepublishOnly": "father doctor && npm run build"
   },
   "authors": [
     "shijiangjiayou@163.com",
     "wu_qingwan@126.com",
     "dogsong99@163.com"
   ],
-  "gitHooks": {
-    "pre-commit": "lint-staged"
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "lint-staged": {
-    "*.{js,jsx,less,md,json}": [
+    "*.{md,json}": [
+      "prettier --write --no-error-on-unmatched-pattern"
+    ],
+    "*.{css,less}": [
+      "stylelint --fix",
       "prettier --write"
     ],
-    "*.ts?(x)": [
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
       "prettier --parser=typescript --write"
     ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "@types/lodash": "^4.17.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@umijs/preset-react": "1.x",
+    "@umijs/test": "^3.5.20",
+    "typescript": "^4.1.2",
+    "yorkie": "^2.0.0",
+    "@umijs/lint": "^4.0.0",
+    "dumi": "^2.3.0",
+    "eslint": "^8.23.0",
+    "father": "^4.1.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "prettier-plugin-organize-imports": "^3.0.0",
+    "prettier-plugin-packagejson": "^2.2.18",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "stylelint": "^14.9.1"
   },
   "dependencies": {
     "@ant-design/icons": "^4.0.6",
@@ -33,24 +86,8 @@
     "@antv/x6-react-components": "^1.1.15",
     "@antv/x6-react-shape": "^1.6.0",
     "antd": "^4.5.3",
-    "mobx": "^6.12.3",
-    "mobx-react-lite": "^4.0.7",
-    "mobx-utils": "^6.0.8",
     "react": "17.x",
     "react-dom": "17.x",
-    "react-json-view": "^1.19.1",
-    "umi": "^3.5.20"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.17.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@umijs/preset-react": "1.x",
-    "@umijs/test": "^3.5.20",
-    "copyfiles": "^2.4.1",
-    "lint-staged": "^10.0.7",
-    "prettier": "^2.2.0",
-    "typescript": "^4.1.2",
-    "yorkie": "^2.0.0"
+    "react-json-view": "^1.19.1"
   }
 }

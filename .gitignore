@@ -19,6 +19,11 @@
 /src/.umi-production
 /src/.umi-test
 /.env.local
+.dumi/tmp
+.dumi/tmp-test
+.dumi/tmp-production
+.DS_Store
+
 
 # IDE
 .vscode/
