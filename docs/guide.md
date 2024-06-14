@@ -7,6 +7,10 @@ group:
   order: -1
 ---
 
+## LiteFlow逻辑可视化编辑器
+
+![LiteFlow逻辑可视化编排](./assets/Liteflow逻辑编排可视化设计.png)
+
 ```jsx
 import { LiteFlowEditor } from 'liteflow-editor-client';
 
@@ -16,10 +20,6 @@ export default () => (
   </div>
 )
 ```
-
-## LiteFlow逻辑可视化编辑器
-
-![LiteFlow逻辑可视化编排](./assets/Liteflow逻辑编排可视化设计.png)
 
 ### 项目启动步骤
 
