@@ -1,6 +1,6 @@
 ---
 nav:
-  title: 指南
+  title: 开发指南
   order: -1
 group:
   title: 介绍
