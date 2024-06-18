@@ -1,6 +1,8 @@
-# LiteFlow逻辑可视化编排功能原型
+# LiteFlow逻辑可视化编辑器前端
 
 ![LiteFlow逻辑可视化编排](./docs/assets/Liteflow逻辑编排可视化设计.png)
+
+本项目是LiteFlow逻辑可视化编辑器前端项目，后端项目请访问[LiteFlow逻辑可视化编辑器后端](https://gitee.com/dogsong99/liteflow-editor-server/)。
 
 ## 项目启动步骤
 
