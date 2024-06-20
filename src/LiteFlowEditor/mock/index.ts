@@ -106,5 +106,31 @@ export default {
         ],
       },
     ]
-  }
+  },
+  // AND_OR_NOT 与或非
+  AND: {
+    type: ConditionTypeEnum.IF,
+    condition: {
+      type: ConditionTypeEnum.AND,
+      children: [
+        {
+          type: ConditionTypeEnum.OR,
+          children: [
+            { type: NodeTypeEnum.COMMON, id: 'a' },
+            { type: NodeTypeEnum.COMMON, id: 'b' },
+          ]
+        },
+        {
+          type: ConditionTypeEnum.NOT,
+          children: [
+            { type: NodeTypeEnum.COMMON, id: 'c' },
+          ]
+        }
+      ]
+    },
+    children: [
+      { type: NodeTypeEnum.COMMON, id: 'x' },
+      { type: NodeTypeEnum.COMMON, id: 'y' },
+    ],
+  },
 } as Record<string, any>;

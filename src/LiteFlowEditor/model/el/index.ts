@@ -36,5 +36,9 @@ export { default as ForOperator } from './for-operator';
 export { default as WhileOperator } from './while-operator';
 // 4. 捕获异常
 export { default as CatchOperator } from './catch-operator';
-// 5. 节点类
+// 5. 运算符
+export { default as AndOperator } from './and-operator';
+export { default as OrOperator } from './or-operator';
+export { default as NotOperator } from './not-operator';
+// 6. 节点类
 export { default as NodeOperator } from './node-operator';

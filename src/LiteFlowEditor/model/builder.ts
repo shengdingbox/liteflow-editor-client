@@ -7,6 +7,9 @@ import {
   ForOperator,
   WhileOperator,
   CatchOperator,
+  AndOperator,
+  OrOperator,
+  NotOperator,
   NodeOperator,
 } from './el';
 import { NodeTypeEnum, ConditionTypeEnum } from '../constant';
@@ -48,7 +51,7 @@ interface ParseParameters {
  */
 export default class ELBuilder {
   public static build(data: Record<string, any> | Record<string, any>[]) {
-    return build(data);
+    return buildModel(data);
   }
   public static createELNode(
     type: ConditionTypeEnum | NodeTypeEnum,
@@ -71,6 +74,12 @@ export default class ELBuilder {
         return WhileOperator.create(parent);
       case ConditionTypeEnum.CATCH:
         return CatchOperator.create(parent);
+      case ConditionTypeEnum.AND:
+        return AndOperator.create(parent);
+      case ConditionTypeEnum.OR:
+        return OrOperator.create(parent);
+      case ConditionTypeEnum.NOT:
+        return NotOperator.create(parent);
       // 2. 节点类型
       default:
         // return NodeOperator.create(parent, type as NodeTypeEnum);
@@ -79,7 +88,7 @@ export default class ELBuilder {
   }
 }
 
-function build(data: Record<string, any> | Record<string, any>[]): ELNode {
+function buildModel(data: Record<string, any> | Record<string, any>[]): ELNode {
   const chain: Chain = new Chain();
   if (Array.isArray(data)) {
     data.forEach((item) => {
@@ -119,6 +128,12 @@ function parse({ parent, data }: ParseParameters): ELNode | undefined {
       return parseControl({ parent: new WhileOperator(parent), data });
     case ConditionTypeEnum.CATCH:
         return parseSequence({ parent: new CatchOperator(parent), data });
+    case ConditionTypeEnum.AND:
+      return parseSequence({ parent: new AndOperator(parent), data });
+    case ConditionTypeEnum.OR:
+      return parseSequence({ parent: new OrOperator(parent), data });
+    case ConditionTypeEnum.NOT:
+      return parseSequence({ parent: new NotOperator(parent), data });
 
     // 2、组件类：顺序、分支、循环
     case NodeTypeEnum.COMMON:
