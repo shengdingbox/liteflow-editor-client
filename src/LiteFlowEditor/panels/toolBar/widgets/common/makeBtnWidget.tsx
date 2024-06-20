@@ -7,7 +7,7 @@ import { useGraph } from '../../../../hooks';
 interface IOptions {
   tooltip: string;
   getIcon: (flowGraph: Graph) => ReactElement;
-  handler: (flowGraph: Graph) => void;
+  handler: (flowGraph: Graph, props?: any) => void;
   disabled?: (flowGraph: Graph) => boolean;
   selected?: (flowGraph: Graph) => boolean;
 }
@@ -17,7 +17,7 @@ interface IBtnWidgetProps {
 }
 
 const makeBtnWidget = (options: IOptions) => {
-  const Widget: React.FC<IBtnWidgetProps> = () => {
+  const Widget: React.FC<IBtnWidgetProps> = (props: any) => {
     const flowGraph = useGraph();
     const { tooltip, getIcon, handler } = options;
     const iconWrapperCls = [styles.btnWidget];
@@ -32,7 +32,7 @@ const makeBtnWidget = (options: IOptions) => {
     }
     const onClick = (): void => {
       if (disabled) return;
-      handler(flowGraph);
+      handler(flowGraph, props);
       flowGraph.trigger('toolBar:forceUpdate');
     };
     return (

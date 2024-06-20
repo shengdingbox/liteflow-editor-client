@@ -9,7 +9,7 @@ import Redo from './redo';
 import Zoom from './zoom';
 import FitWindow from './fitWindow';
 import View from './view';
-import Layout from './layout';
+import Fullscreen from './fullscreen';
 import Mock from './mock';
 
 interface IProps {
@@ -18,7 +18,7 @@ interface IProps {
 
 const tools: React.FC<IProps>[][] = [
   [Zoom],
-  [FitWindow, Undo, Redo, Selection, Save, View, Layout],
+  [FitWindow, Undo, Redo, Selection, Save, View, Fullscreen],
   [Mock],
 ];
 

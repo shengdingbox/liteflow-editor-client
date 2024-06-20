@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Graph } from '@antv/x6';
 import makeBtnWidget from './common/makeBtnWidget';
-import { FullscreenExitOutlined } from '@ant-design/icons';
+import { LayoutOutlined } from '@ant-design/icons';
 
 interface IProps {
   flowGraph: Graph;
@@ -11,7 +11,7 @@ interface IProps {
 const FitWindow: React.FC<IProps> = makeBtnWidget({
   tooltip: '适配窗口',
   getIcon() {
-    return <FullscreenExitOutlined />;
+    return <LayoutOutlined />;
   },
   handler(flowGraph: Graph) {
     flowGraph.zoomToFit({ minScale: 0.5, maxScale: 1 });
