@@ -6,6 +6,7 @@ import {
   IfOperator,
   ForOperator,
   WhileOperator,
+  CatchOperator,
   NodeOperator,
 } from './el';
 import { NodeTypeEnum, ConditionTypeEnum } from '../constant';
@@ -68,6 +69,8 @@ export default class ELBuilder {
         return ForOperator.create(parent);
       case ConditionTypeEnum.WHILE:
         return WhileOperator.create(parent);
+      case ConditionTypeEnum.CATCH:
+        return CatchOperator.create(parent);
       // 2. 节点类型
       default:
         // return NodeOperator.create(parent, type as NodeTypeEnum);
@@ -96,7 +99,7 @@ function build(data: Record<string, any> | Record<string, any>[]): ELNode {
 }
 
 function parse({ parent, data }: ParseParameters): ELNode | undefined {
-  if (!data.type) {
+  if (!(data?.type)) {
     return undefined;
   }
 
@@ -114,6 +117,8 @@ function parse({ parent, data }: ParseParameters): ELNode | undefined {
       return parseControl({ parent: new ForOperator(parent), data });
     case ConditionTypeEnum.WHILE:
       return parseControl({ parent: new WhileOperator(parent), data });
+    case ConditionTypeEnum.CATCH:
+        return parseSequence({ parent: new CatchOperator(parent), data });
 
     // 2、组件类：顺序、分支、循环
     case NodeTypeEnum.COMMON:

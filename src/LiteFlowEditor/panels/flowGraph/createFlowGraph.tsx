@@ -189,8 +189,8 @@ const createFlowChart = (
     //   frontOnly: false,
     // },
     interacting: {
-      nodeMovable: false,
-      edgeLabelMovable: false,
+      nodeMovable: true,
+      edgeLabelMovable: true,
     },
   });
   registerEvents(flowGraph);

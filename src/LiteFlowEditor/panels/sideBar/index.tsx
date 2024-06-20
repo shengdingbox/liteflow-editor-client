@@ -7,6 +7,7 @@ import {
   SEQUENCE_GROUP,
   BRANCH_GROUP,
   CONTROL_GROUP,
+  OTHER_GROUP,
   IGroupItem,
 } from '../../cells';
 import { findViewsFromPoint } from '../../common/events';
@@ -110,14 +111,14 @@ const SideBar: React.FC<ISideBarProps> = (props) => {
 
   // life
   useEffect(() => {
-    setGroups([NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP]);
+    setGroups([SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP, OTHER_GROUP, NODE_GROUP]);
   }, [setGroups]);
 
   return (
     <div className={styles.liteflowEditorSideBarContainer}>
       <Collapse
         className={styles.liteflowEditorSideBarCollapse}
-        defaultActiveKey={['node', 'sequence', 'branch', 'control']}
+        defaultActiveKey={['node', 'sequence', 'branch', 'control', 'other']}
       >
         {groups.map((group) => (
           <Panel key={group.key} header={group.name}>

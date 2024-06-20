@@ -86,4 +86,25 @@ export default {
       },
     ],
   },
+  // CATCH 捕获异常
+  CATCH: {
+    type: ConditionTypeEnum.CATCH,
+    children: [
+      {
+        type: ConditionTypeEnum.WHEN,
+        children: [
+          { type: NodeTypeEnum.COMMON, id: 'a' },
+          { type: NodeTypeEnum.COMMON, id: 'b' },
+          { type: NodeTypeEnum.COMMON, id: 'c' },
+        ],
+      },
+      {
+        type: ConditionTypeEnum.IF,
+        condition: { type: NodeTypeEnum.IF, id: 'x' },
+        children: [
+          { type: NodeTypeEnum.COMMON, id: 'y' },
+        ],
+      },
+    ]
+  }
 } as Record<string, any>;

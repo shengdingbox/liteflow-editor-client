@@ -26,7 +26,7 @@ const Mock: React.FC<IProps> = (props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      handleOnChange(ConditionTypeEnum.IF);
+      handleOnChange(ConditionTypeEnum.CATCH);
     }, 500);
   }, [flowGraph]);
 
@@ -61,6 +61,12 @@ const Mock: React.FC<IProps> = (props) => {
             options: [
               { label: 'FOR循环', value: ConditionTypeEnum.FOR },
               { label: 'WHILE循环', value: ConditionTypeEnum.WHILE },
+            ],
+          },
+          {
+            label: '其他类',
+            options: [
+              { label: '捕获异常(CATCH)', value: ConditionTypeEnum.CATCH },
             ],
           },
         ]}

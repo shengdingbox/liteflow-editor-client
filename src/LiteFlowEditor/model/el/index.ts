@@ -19,6 +19,9 @@
                   ├──▶│  WhileOperator  │
                   │   └─────────────────┘
                   │   ┌─────────────────┐
+                  ├──▶│  CatchOperator  │
+                  │   └─────────────────┘
+                  │   ┌─────────────────┐
                   └──▶│  NodeOperator   │
                       └─────────────────┘
  */
@@ -31,5 +34,7 @@ export { default as IfOperator } from './if-operator';
 // 3. 循环类
 export { default as ForOperator } from './for-operator';
 export { default as WhileOperator } from './while-operator';
-// 4. 节点类
+// 4. 捕获异常
+export { default as CatchOperator } from './catch-operator';
+// 5. 节点类
 export { default as NodeOperator } from './node-operator';
