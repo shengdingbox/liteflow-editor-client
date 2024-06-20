@@ -12,5 +12,5 @@
       "liteflow-editor/*": ["src/*", "*"]
     }
   },
-  "include": [".dumirc.ts", "src/**/*"]
+  "include": [".dumirc.ts", "typings.d.ts", "src/**/*"]
 }
