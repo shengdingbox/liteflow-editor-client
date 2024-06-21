@@ -1,3 +1,4 @@
+import React from 'react';
 import { Graph, Node } from '@antv/x6';
 import '@antv/x6-react-shape';
 import {
@@ -11,8 +12,9 @@ import {
 import { default as Start } from './start';
 import { default as End } from './end';
 // 顺序：串行、并行
-import { default as Common } from './common';
+import { default as Then } from './then';
 import { default as When } from './when';
+import { default as Common } from './common';
 import { default as IntermediateEnd } from './intermediate-end';
 // 分支：选择、条件
 import { default as Switch } from './switch';
@@ -36,8 +38,9 @@ import NodeView from '../components/NodeView';
 [
   Start,
   End,
-  Common,
+  Then,
   When,
+  Common,
   IntermediateEnd,
   If,
   Switch,
@@ -110,7 +113,7 @@ export const SEQUENCE_GROUP: IGroupItem = {
   key: 'sequence',
   name: '顺序类',
   cellTypes: [
-    { ...Common, type: ConditionTypeEnum.THEN, shape: Common.type },
+    { ...Then, type: ConditionTypeEnum.THEN, shape: Then.type },
     { ...When, type: ConditionTypeEnum.WHEN, shape: When.type },
   ],
 };
@@ -146,6 +149,10 @@ export const OTHER_GROUP: IGroupItem = {
 
 export const getIconByType = (nodeType: ConditionTypeEnum | NodeTypeEnum) => {
   switch (nodeType) {
+    case ConditionTypeEnum.THEN:
+        return Then.icon;
+    case ConditionTypeEnum.WHEN:
+      return When.icon;
     case ConditionTypeEnum.SWITCH:
     case NodeTypeEnum.SWITCH:
       return Switch.icon;
@@ -158,8 +165,6 @@ export const getIconByType = (nodeType: ConditionTypeEnum | NodeTypeEnum) => {
     case ConditionTypeEnum.WHILE:
     case NodeTypeEnum.WHILE:
       return While.icon;
-    case ConditionTypeEnum.WHEN:
-      return When.icon;
     case ConditionTypeEnum.CHAIN:
       return Start.icon;
     case ConditionTypeEnum.CATCH:

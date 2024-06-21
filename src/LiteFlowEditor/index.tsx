@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { Graph, Edge, Cell, Node } from '@antv/x6';
 import createFlowGraph from './panels/flowGraph/createFlowGraph';
-import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
+// import NodeEditorModal from './panels/flowGraph/nodeEditorModal';
 import FlowGraphContextMenu from './panels/flowGraph/contextMenu';
 import FlowGraphContextPad from './panels/flowGraph/contextPad';
 import GraphContext from './context/GraphContext';
@@ -66,6 +66,7 @@ const LiteFlowEditor = forwardRef<React.FC, IProps>(function (props, ref) {
         return flowGraph;
       },
       toJSON() {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         return useModel().toJSON();
       },
     } as any;
@@ -117,6 +118,7 @@ const LiteFlowEditor = forwardRef<React.FC, IProps>(function (props, ref) {
     };
     const handleModelChange = () => {
       if (flowGraph) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const model = useModel();
         const modelJSON = model.toCells() as Cell[];
         flowGraph.scroller.disableAutoResize();
