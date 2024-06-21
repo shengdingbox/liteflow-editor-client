@@ -106,7 +106,7 @@ export interface IGroupItem {
 export const NODE_GROUP: IGroupItem = {
   key: 'node',
   name: '节点类',
-  cellTypes: [{ ...Virtual, type: NodeTypeEnum.COMMON, shape: Virtual.type }],
+  cellTypes: [{ ...Common, type: NodeTypeEnum.COMMON, shape: Common.type }],
 };
 
 export const SEQUENCE_GROUP: IGroupItem = {
