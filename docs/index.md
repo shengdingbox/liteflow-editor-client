@@ -3,7 +3,7 @@ hero:
   title: LiteFlow Editor
   description: LiteFlow逻辑可视化编辑器
   actions:
-    - text: 立即上手
+    - text: 开发指南
       link: /guide
     - text: 编辑器前端
       link: https://gitee.com/imwangshijiang/flow-editor-quickstart/
