@@ -127,14 +127,14 @@ export default class IfOperator extends ELNode {
         Edge.create({
           shape: LITEFLOW_EDGE,
           source: start.id,
-          target: nextNode.id,
+          target: next.getStartNode().id,
           label: index ? 'false' : 'true',
         }),
       );
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
-          source: nextNode.id,
+          source: next.getEndNode().id,
           target: end.id,
           label: ' ',
         }),
