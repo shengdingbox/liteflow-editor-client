@@ -8,7 +8,7 @@ import {
   NodeTypeEnum,
 } from '../../constant';
 import NodeOperator from './node-operator';
-// import ErrorIcon from '../../assets/intermediate-event-catch-error.svg'
+import IntermediateErrorBoundaryIcon from '../../assets/intermediate-event-catch-error.svg'
 
 /**
  * 捕获异常操作符：CATCH。
@@ -19,7 +19,7 @@ import NodeOperator from './node-operator';
  * {
     type: ConditionTypeEnum.CATCH,
     children: [
-      { 
+      {
         type: NodeTypeEnum.THEN,
         children: [
           { type: NodeTypeEnum.COMMON, id: 'a' },
@@ -36,8 +36,8 @@ import NodeOperator from './node-operator';
   │  Chain  │───▶│  CatchOperator  │──┤   ┌─────────────────┐  │   ┌─────────────────┐
   └─────────┘    └─────────────────┘  └──▶│  NodeOperator   │  └──▶│  NodeOperator   │
                                           └─────────────────┘      └─────────────────┘
-                                                             
-                                                             
+
+
  */
 export default class CatchOperator extends ELNode {
   type = ConditionTypeEnum.CATCH;
@@ -80,6 +80,30 @@ export default class CatchOperator extends ELNode {
       shape: ConditionTypeEnum.CATCH,
       attrs: {
         label: { text: '' },
+      },
+      portMarkup: [
+        {
+          tagName: 'image',
+          selector: 'circle',
+          attrs: {
+            x: -6,
+            y: -6,
+            width: 12,
+            height: 12,
+            'xlink:href': IntermediateErrorBoundaryIcon,
+          },
+        }
+      ],
+      ports: {
+        groups: {
+          bottom: {
+            position: { name: 'bottom' },
+            zIndex: 1,
+          },
+        },
+        items: [
+          { group: 'bottom', id: 'bottom' }
+        ]
       },
     });
     start.setData({ model: new ELStartNode(this) }, { overwrite: true });
