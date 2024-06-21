@@ -122,26 +122,27 @@ export default class IfOperator extends ELNode {
     [first, last].forEach((item, index) => {
       const next = item || NodeOperator.create(this, NodeTypeEnum.VIRTUAL, ' ');
       next.toCells([], options);
-      const nextNode = next.getStartNode();
+      const nextStartNode = next.getStartNode();
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
           source: start.id,
-          target: next.getStartNode().id,
+          target: nextStartNode.id,
           label: index ? 'false' : 'true',
         }),
       );
+      const nextEndNode = next.getEndNode();
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
-          source: next.getEndNode().id,
+          source: nextEndNode.id,
           target: end.id,
           label: ' ',
         }),
       );
 
       if (!item) {
-        nextNode.setData(
+        nextStartNode.setData(
           {
             model: new ELVirtualNode(this, index, next),
             toolbar: {
@@ -153,7 +154,7 @@ export default class IfOperator extends ELNode {
           },
           { overwrite: true },
         );
-        cells.push(this.addNode(nextNode));
+        cells.push(this.addNode(nextStartNode));
       }
     });
     return this.getCells();
