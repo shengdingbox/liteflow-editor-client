@@ -3,7 +3,7 @@ import { Graph } from '@antv/x6';
 import { Select } from 'antd';
 import mocks from '../../../mock';
 import ELBuilder from '../../../model/builder';
-import { ConditionTypeEnum, MAX_ZOOM, MIN_ZOOM } from '../../../constant';
+import { ConditionTypeEnum, MIN_ZOOM } from '../../../constant';
 import { setModel } from '../../../hooks/useModel';
 import { history } from '../../../hooks/useHistory';
 import styles from './index.module.less';
@@ -22,7 +22,7 @@ const Mock: React.FC<IProps> = (props) => {
     setModel(model);
     history.cleanHistory();
     setSelectedValue(value);
-    flowGraph.zoomToFit({ minScale: MIN_ZOOM, maxScale: MAX_ZOOM });
+    flowGraph.zoomToFit({ minScale: MIN_ZOOM, maxScale: 1 });
   };
 
   useEffect(() => {
