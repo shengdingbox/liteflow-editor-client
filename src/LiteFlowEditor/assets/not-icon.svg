@@ -9,7 +9,7 @@
                       <g id="编组" transform="translate(2.000000, 2.000000)">
                           <g id="加" transform="translate(1.000000, 1.000000)">
                               <circle id="椭圆形" cx="9" cy="9" r="9"></circle>
-                              <text x="2" y="2" font-size="12" text-anchor="middle" transform="translate(8, 10) scale(0.4)">NOT</text>
+                              <text x="2" y="2" font-size="12" text-anchor="middle" transform="translate(8, 10) scale(0.5)">NOT</text>
                           </g>
                       </g>
                   </g>
