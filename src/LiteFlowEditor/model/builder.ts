@@ -51,7 +51,7 @@ interface ParseParameters {
  */
 export default class ELBuilder {
   public static build(data: Record<string, any> | Record<string, any>[]) {
-    return buildModel(data);
+    return builder(data);
   }
   public static createELNode(
     type: ConditionTypeEnum | NodeTypeEnum,
@@ -81,14 +81,15 @@ export default class ELBuilder {
       case ConditionTypeEnum.NOT:
         return NotOperator.create(parent);
       // 2. 节点类型
+      case NodeTypeEnum.COMMON:
       default:
         // return NodeOperator.create(parent, type as NodeTypeEnum);
-        return NodeOperator.create(parent, NodeTypeEnum.COMMON, id);
+        return NodeOperator.create(parent, type as NodeTypeEnum, id);
     }
   }
 }
 
-function buildModel(data: Record<string, any> | Record<string, any>[]): ELNode {
+export function builder(data: Record<string, any> | Record<string, any>[]): ELNode {
   const chain: Chain = new Chain();
   if (Array.isArray(data)) {
     data.forEach((item) => {
@@ -107,7 +108,7 @@ function buildModel(data: Record<string, any> | Record<string, any>[]): ELNode {
   return chain;
 }
 
-function parse({ parent, data }: ParseParameters): ELNode | undefined {
+export function parse({ parent, data }: ParseParameters): ELNode | undefined {
   if (!(data?.type)) {
     return undefined;
   }
