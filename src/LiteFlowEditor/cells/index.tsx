@@ -32,7 +32,7 @@ import { default as Not } from './not';
 import { default as Virtual } from './virtual';
 
 // AntV X6自定义节点的视图：使用React组件
-import NodeView from '../components/NodeView';
+import { NodeView, NodeToolBar, NodeBadge } from '../components';
 
 /** 注册自定义节点到AntV X6 */
 [
@@ -58,7 +58,12 @@ import NodeView from '../components/NodeView';
     // primer: 'circle',
     inherit: 'react-shape',
     component(node: Node) {
-      return <NodeView node={node} icon={icon} />;
+      return (
+        <NodeView node={node} icon={icon}>
+          <NodeBadge node={node} />
+          <NodeToolBar node={node} />
+        </NodeView>
+      );
     },
     width: NODE_WIDTH,
     height: NODE_HEIGHT,
