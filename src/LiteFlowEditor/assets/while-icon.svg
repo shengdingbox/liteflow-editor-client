@@ -7,7 +7,7 @@
             <g id="编组-22" transform="translate(18, 59)">
                 <g id="编组-25备份-3" transform="translate(56, 113)">
                     <g id="编组" transform="translate(0, 15)">
-                        <g transform="translate(22, 0)" id="路径">
+                        <g transform="translate(23, 2) scale(0.8)" id="路径">
                             <path d="M16.31005,5 C14.83735,2.03655 11.7793,0 8.2456,0 C4.71185,0 1.7227,2.03655 0.25,5"></path>
                             <line x1="0.25" y1="1" x2="0.25" y2="5"></line>
                             <line x1="3.64015" y1="5" x2="0.250065" y2="5"></line>
