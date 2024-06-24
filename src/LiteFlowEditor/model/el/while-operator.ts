@@ -83,18 +83,16 @@ export default class WhileOperator extends ELNode {
     options: Record<string, any> = {},
   ): Cell[] {
     this.resetCells(cells);
-
     const { condition, children } = this;
-    const start = Node.create({
+    condition.toCells([], {
       shape: NodeTypeEnum.WHILE,
-      attrs: {
-        label: { text: condition.id },
-      },
     });
-    condition.resetCells([start], [start]);
+    let start = condition.getStartNode();
     start.setData({ model: condition }, { overwrite: true });
-    cells.push(this.addNode(start));
     this.startNode = start;
+    condition.getNodes().forEach(node => this.addNode(node))
+    condition.getCells().forEach(cell => cells.push(cell))
+    start = condition.getEndNode();
 
     const end = Node.create({
       shape: NODE_TYPE_INTERMEDIATE_END,
@@ -106,28 +104,6 @@ export default class WhileOperator extends ELNode {
     cells.push(this.addNode(end));
     this.endNode = end;
 
-    // if (children.length === 1 && children[0].type === ConditionTypeEnum.THEN) {
-    //   children[0].resetCells();
-    //   children[0].children?.forEach((child) => {
-    //     child.toCells([], options);
-    //     const nextStartNode = child.getStartNode();
-    //     cells.push(
-    //       Edge.create({
-    //         shape: LITEFLOW_EDGE,
-    //         source: start.id,
-    //         target: nextStartNode.id,
-    //       }),
-    //     );
-    //     const nextEndNode = child.getEndNode();
-    //     cells.push(
-    //       Edge.create({
-    //         shape: LITEFLOW_EDGE,
-    //         source: nextEndNode.id,
-    //         target: end.id,
-    //       }),
-    //     );
-    //   });
-    // } else
     if (children.length) {
       children.forEach((child) => {
         child.toCells([], options);
