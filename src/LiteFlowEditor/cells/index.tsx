@@ -74,7 +74,7 @@ import NodeView from '../components/NodeView';
         textVerticalAnchor: 'middle',
         textWrap: {
           width: 80,
-          height: 32,
+          height: 60,
           ellipsis: true,
           breakWord: true,
         },
