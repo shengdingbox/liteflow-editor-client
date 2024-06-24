@@ -78,7 +78,7 @@ export default class NodeOperator extends ELNode {
       attrs: {
         label: { text: id },
       },
-      ...(options.node || {}),
+      ...(options || {}),
     });
     node.setData({ model: this }, { overwrite: true });
     cells.push(this.addNode(node));

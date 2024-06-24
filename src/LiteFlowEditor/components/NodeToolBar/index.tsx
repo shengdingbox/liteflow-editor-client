@@ -1,3 +1,4 @@
+import React from'react';
 import { Node } from '@antv/x6';
 import classNames from 'classnames';
 import { debounce } from 'lodash';
