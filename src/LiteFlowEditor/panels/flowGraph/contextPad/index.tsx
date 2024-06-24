@@ -7,6 +7,7 @@ import {
   SEQUENCE_GROUP,
   BRANCH_GROUP,
   CONTROL_GROUP,
+  OTHER_GROUP,
 } from '../../../cells';
 import ELBuilder from '../../../model/builder';
 import { history } from '../../../hooks/useHistory';
@@ -24,7 +25,7 @@ interface IProps {
   flowGraph: Graph;
 }
 
-const groups = [NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP];
+const groups = [NODE_GROUP, SEQUENCE_GROUP, BRANCH_GROUP, CONTROL_GROUP, OTHER_GROUP];
 
 const FlowGraphContextPad: React.FC<IProps> = (props) => {
   const menuRef = useRef(null);
