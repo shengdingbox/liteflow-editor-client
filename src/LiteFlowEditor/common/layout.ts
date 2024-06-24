@@ -1,6 +1,6 @@
 import { Graph, Node } from '@antv/x6';
 import { DagreLayout, DagreLayoutOptions } from '@antv/layout';
-import { NODE_WIDTH, RANK_SEP, NODE_SEP } from '../constant';
+import { NODE_WIDTH, RANK_SEP, NODE_SEP, ConditionTypeEnum } from '../constant';
 // import dagre from '@dagrejs/dagre';
 // import ELK from 'elkjs/lib/elk.bundled.js';
 // import cytoscape from 'cytoscape';
@@ -75,6 +75,8 @@ function antvDagreLayout(flowGraph: Graph, cfg: any = {}): void {
 
   fineTuneLayer(flowGraph);
 
+  fineTuneCatchNodes(flowGraph);
+
   flowGraph.unfreeze();
 }
 
@@ -98,6 +100,85 @@ function fineTuneLayer(flowGraph: Graph) {
       cells = cells.concat(neighbors);
     });
     layer++;
+    queue = cells;
+  }
+}
+
+/**
+ * 调整捕获异常节点/CATCH的布局
+ * @param flowGraph 图实例
+ */
+function fineTuneCatchNodes(flowGraph: Graph) {
+  let queue = flowGraph.getRootNodes();
+
+  while (queue.length) {
+    let cells: Node[] = [];
+    queue.forEach((next: Node) => {
+      const { model } = next.getData();
+      const currentModel = model.proxy || model;
+      if (currentModel.type === ConditionTypeEnum.CATCH) {
+        if (next.shape === ConditionTypeEnum.CATCH) {
+          // CATCH start
+          beforeCatchStart(flowGraph, next);
+        } else {
+          // CATCH end
+          afterCatchEnd(flowGraph, next);
+        }
+      }
+
+      const neighbors = flowGraph.getNeighbors(next, {
+        outgoing: true,
+      }) as Node[];
+      cells = cells.concat(neighbors);
+    });
+    queue = cells;
+  }
+}
+
+function beforeCatchStart(flowGraph: Graph, catchStart: Node) {
+  const catchRootNode = (flowGraph.getNeighbors(catchStart, {
+    outgoing: true,
+  }) as Node[])[0];
+
+  const deltaY = catchStart.position().y - catchRootNode.position().y;
+
+  let queue = [catchStart];
+
+  while (queue.length) {
+    let cells: Node[] = [];
+    queue.forEach((next: Node) => {
+      const { x, y } = next.position();
+      next.position(x, y - deltaY);
+      
+      const neighbors = flowGraph.getNeighbors(next, {
+        incoming: true,
+      }) as Node[];
+      cells = cells.concat(neighbors);
+    });
+    queue = cells;
+  }
+}
+
+function afterCatchEnd(flowGraph: Graph, catchEnd: Node) {
+  const catchRootNode = (flowGraph.getNeighbors(catchEnd, {
+    incoming: true,
+  }) as Node[])[0];
+
+  const deltaY = catchEnd.position().y - catchRootNode.position().y;
+
+  let queue = [catchEnd];
+
+  while (queue.length) {
+    let cells: Node[] = [];
+    queue.forEach((next: Node) => {
+      const { x, y } = next.position();
+      next.position(x, y - deltaY);
+      
+      const neighbors = flowGraph.getNeighbors(next, {
+        outgoing: true,
+      }) as Node[];
+      cells = cells.concat(neighbors);
+    });
     queue = cells;
   }
 }
