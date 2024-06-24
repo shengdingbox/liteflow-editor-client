@@ -22,6 +22,7 @@ const Mock: React.FC<IProps> = (props) => {
     setModel(model);
     history.cleanHistory();
     setSelectedValue(value);
+    flowGraph.zoomToFit({ minScale: 0.5, maxScale: 1 });
   };
 
   useEffect(() => {
