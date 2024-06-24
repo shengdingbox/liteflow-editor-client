@@ -1,9 +1,9 @@
 import { ConditionTypeEnum } from '../constant';
-import icon from '../assets/not-icon.svg';
+import icon from '../assets/or-icon.svg';
 
 const config: LiteFlowNode = {
-  label: '非(Not)',
-  type: ConditionTypeEnum.NOT,
+  label: '或(Or)',
+  type: ConditionTypeEnum.OR,
   icon,
 };
 

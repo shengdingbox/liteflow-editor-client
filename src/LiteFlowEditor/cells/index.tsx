@@ -88,12 +88,17 @@ export {
   Start,
   End,
   Common,
+  Then,
   When,
   IntermediateEnd,
   Switch,
   If,
   For,
   While,
+  Catch,
+  And,
+  Or,
+  Not,
   Virtual,
 };
 
