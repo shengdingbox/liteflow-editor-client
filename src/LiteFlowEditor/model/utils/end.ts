@@ -112,14 +112,14 @@ export default class ELEndNode extends ELNode {
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(): string {
-    throw new Error('Method not implemented.');
+  public toEL(prefix?: string): string {
+    return this.proxy.toEL(prefix);
   }
 
   /**
    * 转换为JSON格式
    */
   public toJSON(): Record<string, any> {
-    throw new Error('Method not implemented.');
+    return this.proxy.toJSON();
   }
 }

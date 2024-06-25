@@ -93,14 +93,14 @@ export default class ELVirtualNode extends ELNode {
    * @returns 属性
    */
   public getProperties(): Properties {
-    throw new Error('Method not implemented.');
+    return this.proxy.getProperties();
   }
 
   /**
    * 设置属性
    */
   public setProperties(properties: Properties): void {
-    throw new Error('Method not implemented.');
+    this.proxy.setProperties(properties);
   }
 
   /**
@@ -108,20 +108,20 @@ export default class ELVirtualNode extends ELNode {
    * @returns 属性的EL表达式
    */
   public propertiesToEL(): string {
-    throw new Error('Method not implemented.');
+    return this.proxy.propertiesToEL();
   }
 
   /**
    * 转换为EL表达式字符串
    */
-  public toEL(): string {
-    throw new Error('Method not implemented.');
+  public toEL(prefix?: string): string {
+    return this.proxy.toEL(prefix);
   }
 
   /**
    * 转换为JSON格式
    */
   public toJSON(): Record<string, any> {
-    throw new Error('Method not implemented.');
+    return this.proxy.toJSON();
   }
 }
