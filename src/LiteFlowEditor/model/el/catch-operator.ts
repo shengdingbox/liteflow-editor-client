@@ -189,16 +189,4 @@ export default class CatchOperator extends ELNode {
     }
     return `CATCH(${catchNode.toEL()})${doNode ? `.DO(${doNode.toEL()})` : ''}${this.propertiesToEL()}`;
   }
-
-  /**
-   * 转换为JSON格式
-   */
-  public toJSON(): Record<string, any> {
-    const { type, children, properties } = this;
-    return {
-      type,
-      children: children.map((child) => child.toJSON()),
-      properties,
-    };
-  }
 }

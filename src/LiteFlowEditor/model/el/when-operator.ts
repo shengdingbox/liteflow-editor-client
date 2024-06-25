@@ -158,16 +158,4 @@ export default class WhenOperator extends ELNode {
       .map((x) => x.toEL())
       .join(', ')})${this.propertiesToEL()}`;
   }
-
-  /**
-   * 转换为JSON格式
-   */
-  public toJSON(): Record<string, any> {
-    const { type, children, properties } = this;
-    return {
-      type,
-      children: children.map((child) => child.toJSON()),
-      properties,
-    };
-  }
 }

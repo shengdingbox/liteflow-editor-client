@@ -329,7 +329,16 @@ export default abstract class ELNode {
   /**
    * 转换为JSON格式
    */
-  public abstract toJSON(): Record<string, any>;
+  public toJSON(): Record<string, any> {
+    const { type, condition, children, properties, id } = this;
+    return Object.assign(
+      { type },
+      condition ? { condition: condition.toJSON() } : {},
+      children ? { children: children.filter(x => x).map((child) => child.toJSON()) } : {},
+      id ? { id } : {},
+      properties ? { properties: this.getProperties() } : {},
+    );
+  };
 
   /**
    * 当前模型，是否是参数模型的父节点

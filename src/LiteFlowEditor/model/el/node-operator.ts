@@ -106,12 +106,4 @@ export default class NodeOperator extends ELNode {
   public toEL(prefix: string = ''): string {
     return `${prefix}${this.id}${this.propertiesToEL()}`;
   }
-
-  /**
-   * 转换为JSON格式
-   */
-  public toJSON(): Record<string, any> {
-    const { type, id, properties } = this;
-    return { type, id, properties };
-  }
 }
