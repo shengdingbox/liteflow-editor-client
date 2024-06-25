@@ -116,25 +116,25 @@ export function parse({ parent, data }: ParseParameters): ELNode | undefined {
   switch (data.type) {
     // 1、编排类：顺序、分支、循环
     case ConditionTypeEnum.THEN:
-      return parseSequence({ parent: new ThenOperator(parent), data });
+      return parseOperator({ parent: new ThenOperator(parent), data });
     case ConditionTypeEnum.WHEN:
-      return parseSequence({ parent: new WhenOperator(parent), data });
+      return parseOperator({ parent: new WhenOperator(parent), data });
     case ConditionTypeEnum.SWITCH:
-      return parseControl({ parent: new SwitchOperator(parent), data });
+      return parseOperator({ parent: new SwitchOperator(parent), data });
     case ConditionTypeEnum.IF:
-      return parseControl({ parent: new IfOperator(parent), data });
+      return parseOperator({ parent: new IfOperator(parent), data });
     case ConditionTypeEnum.FOR:
-      return parseControl({ parent: new ForOperator(parent), data });
+      return parseOperator({ parent: new ForOperator(parent), data });
     case ConditionTypeEnum.WHILE:
-      return parseControl({ parent: new WhileOperator(parent), data });
+      return parseOperator({ parent: new WhileOperator(parent), data });
     case ConditionTypeEnum.CATCH:
-        return parseSequence({ parent: new CatchOperator(parent), data });
+        return parseOperator({ parent: new CatchOperator(parent), data });
     case ConditionTypeEnum.AND:
-      return parseSequence({ parent: new AndOperator(parent), data });
+      return parseOperator({ parent: new AndOperator(parent), data });
     case ConditionTypeEnum.OR:
-      return parseSequence({ parent: new OrOperator(parent), data });
+      return parseOperator({ parent: new OrOperator(parent), data });
     case ConditionTypeEnum.NOT:
-      return parseSequence({ parent: new NotOperator(parent), data });
+      return parseOperator({ parent: new NotOperator(parent), data });
 
     // 2、组件类：顺序、分支、循环
     case NodeTypeEnum.COMMON:
@@ -143,21 +143,7 @@ export function parse({ parent, data }: ParseParameters): ELNode | undefined {
   }
 }
 
-function parseSequence({ parent, data }: ParseParameters): ELNode {
-  const { children = [], properties } = data;
-  children.forEach((child: Record<string, any>) => {
-    const childNode = parse({ parent, data: child });
-    if (childNode) {
-      parent.appendChild(childNode);
-    }
-  });
-  if (properties) {
-    parent.setProperties(properties);
-  }
-  return parent;
-}
-
-function parseControl({ parent, data }: ParseParameters): ELNode {
+function parseOperator({ parent, data }: ParseParameters): ELNode {
   const { condition, children = [], properties } = data;
   const conditionNode = parse({ parent, data: condition });
   if (conditionNode) {
