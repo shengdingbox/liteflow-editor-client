@@ -90,8 +90,6 @@ export default class ForOperator extends ELNode {
     let start = condition.getStartNode();
     start.setData({ model: condition }, { overwrite: true });
     this.startNode = start;
-    condition.getNodes().forEach(node => this.addNode(node))
-    condition.getCells().forEach(cell => cells.push(cell))
     start = condition.getEndNode();
 
     const end = Node.create({

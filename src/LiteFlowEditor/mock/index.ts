@@ -89,15 +89,15 @@ export default {
   // CATCH 捕获异常
   CATCH: {
     type: ConditionTypeEnum.CATCH,
+    condition: {
+      type: ConditionTypeEnum.WHEN,
+      children: [
+        { type: NodeTypeEnum.COMMON, id: 'a' },
+        { type: NodeTypeEnum.COMMON, id: 'b' },
+        { type: NodeTypeEnum.COMMON, id: 'c' },
+      ],
+    },
     children: [
-      {
-        type: ConditionTypeEnum.WHEN,
-        children: [
-          { type: NodeTypeEnum.COMMON, id: 'a' },
-          { type: NodeTypeEnum.COMMON, id: 'b' },
-          { type: NodeTypeEnum.COMMON, id: 'c' },
-        ],
-      },
       {
         type: ConditionTypeEnum.IF,
         condition: { type: NodeTypeEnum.IF, id: 'x' },

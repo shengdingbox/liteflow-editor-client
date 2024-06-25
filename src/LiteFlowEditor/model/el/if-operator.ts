@@ -93,8 +93,6 @@ export default class IfOperator extends ELNode {
       { overwrite: true },
     );
     this.startNode = start;
-    condition.getNodes().forEach(node => this.addNode(node))
-    condition.getCells().forEach(cell => cells.push(cell))
     start = condition.getEndNode();
 
     const end = Node.create({

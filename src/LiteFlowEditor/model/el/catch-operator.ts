@@ -18,14 +18,14 @@ import IntermediateErrorBoundaryIcon from '../../assets/intermediate-event-catch
  * (2) JSON表示形式：
  * {
     type: ConditionTypeEnum.CATCH,
+    condition: {
+      type: NodeTypeEnum.THEN,
+      children: [
+        { type: NodeTypeEnum.COMMON, id: 'a' },
+        { type: NodeTypeEnum.COMMON, id: 'b' }
+      ]
+    },
     children: [
-      {
-        type: NodeTypeEnum.THEN,
-        children: [
-          { type: NodeTypeEnum.COMMON, id: 'a' },
-          { type: NodeTypeEnum.COMMON, id: 'b' }
-        ]
-      },
       { type: NodeTypeEnum.COMMON, id: 'c' }
     ],
   }
@@ -42,14 +42,18 @@ import IntermediateErrorBoundaryIcon from '../../assets/intermediate-event-catch
 export default class CatchOperator extends ELNode {
   type = ConditionTypeEnum.CATCH;
   parent?: ELNode;
+  condition: ELNode = new NodeOperator(this, NodeTypeEnum.COMMON, 'x');
   children: ELNode[] = [];
   properties?: Properties;
   startNode?: Node;
   endNode?: Node;
 
-  constructor(parent?: ELNode, children?: ELNode[], properties?: Properties) {
+  constructor(parent?: ELNode, condition?: ELNode, children?: ELNode[], properties?: Properties) {
     super();
     this.parent = parent;
+    if (condition) {
+      this.condition = condition;
+    }
     if (children) {
       this.children = children;
     }
@@ -75,7 +79,7 @@ export default class CatchOperator extends ELNode {
     options: Record<string, any> = {},
   ): Cell[] {
     this.resetCells(cells);
-    const { children } = this;
+    const { condition, children } = this;
     const start = Node.create({
       shape: ConditionTypeEnum.CATCH,
       attrs: {
@@ -121,7 +125,7 @@ export default class CatchOperator extends ELNode {
     this.endNode = end;
 
     if (children.length) {
-      children.forEach((child: ELNode, index: number) => {
+      [condition, ...children].forEach((child: ELNode, index: number) => {
         child.toCells([], options);
         const nextStartNode = child.getStartNode();
         cells.push(

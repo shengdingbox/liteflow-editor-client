@@ -239,6 +239,9 @@ export default abstract class ELNode {
    */
   public getNodes(): Node[] {
     let nodes: Node[] = [...this.nodes];
+    if (this.condition) {
+      nodes = nodes.concat(this.condition.getNodes());
+    }
     if (this.children && this.children.length) {
       this.children.forEach((child) => {
         nodes = nodes.concat(child.getNodes());
@@ -252,6 +255,9 @@ export default abstract class ELNode {
    */
   public getCells(): Cell[] {
     let cells: Cell[] = [...this.cells];
+    if (this.condition) {
+      cells = cells.concat(this.condition.getCells());
+    }
     if (this.children && this.children.length) {
       this.children.forEach((child) => {
         cells = cells.concat(child.getCells());
