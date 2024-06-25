@@ -145,16 +145,20 @@ export function parse({ parent, data }: ParseParameters): ELNode | undefined {
 
 function parseOperator({ parent, data }: ParseParameters): ELNode {
   const { condition, children = [], properties } = data;
-  const conditionNode = parse({ parent, data: condition });
-  if (conditionNode) {
-    parent.condition = conditionNode;
-  }
-  children.forEach((child: Record<string, any>) => {
-    const childNode = parse({ parent, data: child });
-    if (childNode) {
-      parent.appendChild(childNode);
+  if (condition) {
+    const conditionNode = parse({ parent, data: condition });
+    if (conditionNode) {
+      parent.condition = conditionNode;
     }
-  });
+  }
+  if (children && children.length) {
+    children.forEach((child: Record<string, any>) => {
+      const childNode = parse({ parent, data: child });
+      if (childNode) {
+        parent.appendChild(childNode);
+      }
+    });
+  }
   if (properties) {
     parent.setProperties(properties);
   }
