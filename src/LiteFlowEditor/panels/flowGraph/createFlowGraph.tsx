@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from 'antd';
 import { Cell, Graph, NodeView } from '@antv/x6';

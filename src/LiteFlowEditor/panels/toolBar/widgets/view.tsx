@@ -21,6 +21,7 @@ const View: React.FC<IProps> = makeBtnWidget({
       maskClosable: true,
       closable: true,
       content: (
+        // @ts-ignore
         <JsonView
           name={null}
           collapsed={false}
