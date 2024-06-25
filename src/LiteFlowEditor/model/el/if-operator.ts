@@ -189,7 +189,8 @@ export default class IfOperator extends ELNode {
         // this.children.splice(index, this.children[index] ? 1: 0, newNode);
         this.children[index <= 1 ? index : 1] = newNode;
         return true;
-      } else if (index) {
+      }
+      if (index) {
         // 2. 如果有目标节点
         const _index = this.children.indexOf(index);
         if (_index !== -1) {
@@ -201,11 +202,10 @@ export default class IfOperator extends ELNode {
         if (this.condition === index) {
           return this.appendChild(newNode, 0);
         }
-      } else {
-        // 4. 否则直接插入
-        this.children.push(newNode);
-        return true;
       }
+      // 4. 否则直接插入
+      this.children.push(newNode);
+      return true;
     }
     return false;
   }
@@ -227,7 +227,8 @@ export default class IfOperator extends ELNode {
         // this.children.splice(index, this.children[index] ? 1: 0, newNode);
         this.children[index] = newNode;
         return true;
-      } else if (index) {
+      }
+      if (index) {
         // 2. 如果有目标节点
         const _index = this.children.indexOf(index);
         if (_index !== -1) {
@@ -239,11 +240,10 @@ export default class IfOperator extends ELNode {
           // 3. 如果是在condition之前追加
           return this.prepend(newNode);
         }
-      } else {
-        // 4. 否则直接插入
-        this.children.splice(0, this.children[0] ? 1 : 0, newNode);
-        return true;
       }
+      // 4. 否则直接插入
+      this.children.splice(0, this.children[0] ? 1 : 0, newNode);
+      return true;
     }
     return false;
   }
