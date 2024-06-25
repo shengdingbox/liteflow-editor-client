@@ -198,12 +198,10 @@ export default class IfOperator extends ELNode {
           // this.children.splice(_index + 1, this.children[_index] ? 1: 0, newNode);
           this.children[_index <= 1 ? _index : 1] = newNode;
           return true;
-        } else if (this.condition === index) {
-          // 3. 如果是在condition之后追加
+        }
+        // 3. 如果是在condition之后追加
+        if (this.condition === index) {
           return this.appendChild(newNode, 0);
-        } else {
-          this.children.push(newNode);
-          return true;
         }
       } else {
         // 4. 否则直接插入
@@ -238,12 +236,10 @@ export default class IfOperator extends ELNode {
           // this.children.splice(_index, this.children[_index] ? 1: 0, newNode);
           this.children[_index] = newNode;
           return true;
-        } else if (this.condition === index) {
+        }
+        if (this.condition === index) {
           // 3. 如果是在condition之前追加
           return this.prepend(newNode);
-        } else {
-          this.children.splice(0, this.children[0] ? 1 : 0, newNode);
-          return true;
         }
       } else {
         // 4. 否则直接插入
@@ -278,7 +274,7 @@ export default class IfOperator extends ELNode {
     return {
       type,
       condition: condition.toJSON(),
-      children: children.filter((x) => x).map((child) => child.toJSON()),
+      children: children.filter(x => x).map((child) => child.toJSON()),
       properties,
     };
   }
