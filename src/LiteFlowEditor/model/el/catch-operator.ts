@@ -187,7 +187,8 @@ export default class CatchOperator extends ELNode {
    * 转换为EL表达式字符串
    */
   public toEL(prefix: string = ''): string {
-    const [catchNode, doNode] = this.children;
+    const catchNode = this.condition;
+    const [doNode] = this.children;
     if (prefix) {
       return `${prefix}CATCH(\n${catchNode.toEL(`${prefix}  `)}\n${prefix})${doNode ? `.DO(\n${doNode.toEL(`${prefix}  `)}\n${prefix})` : ''}${this.propertiesToEL()}`;
     }
