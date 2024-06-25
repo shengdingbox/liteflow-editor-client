@@ -48,6 +48,10 @@ export default abstract class ELNode {
   public nodes: Node[] = [];
   // 代理节点
   public proxy?: ELNode;
+  // 当前操作符节点的开始节点
+  startNode?: Node;
+  // 当前操作符节点的结束节点
+  endNode?: Node;
 
   /**
    * 在后面添加子节点
@@ -280,12 +284,16 @@ export default abstract class ELNode {
   /**
    * 获取当前节点的开始节点
    */
-  public abstract getStartNode(): Node;
+  public getStartNode(): Node {
+    return this.startNode as Node;
+  }
 
   /**
    * 获取当前节点的结束节点
    */
-  public abstract getEndNode(): Node;
+  public getEndNode(): Node {
+    return this.endNode as Node;
+  };
 
   /**
    * 添加X6 Node相关内容

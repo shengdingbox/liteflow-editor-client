@@ -133,20 +133,6 @@ export default class AndOperator extends ELNode {
   }
 
   /**
-   * 获取当前节点的开始节点
-   */
-  public getStartNode(): Node {
-    return this.startNode as Node;
-  }
-
-  /**
-   * 获取当前节点的结束节点
-   */
-  public getEndNode(): Node {
-    return this.endNode as Node;
-  }
-
-  /**
    * 转换为EL表达式字符串
    */
   public toEL(prefix: string = ''): string {
