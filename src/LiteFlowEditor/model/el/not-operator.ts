@@ -108,6 +108,16 @@ export default class NotOperator extends ELNode {
             shape: LITEFLOW_EDGE,
             source: start.id,
             target: nextStartNode.id,
+            label: ' - ',
+            defaultLabel: {
+              position: {
+                distance: 0.5,
+                options: {
+                  keepGradient: false,
+                  ensureLegibility: false,
+                }
+              }
+            }
           }),
         );
         const nextEndNode = child.getEndNode();
