@@ -124,7 +124,7 @@ export default class CatchOperator extends ELNode {
     cells.push(this.addNode(end));
     this.endNode = end;
 
-    if (children.length) {
+    if ([condition, ...children].length) {
       [condition, ...children].forEach((child: ELNode, index: number) => {
         child.toCells([], options);
         const nextStartNode = child.getStartNode();
