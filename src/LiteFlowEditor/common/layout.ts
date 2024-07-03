@@ -141,6 +141,7 @@ function beforeCatchStart(flowGraph: Graph, catchStart: Node) {
   }) as Node[])[0];
 
   const deltaY = catchStart.position().y - catchRootNode.position().y;
+  if (!deltaY) return;
 
   let queue = [catchStart];
 
@@ -149,7 +150,7 @@ function beforeCatchStart(flowGraph: Graph, catchStart: Node) {
     queue.forEach((next: Node) => {
       const { x, y } = next.position();
       next.position(x, y - deltaY);
-      
+
       const neighbors = flowGraph.getNeighbors(next, {
         incoming: true,
       }) as Node[];
@@ -165,6 +166,7 @@ function afterCatchEnd(flowGraph: Graph, catchEnd: Node) {
   }) as Node[])[0];
 
   const deltaY = catchEnd.position().y - catchRootNode.position().y;
+  if (!deltaY) return;
 
   let queue = [catchEnd];
 
@@ -173,7 +175,7 @@ function afterCatchEnd(flowGraph: Graph, catchEnd: Node) {
     queue.forEach((next: Node) => {
       const { x, y } = next.position();
       next.position(x, y - deltaY);
-      
+
       const neighbors = flowGraph.getNeighbors(next, {
         outgoing: true,
       }) as Node[];
