@@ -133,18 +133,16 @@ export default class CatchOperator extends ELNode {
             shape: LITEFLOW_EDGE,
             source: start.id,
             target: nextStartNode.id,
-            ...(index === 1 ? {
-              label: '异常',
-              defaultLabel: {
-                position: {
-                  distance: 0.3,
-                  // options: {
-                  //   keepGradient: true,
-                  //   ensureLegibility: true,
-                  // },
-                },
-              }
-             } : {}),
+            label: index === 1 ? '异常' : ' ',
+            defaultLabel: {
+              position: {
+                distance: 0.3,
+                // options: {
+                //   keepGradient: true,
+                //   ensureLegibility: true,
+                // },
+              },
+            },
           }),
         );
         const nextEndNode = child.getEndNode();
@@ -153,6 +151,7 @@ export default class CatchOperator extends ELNode {
             shape: LITEFLOW_EDGE,
             source: nextEndNode.id,
             target: end.id,
+            label: ' ',
           }),
         );
       });

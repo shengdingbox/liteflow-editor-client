@@ -4,7 +4,7 @@ import { NodeTypeEnum } from '../../constant';
 
 /**
  * 操作符中开始节点的模型（作为操作符模型的代理），
- * 操作符包括WHEN。
+ * 操作符包括WHEN、CATCH、AND、OR、NOT等等。
  */
 export default class ELStartNode extends ELNode {
   public type = NodeTypeEnum.VIRTUAL;

@@ -4,11 +4,13 @@ import { NodeTypeEnum } from '../../constant';
 
 /**
  * 操作符中结束节点的模型（作为操作符模型的代理），
- * 操作符包括WHEN、SWITCH、IF、FOR、WHILE等等
+ * 操作符包括WHEN、SWITCH、IF、FOR、WHILE、CATCH、AND、OR、NOT等等。
  */
 export default class ELEndNode extends ELNode {
   public type = NodeTypeEnum.VIRTUAL;
+  /** 代理的节点组件 */
   public proxy: ELNode;
+  /** 代理节点组件的相关属性 */
   public parent?: ELNode;
 
   constructor(proxy: ELNode) {
