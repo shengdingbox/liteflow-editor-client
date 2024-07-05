@@ -12,33 +12,28 @@ import NodeOperator from './node-operator';
 /**
  * 与操作符：AND。
  *
- * 例如一个并行编排(WHEN)示例：
- * (1) EL表达式语法：THEN(a, WHEN(b, c, d), e)
+ * 例如一个与(AND)示例：
+ * (1) EL表达式语法：IF(AND(a, b)), c)
  * (2) JSON表示形式：
  * {
-    type: ConditionTypeEnum.THEN,
+    type: ConditionTypeEnum.IF,
+    condition: {
+      type: ConditionTypeEnum.AND,
+      children: [
+        { type: NodeTypeEnum.COMMON, id: 'a' },
+        { type: NodeTypeEnum.COMMON, id: 'b' }
+      ]
+    },
     children: [
-      { type: NodeTypeEnum.COMMON, id: 'a' },
-      {
-        type: ConditionTypeEnum.AND,
-        children: [
-          { type: NodeTypeEnum.COMMON, id: 'b' },
-          { type: NodeTypeEnum.COMMON, id: 'c' },
-          { type: NodeTypeEnum.COMMON, id: 'd' },
-        ],
-      },
-      { type: NodeTypeEnum.COMMON, id: 'e' },
+      { type: NodeTypeEnum.COMMON, id: 'c' }
     ],
   }
   * (3) 通过ELNode节点模型进行表示的组合关系为：
                                           ┌─────────────────┐      ┌─────────────────┐
-                                      ┌──▶│  NodeOperator   │  ┌──▶│  NodeOperator   │
+                                      ┌──▶│  AndOperator    │──┌──▶│  NodeOperator   │
   ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘  │   └─────────────────┘
-  │  Chain  │───▶│  ThenOperator   │──┤   ┌─────────────────┐  │   ┌─────────────────┐
-  └─────────┘    └─────────────────┘  ├──▶│  WhenOperator   │──┼──▶│  NodeOperator   │
-                                      │   └─────────────────┘  │   └─────────────────┘
-                                      │   ┌─────────────────┐  │   ┌─────────────────┐
-                                      └──▶│  NodeOperator   │  └──▶│  NodeOperator   │
+  │  Chain  │───▶│    IfOperator   │──┤   ┌─────────────────┐  │   ┌─────────────────┐
+  └─────────┘    └─────────────────┘  └──▶│  NodeOperator   │  └──▶│  NodeOperator   │
                                           └─────────────────┘      └─────────────────┘
  */
 export default class AndOperator extends ELNode {

@@ -12,34 +12,28 @@ import NodeOperator from './node-operator';
 /**
  * 非操作符：NOT。
  *
- * 例如一个并行编排(WHEN)示例：
- * (1) EL表达式语法：THEN(a, WHEN(b, c, d), e)
+ * 例如一个非(NOT)示例：
+ * (1) EL表达式语法：IF(NOT(a)), b)
  * (2) JSON表示形式：
  * {
-    type: ConditionTypeEnum.THEN,
+    type: ConditionTypeEnum.IF,
+    condition: {
+      type: ConditionTypeEnum.NOT,
+      children: [
+        { type: NodeTypeEnum.COMMON, id: 'a' }
+      ]
+    },
     children: [
-      { type: NodeTypeEnum.COMMON, id: 'a' },
-      {
-        type: ConditionTypeEnum.NOT,
-        children: [
-          { type: NodeTypeEnum.COMMON, id: 'b' },
-          { type: NodeTypeEnum.COMMON, id: 'c' },
-          { type: NodeTypeEnum.COMMON, id: 'd' },
-        ],
-      },
-      { type: NodeTypeEnum.COMMON, id: 'e' },
+      { type: NodeTypeEnum.COMMON, id: 'b' }
     ],
   }
   * (3) 通过ELNode节点模型进行表示的组合关系为：
-                                          ┌─────────────────┐      ┌─────────────────┐
-                                      ┌──▶│  NodeOperator   │  ┌──▶│  NodeOperator   │
-  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘  │   └─────────────────┘
-  │  Chain  │───▶│  ThenOperator   │──┤   ┌─────────────────┐  │   ┌─────────────────┐
-  └─────────┘    └─────────────────┘  ├──▶│  WhenOperator   │──┼──▶│  NodeOperator   │
-                                      │   └─────────────────┘  │   └─────────────────┘
-                                      │   ┌─────────────────┐  │   ┌─────────────────┐
-                                      └──▶│  NodeOperator   │  └──▶│  NodeOperator   │
-                                          └─────────────────┘      └─────────────────┘
+                                          ┌─────────────────┐
+                                      ┌──▶│  OrOperator     │
+  ┌─────────┐    ┌─────────────────┐  │   └─────────────────┘
+  │  Chain  │───▶│   IfOperator    │──┤   ┌─────────────────┐
+  └─────────┘    └─────────────────┘  └──▶│  NodeOperator   │
+                                          └─────────────────┘
  */
 export default class NotOperator extends ELNode {
   type = ConditionTypeEnum.NOT;
