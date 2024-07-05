@@ -1,6 +1,6 @@
 import { Cell, Node, Edge } from '@antv/x6';
 import ELNode, { Properties } from '../node';
-import { ELStartNode, ELEndNode } from '../utils';
+import { ELStartNode, ELEndNode, ELVirtualNode } from '../utils';
 import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
@@ -79,7 +79,15 @@ export default class NotOperator extends ELNode {
       },
       ...options,
     });
-    start.setData({ model: new ELStartNode(this) }, { overwrite: true });
+    start.setData({
+      model: new ELStartNode(this),
+      toolbar: {
+        prepend: true,
+        append: false,
+        delete: true,
+        replace: true,
+      },
+    }, { overwrite: true });
     cells.push(this.addNode(start));
     this.startNode = start;
 
@@ -89,51 +97,100 @@ export default class NotOperator extends ELNode {
         label: { text: '' },
       },
     });
-    end.setData({ model: new ELEndNode(this) }, { overwrite: true });
+    end.setData({
+      model: new ELEndNode(this),
+      toolbar: {
+        prepend: false,
+        append: true,
+        delete: true,
+        replace: true,
+      },
+    }, { overwrite: true });
     cells.push(this.addNode(end));
     this.endNode = end;
 
-    if (children.length) {
-      children.forEach((child) => {
-        child.toCells([], {});
-        const nextStartNode = child.getStartNode();
-        cells.push(
-          Edge.create({
-            shape: LITEFLOW_EDGE,
-            source: start.id,
-            target: nextStartNode.id,
-            label: ' - ',
-            defaultLabel: {
-              position: {
-                distance: 0.5,
-                options: {
-                  keepGradient: false,
-                  ensureLegibility: false,
-                }
-              }
-            }
-          }),
-        );
-        const nextEndNode = child.getEndNode();
-        cells.push(
-          Edge.create({
-            shape: LITEFLOW_EDGE,
-            source: nextEndNode.id,
-            target: end.id,
-          }),
-        );
-      });
-    } else {
+    const [notNode] = children;
+    [notNode].forEach((item, index) => {
+      const next = item || NodeOperator.create(this, NodeTypeEnum.VIRTUAL, ' ');
+      next.toCells([], {});
+      const nextStartNode = next.getStartNode();
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
           source: start.id,
-          target: end.id,
+          target: nextStartNode.id,
+          label: ' - ',
+          defaultLabel: {
+            attrs: {
+              fo: { x: -20, y: -20, },
+            },
+            position: {
+              options: {
+                keepGradient: false,
+                ensureLegibility: false,
+              }
+            }
+          }
         }),
       );
-    }
+      const nextEndNode = next.getEndNode();
+      cells.push(
+        Edge.create({
+          shape: LITEFLOW_EDGE,
+          source: nextEndNode.id,
+          target: end.id,
+          label: ' ',
+        }),
+      );
+
+      if (!item) {
+        nextStartNode.setData(
+          {
+            model: new ELVirtualNode(this, index, next),
+            toolbar: {
+              prepend: false,
+              append: false,
+              delete: false,
+              replace: true,
+            },
+          },
+          { overwrite: true },
+        );
+        cells.push(this.addNode(nextStartNode));
+      }
+    });
 
     return this.getCells();
+  }
+
+  /**
+   * 在后面添加子节点
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
+   */
+  public appendChild(newNode: ELNode): boolean;
+  public appendChild(newNode: ELNode, index: number): boolean;
+  public appendChild(newNode: ELNode, sibling: ELNode): boolean;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public appendChild(newNode: ELNode, index?: number | ELNode): boolean {
+    newNode.parent = this;
+    this.children[0] = newNode;
+    return true;
+  }
+
+  /**
+   * 在后面添加子节点
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
+   */
+  public prependChild(newNode: ELNode): boolean;
+  public prependChild(newNode: ELNode, index: number): boolean;
+  public prependChild(newNode: ELNode, sibling: ELNode): boolean;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public prependChild(newNode: ELNode, index?: number | ELNode): boolean {
+    newNode.parent = this;
+    this.children[0] = newNode;
+    return true;
   }
 
   /**
