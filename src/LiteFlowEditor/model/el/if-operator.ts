@@ -116,8 +116,8 @@ export default class IfOperator extends ELNode {
     cells.push(this.addNode(end));
     this.endNode = end;
 
-    const [first, last] = children;
-    [first, last].forEach((item, index) => {
+    const [trueNode, falseNode] = children;
+    [trueNode, falseNode].forEach((item, index) => {
       const next = item || NodeOperator.create(this, NodeTypeEnum.VIRTUAL, ' ');
       next.toCells([], options);
       const nextStartNode = next.getStartNode();
