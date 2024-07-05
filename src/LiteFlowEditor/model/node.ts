@@ -293,7 +293,7 @@ export default abstract class ELNode {
    */
   public getEndNode(): Node {
     return this.endNode as Node;
-  };
+  }
 
   /**
    * 添加X6 Node相关内容
@@ -352,7 +352,7 @@ export default abstract class ELNode {
       id ? { id } : {},
       properties ? { properties: this.getProperties() } : {},
     );
-  };
+  }
 
   /**
    * 当前模型，是否是参数模型的父节点
