@@ -1,6 +1,6 @@
 import { Cell, Node, Edge } from '@antv/x6';
 import ELNode, { Properties } from '../node';
-import { ELStartNode, ELEndNode } from '../utils';
+import { ELStartNode, ELEndNode, ELVirtualNode } from '../utils';
 import {
   ConditionTypeEnum,
   LITEFLOW_EDGE,
@@ -42,7 +42,7 @@ import IntermediateErrorBoundaryIcon from '../../assets/intermediate-event-catch
 export default class CatchOperator extends ELNode {
   type = ConditionTypeEnum.CATCH;
   parent?: ELNode;
-  condition: ELNode = new NodeOperator(this, NodeTypeEnum.COMMON, 'x');
+  condition?: ELNode = new NodeOperator(this, NodeTypeEnum.COMMON, 'x');
   children: ELNode[] = [];
   properties?: Properties;
   startNode?: Node;
@@ -124,48 +124,156 @@ export default class CatchOperator extends ELNode {
     cells.push(this.addNode(end));
     this.endNode = end;
 
-    if ([condition, ...children].length) {
-      [condition, ...children].forEach((child: ELNode, index: number) => {
-        child.toCells([], options);
-        const nextStartNode = child.getStartNode();
-        cells.push(
-          Edge.create({
-            shape: LITEFLOW_EDGE,
-            source: start.id,
-            target: nextStartNode.id,
-            label: index === 1 ? '异常' : ' ',
-            defaultLabel: {
-              position: {
-                distance: 0.3,
-                // options: {
-                //   keepGradient: true,
-                //   ensureLegibility: true,
-                // },
-              },
-            },
-          }),
-        );
-        const nextEndNode = child.getEndNode();
-        cells.push(
-          Edge.create({
-            shape: LITEFLOW_EDGE,
-            source: nextEndNode.id,
-            target: end.id,
-            label: ' ',
-          }),
-        );
-      });
-    } else {
+    [condition, ...children].forEach((item: ELNode | undefined, index: number) => {
+      const next = item || NodeOperator.create(this, NodeTypeEnum.VIRTUAL, ' ');
+      next.toCells([], options);
+      const nextStartNode = next.getStartNode();
       cells.push(
         Edge.create({
           shape: LITEFLOW_EDGE,
           source: start.id,
-          target: end.id,
+          target: nextStartNode.id,
+          label: index === 1 ? '异常' : ' ',
+          defaultLabel: {
+            position: {
+              distance: 0.3,
+            },
+          },
         }),
       );
-    }
+      const nextEndNode = next.getEndNode();
+      cells.push(
+        Edge.create({
+          shape: LITEFLOW_EDGE,
+          source: nextEndNode.id,
+          target: end.id,
+          label: ' ',
+        }),
+      );
+
+      if (!item) {
+        nextStartNode.setData(
+          {
+            model: new ELVirtualNode(this, index, next),
+            toolbar: {
+              prepend: false,
+              append: false,
+              delete: false,
+              replace: true,
+            },
+          },
+          { overwrite: true },
+        );
+        cells.push(this.addNode(nextStartNode));
+      }
+    });
 
     return this.getCells();
+  }
+
+  /**
+   * 在后面添加子节点
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
+   */
+  public appendChild(newNode: ELNode): boolean;
+  public appendChild(newNode: ELNode, index: number): boolean;
+  public appendChild(newNode: ELNode, sibling: ELNode): boolean;
+  public appendChild(newNode: ELNode, index?: number | ELNode): boolean {
+    newNode.parent = this;
+    // 没有condition节点，则优先添加为condition节点
+    if (!this.condition) {
+      this.condition = newNode;
+      return true;
+    }
+
+    if (this.children) {
+      // 尝试在父节点中添加新节点
+      if (typeof index === 'number') {
+        // 1. 如果有索引
+        this.children[0] = newNode;
+        return true;
+      }
+      if (index) {
+        // 2. 如果有目标节点
+        const _index = this.children.indexOf(index);
+        if (_index !== -1) {
+          this.children[0] = newNode;
+          return true;
+        }
+        // 3. 如果是在condition之后追加
+        if (this.condition === index) {
+          this.condition = newNode;
+          return true;
+        }
+      }
+      // 4. 否则直接插入
+      this.children[0] = newNode;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 在后面添加子节点
+   * @param newNode 子节点
+   * @param index 指定位置：可以是索引，也可以是兄弟节点
+   */
+  public prependChild(newNode: ELNode): boolean;
+  public prependChild(newNode: ELNode, index: number): boolean;
+  public prependChild(newNode: ELNode, sibling: ELNode): boolean;
+  public prependChild(newNode: ELNode, index?: number | ELNode): boolean {
+    newNode.parent = this;
+    // 没有condition节点，则优先添加为condition节点
+    if (!this.condition) {
+      this.condition = newNode;
+      return true;
+    }
+
+    if (this.children) {
+      // 尝试在父节点中添加新节点
+      if (typeof index === 'number') {
+        // 1. 如果有索引
+        this.children[0] = newNode;
+        return true;
+      }
+      if (index) {
+        // 2. 如果有目标节点
+        const _index = this.children.indexOf(index);
+        if (_index !== -1) {
+          this.children[0] = newNode;
+          return true;
+        }
+        if (this.condition === index) {
+          // 3. 如果是在condition之前追加
+          this.condition = newNode;
+          return true;
+        }
+      }
+      // 4. 否则直接插入
+      this.children[0] = newNode;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 删除指定的子节点
+   * @param child 子节点
+   */
+  public removeChild(child: ELNode): boolean {
+    if (this.children) {
+      const index = this.children.indexOf(child);
+      if (index !== -1) {
+        this.children.splice(index, 1);
+        return true;
+      }
+    }
+    if (this.condition && this.condition === child) {
+      this.condition = undefined;
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -175,8 +283,8 @@ export default class CatchOperator extends ELNode {
     const catchNode = this.condition;
     const [doNode] = this.children;
     if (prefix) {
-      return `${prefix}CATCH(\n${catchNode.toEL(`${prefix}  `)}\n${prefix})${doNode ? `.DO(\n${doNode.toEL(`${prefix}  `)}\n${prefix})` : ''}${this.propertiesToEL()}`;
+      return `${prefix}CATCH(\n${catchNode ? catchNode.toEL(`${prefix}  `) : ''}\n${prefix})${doNode ? `.DO(\n${doNode.toEL(`${prefix}  `)}\n${prefix})` : ''}${this.propertiesToEL()}`;
     }
-    return `CATCH(${catchNode.toEL()})${doNode ? `.DO(${doNode.toEL()})` : ''}${this.propertiesToEL()}`;
+    return `CATCH(${catchNode ? catchNode.toEL() : ''})${doNode ? `.DO(${doNode.toEL()})` : ''}${this.propertiesToEL()}`;
   }
 }
