@@ -106,7 +106,6 @@ export default class OrOperator extends ELNode {
             label: ' * ',
             defaultLabel: {
               position: {
-                distance: 0.5,
                 options: {
                   keepGradient: false,
                   ensureLegibility: false,
