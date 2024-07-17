@@ -49,9 +49,9 @@ export default abstract class ELNode {
   // 代理节点
   public proxy?: ELNode;
   // 当前操作符节点的开始节点
-  startNode?: Node;
+  public startNode?: Node;
   // 当前操作符节点的结束节点
-  endNode?: Node;
+  public endNode?: Node;
 
   /**
    * 在后面添加子节点
